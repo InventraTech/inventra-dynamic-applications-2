@@ -1,12 +1,9 @@
-import Button from "./components/Button";
+import Loading from "./components/Loading";
 
 function App() {
   return (
-    <main className="bg-amber-200 min-h-screen flex flex-col justify-center items-center">
-      <Button />
-      <Button />
-      <Button />
-      <Button />
+    <main className="bg-white min-h-screen flex flex-col justify-center items-center">
+      <Loading loadingText="Carregando..."/>
     </main>
   )
 }
