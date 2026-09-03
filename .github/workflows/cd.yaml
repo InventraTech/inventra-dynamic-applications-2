@@ -1,0 +1,10 @@
+name: "CD"
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  cd:
+    uses: InventraTech/.github/.github/workflows/cd-node.yaml@main
+    secrets: inherit
