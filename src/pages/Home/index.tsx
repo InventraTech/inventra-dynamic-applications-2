@@ -1,7 +1,11 @@
+import Loading from "../../components/Loading";
+
 function Home() {
-    return (
-        <h1>ola</h1>
-    )
+  return (
+    <main className="flex items-center justify-center min-h-screen">
+      <Loading loadingText="Carregando..."/>
+    </main>
+  )
 }
 
 export default Home;
