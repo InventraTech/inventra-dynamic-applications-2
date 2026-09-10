@@ -18,7 +18,27 @@ function PrivateRoute() {
                 {page: "Estoque", pageIcon: logoInventra, pagePath: "/estoque"},
                 {page: "Cozinhas", pageIcon: logoInventra, pagePath: "/cozinhas"}
             ]
-        }
+        },
+        {
+            sectionTitle: "Tolete",
+            menuOptions: [
+                {page: "Início", pageIcon: logoInventra, pagePath: "/"},
+                {page: "Estoque", pageIcon: logoInventra, pagePath: "/estoque"},
+                {page: "Cozinhas", pageIcon: logoInventra, pagePath: "/cozinhas"},
+                {page: "Cozinhas", pageIcon: logoInventra, pagePath: "/cozinhas"},
+                {page: "Cozinhas", pageIcon: logoInventra, pagePath: "/cozinhas"}
+            ]
+        },
+        {
+            sectionTitle: "Tolete",
+            menuOptions: [
+                {page: "Início", pageIcon: logoInventra, pagePath: "/"},
+                {page: "Estoque", pageIcon: logoInventra, pagePath: "/estoque"},
+                {page: "Cozinhas", pageIcon: logoInventra, pagePath: "/cozinhas"},
+                {page: "Cozinhas", pageIcon: logoInventra, pagePath: "/cozinhas"},
+                {page: "Cozinhas", pageIcon: logoInventra, pagePath: "/cozinhas"}
+            ]
+        },
     ]
 
     return (

@@ -26,19 +26,19 @@ function Sidebar({logo, logoMark, menuSections=[], fixo, setFixo}: SidebarProps)
     const variableMarginLeft = fixo ? "ml-8" : "ml-3 group-hover:ml-8";
 
     return (
-        <aside className={`rounded-r-2xl border-r-2 border-t-2 border-b-2 border-gray-200 flex justify-center overflow-hidden py-3 pt-6 fixed left-0 top-0 h-screen w-24 hover:w-70 group group-default:transition-all  transition-all z-100 ${sidebarState}`}>
+        <aside className={`overflow-y-scroll rounded-r-2xl border-r-2 border-t-2 border-b-2 border-gray-200 flex justify-center overflow-hidden py-3 pt-6 fixed left-0 top-0 h-screen w-24 hover:w-70 group group-default:transition-all  transition-all z-100 ${sidebarState}`}>
             <button className="fixed top-1 left-2 cursor-pointer" onClick={() => setFixo(!fixo)}>
                 {fixo ? "X" : "O"}
             </button>
             <nav className="">
-                <div className={`flex justify-center items-center ${variableGapSpacing} text-purple-950`}>
+                <div className={`mb-5 flex justify-center items-center ${variableGapSpacing} text-purple-950`}>
                     <img className="object-contain w-16 shrink-0" src={logo} alt="Logo do site" />
                     <h1 className={`font-k2d text-4xl max-w-0 group-hover:max-w-50 whitespace-nowrap overflow-hidden font-bold ${variableOpacity} transition-all`}>{logoMark}</h1>
                 </div>
                 {menuSections.map((section) => (
                     <section key={section.sectionTitle}>
                         <h2>{section.sectionTitle}</h2>
-                            <ul className={`flex flex-col ${variableMarginLeft} items-start justify-center gap-3 mt-12`}>
+                            <ul className={`flex flex-col ${variableMarginLeft} items-start justify-center gap-3 my-4`}>
                                 {section.menuOptions.map((option) => (
                                     <li className={`flex flex-row ${variableGapSpacing}`} key={option.pagePath}>
                                         <img className="object-contain w-10 shrink-0" src={option.pageIcon} alt={`Ícone da página de ${option.page}`} />
