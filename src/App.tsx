@@ -1,8 +1,12 @@
 import AppRoutes from "./routes/AppRoutes";
 
+import { AccessibilityProvider } from "./context/AccessibilityContext";
+
 function App() {
   return (
-    <AppRoutes />
+    <AccessibilityProvider>
+      <AppRoutes />
+    </AccessibilityProvider>
   )
 }
 
