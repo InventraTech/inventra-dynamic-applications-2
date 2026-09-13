@@ -7,3 +7,9 @@ export interface AccessibilityContextType {
 export interface AccessibilityProviderProps {
     children: ReactNode;
 }
+
+export interface AccessibilityStorage {
+    _version: number,
+    libras: boolean,
+
+}
