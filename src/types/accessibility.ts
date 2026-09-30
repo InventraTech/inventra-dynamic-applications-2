@@ -9,7 +9,7 @@ export interface AccessibilityProviderProps {
 }
 
 export interface AccessibilityStorage {
-    _version: number,
+    _versao: number,
     libras: boolean,
 
 }

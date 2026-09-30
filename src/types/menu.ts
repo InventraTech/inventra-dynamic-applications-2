@@ -1,4 +1,4 @@
-interface MenuOptions {
+interface MenuOption {
     page: string;
     pageIcon: string;
     pagePath: string;
@@ -6,7 +6,7 @@ interface MenuOptions {
 
 export interface Menu {
     sectionTitle: string;
-    menuOptions: MenuOptions[];
+    menuOptions: MenuOption[];
 }
 
 export interface SidebarProps {

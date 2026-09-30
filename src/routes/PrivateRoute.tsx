@@ -12,15 +12,15 @@ function PrivateRoute() {
 
     const options: Menu[] = [
         {
-            sectionTitle: "Tolete",
+            sectionTitle: "titlo 1",
             menuOptions: [
-                {page: "Início", pageIcon: logoInventra, pagePath: "/"},
-                {page: "Estoque", pageIcon: logoInventra, pagePath: "/estoque"},
-                {page: "Cozinhas", pageIcon: logoInventra, pagePath: "/cozinhas"}
+                {page: "Login", pageIcon: logoInventra, pagePath: "/"},
+                {page: "Início", pageIcon: logoInventra, pagePath: "/home"},
+                {page: "Acessibilidade", pageIcon: logoInventra, pagePath: "/"}
             ]
         },
         {
-            sectionTitle: "Tolete",
+            sectionTitle: "titlo 2",
             menuOptions: [
                 {page: "Início", pageIcon: logoInventra, pagePath: "/"},
                 {page: "Estoque", pageIcon: logoInventra, pagePath: "/estoque"},
@@ -30,7 +30,7 @@ function PrivateRoute() {
             ]
         },
         {
-            sectionTitle: "Tolete",
+            sectionTitle: "titlo 3",
             menuOptions: [
                 {page: "Início", pageIcon: logoInventra, pagePath: "/"},
                 {page: "Estoque", pageIcon: logoInventra, pagePath: "/estoque"},
