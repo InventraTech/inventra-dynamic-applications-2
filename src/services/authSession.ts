@@ -1,4 +1,4 @@
-import type { AuthSession, LoginResponse } from "../types/auth";
+import type { ApiKitchen, AuthSession, LoginResponse } from "../types/auth";
 
 const SESSION_KEY = "inventra.auth-session";
 export const SESSION_EXPIRED_EVENT = "inventra:session-expired";
@@ -14,6 +14,24 @@ export function saveSession(response: LoginResponse, rememberMe = false): AuthSe
     const storage = rememberMe ? window.localStorage : window.sessionStorage;
     storage.setItem(SESSION_KEY, JSON.stringify(session));
     return session;
+}
+
+export function updateSessionKitchen(kitchen: ApiKitchen): AuthSession | null {
+    const session = getSession();
+    if (!session) return null;
+
+    const updatedSession: AuthSession = {
+        ...session,
+        user: { ...session.user, kitchen },
+    };
+
+    try {
+        const storage = window.sessionStorage.getItem(SESSION_KEY) ? window.sessionStorage : window.localStorage;
+        storage.setItem(SESSION_KEY, JSON.stringify(updatedSession));
+        return updatedSession;
+    } catch {
+        return null;
+    }
 }
 
 export function getSession(): AuthSession | null {
