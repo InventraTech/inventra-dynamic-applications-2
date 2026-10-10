@@ -1,4 +1,4 @@
-import logo from "../../../assets/img/favicon.svg";
+import logo from "../../../assets/icons/favicon.svg";
 import hexagon from "../../../assets/login/login-hexagon.svg";
 import mascot from "../../../assets/login/login-mascot.svg";
 import stockIcon from "../../../assets/login/login-icon-stock.svg";
