@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import type { SidebarProps } from "../../../types/menu";
+import type { SidebarProps } from "../../../types/sidebar";
 
 function Sidebar({ logo, logoMark, menuSections = [], fixo, setFixo }: SidebarProps) {
     const sidebarState = fixo ? "w-70" : "w-24 hover:w-70";

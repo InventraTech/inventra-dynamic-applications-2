@@ -13,6 +13,7 @@ export default function AppRoutes() {
                 {/* Páginas Públicas */}
                 <Route path="/" element={<Login />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/accessibilityconfig" element={<Home />} />
 
                 {/* Páginas Privadas */}
                 <Route element={<PrivateRoute />}>

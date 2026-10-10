@@ -1,44 +1,48 @@
-import { Outlet } from "react-router-dom";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 import Sidebar from "../components/layout/Sidebar";
-import type { MenuSection } from "../types/menu";
+import type { MenuSection } from "../types/sidebar";
 import logoInventra from "../assets/icons/favicon.svg";
-import { useEffect, useState } from "react";
-import { getSession, SESSION_EXPIRED_EVENT } from "../services/authSession";
+import { useState } from "react";
+import { getSession } from "../services/authSession";
 
 
 function PrivateRoute() {
-    const [fixo, setFixo] = useState<boolean>(false)
-    const [isAuthenticated, setIsAuthenticated] = useState(() => Boolean(getSession()));
+    const [fix, setfix] = useState<boolean>(false)
     const location = useLocation();
-    const variableSpacedMain = fixo ? "ml-70" : "ml-24";
-
-    useEffect(() => {
-        const handleSessionExpired = () => setIsAuthenticated(false);
-        window.addEventListener(SESSION_EXPIRED_EVENT, handleSessionExpired);
-        return () => window.removeEventListener(SESSION_EXPIRED_EVENT, handleSessionExpired);
-    }, []);
+    const isAuthenticated = Boolean(getSession());
+    const compactedMain = fix ? "ml-70" : "ml-24";
 
     const options: MenuSection[] = [
         {
-            sectionTitle: "Principal",
+            sectionTitle: "titlo 1",
+            menuOptions: [
+                {page: "Login", pageIcon: logoInventra, pagePath: "/"},
+                {page: "Início", pageIcon: logoInventra, pagePath: "/home"},
+                {page: "Acessibilidade", pageIcon: logoInventra, pagePath: "/"}
+            ]
+        },
+        {
+            sectionTitle: "titlo 2",
             menuOptions: [
                 {page: "Dashboard", pageIcon: logoInventra, pagePath: "/home"},
                 {page: "Produtos", pageIcon: logoInventra, pagePath: "/produtos"},
                 {page: "Estoque", pageIcon: logoInventra, pagePath: "/estoque"},
-                {page: "Requisições", pageIcon: logoInventra, pagePath: "/requisicoes"},
-                {page: "Histórico", pageIcon: logoInventra, pagePath: "/historico"},
-                {page: "Pré-Listas", pageIcon: logoInventra, pagePath: "/pre-listas"}
+                {page: "Cozinhas", pageIcon: logoInventra, pagePath: "/cozinhas"},
+                {page: "Cozinhas", pageIcon: logoInventra, pagePath: "/cozinhas"},
+                {page: "Cozinhas", pageIcon: logoInventra, pagePath: "/cozinhas"}
             ]
         },
         {
-            sectionTitle: "Cadastros",
+            sectionTitle: "titlo 3",
             menuOptions: [
-                {page: "Fornecedores", pageIcon: logoInventra, pagePath: "/fornecedores"},
-                {page: "Configurações", pageIcon: logoInventra, pagePath: "/configuracoes"}
+                {page: "Início", pageIcon: logoInventra, pagePath: "/"},
+                {page: "Estoque", pageIcon: logoInventra, pagePath: "/estoque"},
+                {page: "Cozinhas", pageIcon: logoInventra, pagePath: "/cozinhas"},
+                {page: "Cozinhas", pageIcon: logoInventra, pagePath: "/cozinhas"},
+                {page: "Cozinhas", pageIcon: logoInventra, pagePath: "/cozinhas"}
             ]
-        }
+        },
     ]
 
     if (!isAuthenticated) {
@@ -47,8 +51,8 @@ function PrivateRoute() {
 
     return (
         <>
-            <Sidebar logo={logoInventra} logoMark="Inventra" menuSections={options} fixo={fixo} setFixo={setFixo}/>
-            <main className={`${variableSpacedMain} transition-all duration-500`}>
+            <Sidebar logo={logoInventra} logoMark="Inventra" menuSections={options} fixo={fix} setFixo={setfix}/>
+            <main className={`${compactedMain} transition-all duration-500`}>
                 <Outlet />
             </main>
         </>
