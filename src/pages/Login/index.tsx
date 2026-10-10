@@ -1,11 +1,14 @@
-import Loading from "../../components/Loading";
+import { Navigate } from "react-router-dom";
+
+import LoginFeature from "../../components/features/Login";
+import { getSession } from "../../services/authSession";
 
 function Login() {
+    if (getSession()) return <Navigate to="/historico" replace />;
+
     return (
-        <main className="flex items-center justify-center min-h-screen">
-            <Loading loadingText="Bem vindo!"/>
-        </main>
-    )
+        <LoginFeature />
+    );
 }
 
 export default Login;
