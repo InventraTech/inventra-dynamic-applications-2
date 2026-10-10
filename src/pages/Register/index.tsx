@@ -1,12 +1,12 @@
 import { Navigate } from "react-router-dom";
 
-import LoginFeature from "../../components/features/Login";
+import RegisterFeature from "../../components/features/Register";
 import { getSession } from "../../services/authSession";
 
-function Login() {
+function Register() {
     if (getSession()) return <Navigate to="/historico" replace />;
 
-    return <LoginFeature />;
+    return <RegisterFeature />;
 }
 
-export default Login;
+export default Register;

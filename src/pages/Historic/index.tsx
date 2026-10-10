@@ -32,9 +32,6 @@ function Historico({ mode }: HistoryProps) {
                 userRole={userRole}
             />
             <HistoryContent mode={mode} />
-            <button className="fixed bottom-10 right-9 z-20 h-18 w-18" type="button" aria-label="Abrir assistente">
-                <img className="history-chatbot-art" src={chatbot} alt="" aria-hidden="true" />
-            </button>
         </div>
     );
 }
