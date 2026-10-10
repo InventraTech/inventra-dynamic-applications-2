@@ -1,8 +1,64 @@
 @import "tailwindcss";
 
+html,
+body,
+#root {
+  min-height: 100vh;
+}
+
+body {
+  background-image:
+    linear-gradient(to bottom, var(--color-topbar-surface) 0 5rem, transparent 5rem),
+    linear-gradient(to bottom, var(--color-history-background-start), var(--color-history-background-end));
+}
+
 @theme {
   --font-k2d: "K2D", sans-serif;
-  --color-login-brand-start: #360082;
+  --color-sidebar-purple: #360082;
+  --color-sidebar-indicator: #5700bb;
+  --color-sidebar-active: #efe7fe;
+  --color-sidebar-text: #221b2e;
+  --color-sidebar-label: #68647a;
+  --color-sidebar-line: #dccbf5;
+  --color-sidebar-divider: #b9a2dc;
+  --shadow-sidebar: 0 4.856px 19.426px 0 rgb(54 0 130 / 10%);
+  --text-sidebar-logo: 36px;
+  --text-sidebar-nav: 18px;
+  --text-sidebar-label: 13px;
+  --tracking-sidebar-label: 1.3px;
+  --radius-sidebar-indicator: 3px;
+  --color-topbar-surface: #e8e3f2;
+  --color-topbar-search: rgb(255 255 255 / 12%);
+  --color-topbar-border: rgb(255 255 255 / 16%);
+  --color-topbar-placeholder: #d8c4f0;
+  --color-topbar-purple: #5700bb;
+  --text-topbar-title: 28px;
+  --text-topbar-description: 13px;
+  --text-topbar-search: 14px;
+  --text-topbar-user: 16px;
+  --text-topbar-role: 13px;
+  --color-history-background-start: #f7f6fc;
+  --color-history-background-end: #ece8f6;
+  --color-history-card-header: #f7f5fc;
+  --color-history-border: #efeaf9;
+  --color-history-muted: #68647a;
+  --color-history-avatar: #efeaf9;
+  --color-history-search-placeholder: #a59fb8;
+  --color-history-status-complete-bg: #e7f5e5;
+  --color-history-status-complete-text: #0d8302;
+  --color-history-status-pending-bg: #fbe4e4;
+  --color-history-status-pending-text: #b20707;
+  --color-history-status-observation-bg: #fbf3cc;
+  --color-history-status-observation-text: #7a5f00;
+  --shadow-history-card: 0 8px 24px 0 rgb(89 71 128 / 8%);
+  --shadow-history-tab: 0 6px 14px 0 rgb(87 0 187 / 25%);
+  --radius-history-card: 36px;
+  --radius-history-tabs: 22px;
+  --text-history-header: 12px;
+  --text-history-body: 14px;
+  --text-history-tab: 14px;
+  --tracking-history-header: 0.72px;
+    --color-login-brand-start: #360082;
   --color-login-brand-end: #5700bb;
   --color-login-gold: #f5a623;
   --color-login-accent: #ecc506;
@@ -119,4 +175,97 @@
   --text-login-mobile-footer: 0.7rem;
   --radius-login-control: 0.85rem;
   --radius-login-button: 1rem;
+}
+
+.sidebar-width-transition {
+  transition: width 300ms ease-out;
+  will-change: width;
+}
+
+.sidebar-label-transition {
+  transition: max-width 200ms ease-out, opacity 200ms ease-out;
+}
+
+.sidebar-gap-transition {
+  transition: gap 300ms ease-out;
+}
+
+.topbar-accent {
+  width: 43.75rem;
+  height: 100%;
+}
+
+@media (max-width: 64rem) {
+  .topbar-accent {
+    width: 36rem;
+  }
+}
+
+@media (max-width: 48rem) {
+  .topbar-accent {
+    width: 24rem;
+  }
+}
+
+.sidebar-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #5700bb transparent;
+}
+
+.sidebar-scrollbar-collapsed {
+  scrollbar-width: none;
+}
+
+.sidebar-scrollbar-collapsed::-webkit-scrollbar {
+  width: 0;
+}
+
+.group:hover .sidebar-scrollbar-collapsed {
+  scrollbar-width: thin;
+}
+
+.group:hover .sidebar-scrollbar-collapsed::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  margin-block: 6px;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar-thumb {
+  background: #5700bb;
+  border-radius: 2px;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #360082;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar-button {
+  width: 8px;
+  height: 8px;
+  display: block;
+  background: transparent;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar-button:vertical:start:decrement,
+.sidebar-scrollbar::-webkit-scrollbar-button:vertical:end:increment {
+  width: 8px;
+  height: 8px;
+  display: block;
+  background: transparent;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.history-chatbot-art {
+  position: absolute;
+  inset: -14px -24px -34px;
 }

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Loading from "../../components/Loading";
-import Toggle from "../../components/Toggle";
+import Loading from "../../components/ui/Loading";
+import Toggle from "../../components/ui/Toggle";
 
 function Home() {
   const [falso, setFalso] = useState<boolean>(false);

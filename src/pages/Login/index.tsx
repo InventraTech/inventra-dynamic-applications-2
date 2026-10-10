@@ -6,9 +6,7 @@ import { getSession } from "../../services/authSession";
 function Login() {
     if (getSession()) return <Navigate to="/historico" replace />;
 
-    return (
-        <LoginFeature />
-    );
+    return <LoginFeature />;
 }
 
 export default Login;

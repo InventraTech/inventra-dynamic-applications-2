@@ -1,6 +1,4 @@
-interface LoadingProps {
-    loadingText?: string; 
-}
+import type { LoadingProps } from "../../../types/loading";
 
 function Loading({loadingText = "Carregando..."}: LoadingProps) {
     return (
