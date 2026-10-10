@@ -1,30 +1,50 @@
 import { Outlet } from "react-router-dom";
 
 import Sidebar from "../components/Sidebar";
-import type { MenuSections } from "../components/Sidebar";
+import type { Menu } from "../types/menu";
 import logoInventra from "../assets/img/favicon.svg";
 import { useState } from "react";
 
 
 function PrivateRoute() {
-    const [fixo, setFixo] = useState<boolean>(false)
-    const variableSpacedMain = fixo ? "ml-70" : "ml-24";
+    const [fix, setfix] = useState<boolean>(false)
+    const compactedMain = fix ? "ml-70" : "ml-24";
 
-    const options: MenuSections[] = [
+    const options: Menu[] = [
         {
-            sectionTitle: "Tolete",
+            sectionTitle: "titlo 1",
+            menuOptions: [
+                {page: "Login", pageIcon: logoInventra, pagePath: "/"},
+                {page: "Início", pageIcon: logoInventra, pagePath: "/home"},
+                {page: "Acessibilidade", pageIcon: logoInventra, pagePath: "/"}
+            ]
+        },
+        {
+            sectionTitle: "titlo 2",
             menuOptions: [
                 {page: "Início", pageIcon: logoInventra, pagePath: "/"},
                 {page: "Estoque", pageIcon: logoInventra, pagePath: "/estoque"},
+                {page: "Cozinhas", pageIcon: logoInventra, pagePath: "/cozinhas"},
+                {page: "Cozinhas", pageIcon: logoInventra, pagePath: "/cozinhas"},
                 {page: "Cozinhas", pageIcon: logoInventra, pagePath: "/cozinhas"}
             ]
-        }
+        },
+        {
+            sectionTitle: "titlo 3",
+            menuOptions: [
+                {page: "Início", pageIcon: logoInventra, pagePath: "/"},
+                {page: "Estoque", pageIcon: logoInventra, pagePath: "/estoque"},
+                {page: "Cozinhas", pageIcon: logoInventra, pagePath: "/cozinhas"},
+                {page: "Cozinhas", pageIcon: logoInventra, pagePath: "/cozinhas"},
+                {page: "Cozinhas", pageIcon: logoInventra, pagePath: "/cozinhas"}
+            ]
+        },
     ]
 
     return (
         <>
-            <Sidebar logo={logoInventra} logoMark="Inventra" menuSections={options} fixo={fixo} setFixo={setFixo}/>
-            <main className={`${variableSpacedMain} transition-all duration-500`}>
+            <Sidebar logo={logoInventra} brandName="Inventra" menu={options} fix={fix} setfix={setfix}/>
+            <main className={`${compactedMain} transition-all duration-500`}>
                 <Outlet />
             </main>
         </>

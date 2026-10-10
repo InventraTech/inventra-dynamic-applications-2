@@ -1,9 +1,14 @@
+import { useState } from "react";
 import Loading from "../../components/Loading";
+import Toggle from "../../components/Toggle";
 
 function Home() {
+  const [falso, setFalso] = useState<boolean>(false);
+
   return (
     <main className="flex items-center justify-center min-h-screen">
       <Loading loadingText="Carregando..."/>
+      <Toggle enabled={falso} onToggle={() => setFalso(!falso)} ariaLabel="oi"/>
     </main>
   )
 }
