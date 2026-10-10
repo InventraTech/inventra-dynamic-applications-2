@@ -2,13 +2,10 @@ import { useState } from "react";
 
 import HistoryContent from "../../components/features/History";
 import Topbar from "../../components/layout/Topbar";
-import purchaseChatbot from "../../assets/icons/history-2-chatbot.svg";
-import withdrawalChatbot from "../../assets/icons/history-1-chatbot.svg";
 import type { HistoryProps } from "../../types/history";
 import { getSession } from "../../services/authSession";
 
 function Historico({ mode }: HistoryProps) {
-    const chatbot = mode === "withdrawal" ? withdrawalChatbot : purchaseChatbot;
     const [session] = useState(() => getSession());
     const userName = session?.user.name ?? "Usuário";
     const userInitials = userName
