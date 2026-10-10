@@ -1,0 +1,30 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="ChatBot FAB" filter="url(#filter0_d_0_4)">
+<rect id="Rectangle 165" x="53.2645" y="19.1094" width="13.471" height="32.9806" fill="#CDAC0A"/>
+<path id="Rectangle 22" d="M24 29.7936C24 21.071 31.071 14 39.7935 14H80.2064C88.929 14 96 21.071 96 29.7935V70.2064C96 78.929 88.929 86 80.2065 86H39.7936C31.071 86 24 78.929 24 70.2065V29.7936Z" fill="#6700F8"/>
+<rect id="Rectangle 80" x="28.6451" y="18.6455" width="62.7097" height="62.7097" rx="13.0065" fill="#E2BC03"/>
+<circle id="Ellipse 2" cx="77.6516" cy="45.3548" r="8.12903" fill="white"/>
+<rect id="Rectangle 87" x="37.471" y="59.9871" width="44.5935" height="12.0774" rx="6.03871" fill="white"/>
+<rect id="Rectangle 81" x="53.2645" y="18.6455" width="13.471" height="33.4452" fill="#BC8206"/>
+<circle id="Ellipse 1" cx="41.8839" cy="45.3548" r="8.12903" fill="white"/>
+<rect id="Rectangle 91" width="2.21992" height="2.21992" transform="matrix(0.773073 -0.634317 0.773073 0.634317 53.0457 52.0391)" fill="#E2BC03"/>
+<rect id="Rectangle 92" width="2.21992" height="2.21992" transform="matrix(0.773073 -0.634317 0.773073 0.634317 56.4435 52.0391)" fill="#E2BC03"/>
+<rect id="Rectangle 93" width="2.21992" height="2.21992" transform="matrix(0.773073 -0.634317 0.773073 0.634317 59.8412 52.0391)" fill="#E2BC03"/>
+<rect id="Rectangle 94" width="2.21992" height="2.21992" transform="matrix(0.773073 -0.634317 0.773073 0.634317 63.2391 52.0391)" fill="#E2BC03"/>
+<rect id="Rectangle 90" x="69.5226" y="59.9871" width="1.85806" height="12.0774" fill="#ECC506"/>
+<rect id="Rectangle 88" x="48.1548" y="59.9871" width="1.85806" height="12.5419" fill="#ECC506"/>
+<rect id="Rectangle 89" x="58.8387" y="59.9871" width="1.85806" height="12.5419" fill="#ECC506"/>
+<rect id="Rectangle 174" x="69.5226" y="59.9871" width="1.85806" height="12.0774" fill="#ECC506"/>
+</g>
+<defs>
+<filter id="filter0_d_0_4" x="0" y="0" width="120" height="120" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="10"/>
+<feGaussianBlur stdDeviation="12"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.341 0 0 0 0 0 0 0 0 0 0.733 0 0 0 0.35 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_4"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_4" result="shape"/>
+</filter>
+</defs>
+</svg>
