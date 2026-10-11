@@ -3,10 +3,9 @@ import { Link } from "react-router-dom";
 
 import type { HistoryListProps, HistoryRequest } from "../../../types/history";
 import HistoryCard from "./HistoryCard";
+import Mascote from "../../ui/Mascot";
 import dateMarker from "../../../assets/icons/marcador-data.svg";
 import errorGlyph from "../../../assets/icons/erro.svg";
-import emptyMascot from "../../../assets/images/mascote-vazio.svg";
-import noKitchenMascot from "../../../assets/images/mascote-sem-cozinha.svg";
 import searchGlyph from "../../../assets/icons/busca.svg";
 
 interface HistoryDayGroup {
@@ -105,7 +104,7 @@ function HistoryList({
     if (kitchenMissing) {
         return (
             <div className="flex min-h-[340px] flex-col items-center justify-center gap-3 rounded-[20px] bg-[#f7f5fc] px-7 py-6 text-center">
-                <img src={noKitchenMascot} alt="" aria-hidden="true" width={132.861} height={110} />
+                <Mascote size="amplo" />
                 <h2 className="font-k2d text-xl font-bold text-[#221b2e]">Você ainda não tem uma cozinha</h2>
                 <p className="max-w-[420px] font-k2d text-base text-[#6b647a]">
                     Crie a sua para acompanhar as requisições e as retiradas do estoque.
@@ -173,7 +172,7 @@ function HistoryList({
 
         return (
             <div className="flex min-h-[340px] flex-col items-center justify-center gap-3 rounded-[20px] bg-[#f7f5fc] px-7 py-6 text-center">
-                <img src={emptyMascot} alt="" aria-hidden="true" width={132.861} height={110} />
+                <Mascote size="amplo" />
                 <h2 className="font-k2d text-xl font-bold text-[#221b2e]">
                     {mode === "purchase" ? "Nenhuma solicitação por aqui" : "Nenhuma retirada aprovada ainda"}
                 </h2>
