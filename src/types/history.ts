@@ -1,37 +1,40 @@
+import type { RequisitionDto, RequisitionItemDto, RequisitionStatus } from "./api";
+
 export type HistoryMode = "withdrawal" | "purchase";
 
-export type StatusTone = "complete" | "pending" | "observation";
+export interface HistoryItem extends RequisitionItemDto {
+    product: RequisitionItemDto["product"] & {
+        brand: string;
+        unit: string;
+    };
+}
 
-export interface HistoryRow {
-    key: string;
-    status: string;
-    statusTone: StatusTone;
-    reason?: string;
-    initial: string;
-    product: string;
-    id: string;
-    date: string;
-    time: string;
-    quantity: string;
-    brand: string;
+export interface HistoryRequest extends RequisitionDto {
+    items: HistoryItem[];
 }
 
 export interface HistoryProps {
     mode: HistoryMode;
 }
 
-export interface StatusBadgeProps extends HistoryProps {
-    row: HistoryRow;
-}
-
-export interface HistoryTableProps extends HistoryProps {
-    rows: HistoryRow[];
-    totalRows: number;
-    page: number;
-    pageCount: number;
+export interface HistoryListProps extends HistoryProps {
+    requests: HistoryRequest[];
     loading: boolean;
     error: string | null;
+    kitchenMissing: boolean;
+    canCreateKitchen: boolean;
     canRetry: boolean;
-    onPageChange: (page: number) => void;
+    search: string;
     onRetry: () => void;
+    onClearSearch: () => void;
+}
+
+export interface HistoryCardProps extends HistoryProps {
+    request: HistoryRequest;
+    expanded: boolean;
+    onToggle: () => void;
+}
+
+export interface HistoryStatusBadgeProps {
+    status: RequisitionStatus;
 }

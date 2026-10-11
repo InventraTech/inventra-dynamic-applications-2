@@ -1,37 +1,36 @@
-import type { HistoryMode, HistoryRow, StatusTone } from "../../../types/history";
-import withdrawalCompleteDot from "../../../assets/icons/history-1-status-complete.svg";
-import purchasePendingDot from "../../../assets/icons/history-2-status-pending.svg";
-import purchaseObservationDot from "../../../assets/icons/history-2-status-observation.svg";
-import purchaseCompleteDot from "../../../assets/icons/history-2-status-complete.svg";
+import type { RequisitionStatus } from "../../../types/api";
+import type { HistoryStatusBadgeProps } from "../../../types/history";
+import approvedIcon from "../../../assets/icons/history-v2/status-approved.svg";
+import pendingIcon from "../../../assets/icons/history-2-status-observation.svg";
+import rejectedIcon from "../../../assets/icons/history-2-status-pending.svg";
 
-const statusStyles: Record<StatusTone, string> = {
-    complete: "bg-history-status-complete-bg text-history-status-complete-text",
-    pending: "bg-history-status-pending-bg text-history-status-pending-text",
-    observation: "bg-history-status-observation-bg text-history-status-observation-text",
+const statusLabels: Record<RequisitionStatus, string> = {
+    APPROVED: "Aprovada",
+    UNDER_REVIEW: "Em análise",
+    REJECTED: "Recusada",
+    CANCELLED: "Cancelada",
 };
 
-interface HistoryStatusBadgeProps {
-    mode: HistoryMode;
-    row: HistoryRow;
-}
+const statusStyles: Record<RequisitionStatus, string> = {
+    APPROVED: "bg-[#e7f5ec] text-[#0d8302]",
+    UNDER_REVIEW: "bg-[#fff3d4] text-[#8a6200]",
+    REJECTED: "bg-[#fbe4e4] text-[#b20707]",
+    CANCELLED: "bg-[#f0edf5] text-[#68647a]",
+};
 
-function HistoryStatusBadge({ row, mode }: HistoryStatusBadgeProps) {
-    const dot = mode === "withdrawal"
-        ? withdrawalCompleteDot
-        : row.statusTone === "pending"
-            ? purchasePendingDot
-            : row.statusTone === "observation"
-                ? purchaseObservationDot
-                : purchaseCompleteDot;
+const statusIcons: Record<RequisitionStatus, string> = {
+    APPROVED: approvedIcon,
+    UNDER_REVIEW: pendingIcon,
+    REJECTED: rejectedIcon,
+    CANCELLED: pendingIcon,
+};
 
+function HistoryStatusBadge({ status }: HistoryStatusBadgeProps) {
     return (
-        <div
-            className={`flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 font-k2d text-history-header font-bold whitespace-nowrap ${statusStyles[row.statusTone]}`}
-            title={row.reason || undefined}
-        >
-            <img src={dot} alt="" aria-hidden="true" />
-            {row.status}
-        </div>
+        <span className={`inline-flex shrink-0 items-center gap-[7px] rounded-full px-3 py-1.5 font-k2d text-sm font-bold whitespace-nowrap ${statusStyles[status]}`}>
+            <img src={statusIcons[status]} alt="" aria-hidden="true" width={16} height={16} />
+            {statusLabels[status]}
+        </span>
     );
 }
 

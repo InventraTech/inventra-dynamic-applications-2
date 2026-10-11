@@ -1,7 +1,6 @@
-import type { HistoryMode, HistoryRow } from "../types/history";
 import type { ProductDto, RequisitionDto, RequisitionItemDto } from "../types/api";
+import type { HistoryMode, HistoryRequest } from "../types/history";
 import { apiRequest } from "./api";
-import { mapRequisitionItems } from "../components/features/History/data";
 
 async function mapInBatches<T, Result>(
     values: T[],
@@ -16,11 +15,11 @@ async function mapInBatches<T, Result>(
     return results;
 }
 
-export async function getHistoryRows(
+export async function getHistoryRequests(
     mode: HistoryMode,
     kitchenId: number,
     signal?: AbortSignal,
-): Promise<HistoryRow[]> {
+): Promise<HistoryRequest[]> {
     const requisitions = await apiRequest<RequisitionDto[]>(
         `/requisitions?kitchenId=${encodeURIComponent(kitchenId)}`,
         { signal },
@@ -41,19 +40,37 @@ export async function getHistoryRows(
     const productDetails = await mapInBatches(productIds, 8, async (productId) => {
         try {
             const product = await apiRequest<ProductDto>(`/products/${productId}`, { signal });
-            return { productId, brand: product.brand?.trim() || "—" };
+            return {
+                productId,
+                brand: product.brand?.trim() || "—",
+                unit: product.unit?.symbol?.trim() || "",
+            };
         } catch {
-            return { productId, brand: "—" };
+            return { productId, brand: "—", unit: "" };
         }
     });
+
     if (signal?.aborted) throw new DOMException("A solicitação foi cancelada.", "AbortError");
 
-    const brands = new Map<string, string>();
-    productDetails.forEach(({ productId, brand }) => {
-        brands.set(String(productId), brand);
-    });
+    const products = new Map(productDetails.map(({ productId, brand, unit }) => [productId, { brand, unit }]));
+    const requests = requisitionsWithItems.map(({ requisition, items }) => ({
+        ...requisition,
+        items: items.map((item) => {
+            const details = products.get(item.product.id);
+            return {
+                ...item,
+                product: {
+                    ...item.product,
+                    brand: details?.brand ?? "—",
+                    unit: details?.unit ?? "",
+                },
+            };
+        }),
+    }));
 
-    return requisitionsWithItems.flatMap(({ requisition, items }) =>
-        mapRequisitionItems(requisition, items, brands, mode),
-    );
+    return requests.sort((first, second) => {
+        const firstDate = mode === "withdrawal" && first.status === "APPROVED" && first.approvedAt ? first.approvedAt : first.createdAt;
+        const secondDate = mode === "withdrawal" && second.status === "APPROVED" && second.approvedAt ? second.approvedAt : second.createdAt;
+        return new Date(secondDate).getTime() - new Date(firstDate).getTime();
+    });
 }

@@ -1,6 +1,5 @@
 import type { HistoryMode } from "../../../types/history";
-import withdrawalSearchIcon from "../../../assets/icons/history-1-table-search.svg";
-import purchaseSearchIcon from "../../../assets/icons/history-2-table-search.svg";
+import searchIcon from "../../../assets/icons/history-v2/search.svg";
 
 interface HistorySearchProps {
     mode: HistoryMode;
@@ -10,13 +9,15 @@ interface HistorySearchProps {
 
 function HistorySearch({ mode, value, onChange }: HistorySearchProps) {
     return (
-        <label className="flex h-10 w-full max-w-68 shrink-0 items-center gap-2 overflow-hidden rounded-full bg-white px-4 shadow-history-card sm:w-68">
-            <img src={mode === "withdrawal" ? withdrawalSearchIcon : purchaseSearchIcon} alt="" aria-hidden="true" />
+        <label className="flex h-12 w-full max-w-full shrink-0 items-center gap-2 overflow-hidden rounded-full bg-white px-5 shadow-history-card transition-shadow focus-within:ring-2 focus-within:ring-[#5700bb] md:w-[340px] md:max-w-[42vw]">
+            <img src={searchIcon} alt="" aria-hidden="true" width={18} height={18} />
             <input
-                className="min-w-0 flex-1 bg-transparent font-k2d text-history-body text-history-search-placeholder outline-none placeholder:text-history-search-placeholder"
+                className="min-w-0 flex-1 bg-transparent font-k2d text-[15px] text-[#221b2e] outline-none placeholder:text-[#a59fb8]"
                 type="search"
-                aria-label="Buscar no histórico"
-                placeholder="Buscar por produto ou ID"
+                aria-label={mode === "withdrawal"
+                    ? "Buscar retiradas por produto, pessoa ou número"
+                    : "Buscar solicitações de compra por produto, pessoa ou número"}
+                placeholder="Buscar por produto, pessoa ou nº"
                 value={value}
                 onChange={(event) => onChange(event.target.value)}
             />
