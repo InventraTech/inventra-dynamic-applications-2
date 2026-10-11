@@ -1,10 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "proxy": {
-    "entrypoint": "proxy.ts",
-    "matcher": "/api/:func*"
-  },
   "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://ms-inventra-api.onrender.com/api/:path*"
+    },
     {
       "source": "/(.*)",
       "destination": "/index.html"
