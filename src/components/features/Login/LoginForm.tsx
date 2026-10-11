@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-import mascotHead from "../../../assets/login/login-mascot-head.svg";
+import mascotHead from "../../../assets/images/mascote-cabeca.svg";
 import Button from "../../ui/Button";
 import Input from "../../ui/Input";
 import { ApiError } from "../../../services/api";

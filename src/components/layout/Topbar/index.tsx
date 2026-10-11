@@ -1,4 +1,4 @@
-import accent from "../../../assets/img/topbar-accent.svg";
+import accent from "../../../assets/images/onda-topbar.svg";
 import searchIcon from "../../../assets/icons/busca.svg";
 import notificationIcon from "../../../assets/icons/sino.svg";
 import type { TopbarProps } from "../../../types/topbar";
