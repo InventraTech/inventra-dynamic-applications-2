@@ -1,6 +1,6 @@
 import accent from "../../../assets/img/topbar-accent.svg";
-import searchIcon from "../../../assets/icons/topbar-search.svg";
-import notificationsIcon from "../../../assets/icons/topbar-notifications.svg";
+import searchIcon from "../../../assets/icons/busca.svg";
+import notificationsIcon from "../../../assets/icons/notificacao.svg";
 import type { TopbarProps } from "../../../types/topbar";
 
 function Topbar({
@@ -22,7 +22,7 @@ function Topbar({
 
             <div className="absolute right-7 top-4 z-10 flex items-center gap-4 whitespace-nowrap max-lg:right-5 max-md:right-4 max-md:gap-2">
                 <label className="flex h-11 w-75 items-center gap-2.5 overflow-hidden rounded-full border border-topbar-border bg-topbar-search px-4 max-lg:w-60 max-md:h-10 max-md:w-10 max-md:justify-center max-md:px-2.5">
-                    <img src={searchIcon} alt="" aria-hidden="true" />
+                    <img className="h-[18px] w-[18px] shrink-0 brightness-0 invert opacity-80" src={searchIcon} alt="" aria-hidden="true" />
                     <input
                         className="min-w-0 flex-1 bg-transparent font-k2d text-topbar-search text-topbar-placeholder outline-none placeholder:text-topbar-placeholder max-md:hidden"
                         type="search"

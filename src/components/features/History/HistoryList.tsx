@@ -3,12 +3,11 @@ import { Link } from "react-router-dom";
 
 import type { HistoryListProps, HistoryRequest } from "../../../types/history";
 import HistoryCard from "./HistoryCard";
-import dateMarker from "../../../assets/icons/history-v2/date-marker.svg";
-import skeletonCircle from "../../../assets/icons/history-v2/states/skeleton-circle.svg";
-import errorGlyph from "../../../assets/icons/history-v2/states/error-glyph.svg";
-import noKitchenMascot from "../../../assets/icons/history-v2/states/mascot-no-kitchen.svg";
-import emptyMascot from "../../../assets/icons/history-v2/states/mascot-empty.svg";
-import searchGlyph from "../../../assets/icons/history-v2/states/search-glyph.svg";
+import dateMarker from "../../../assets/icons/marcador-data.svg";
+import errorGlyph from "../../../assets/icons/erro.svg";
+import emptyMascot from "../../../assets/images/mascote-vazio.svg";
+import noKitchenMascot from "../../../assets/images/mascote-sem-cozinha.svg";
+import searchGlyph from "../../../assets/icons/busca.svg";
 
 interface HistoryDayGroup {
     key: string;
@@ -87,7 +86,7 @@ function HistoryList({
                 <div className="flex flex-col gap-3" aria-hidden="true">
                     {[1, 2, 3].map((item) => (
                         <div className="flex min-h-[62px] items-center gap-3.5 rounded-[18px] bg-white p-4" key={item}>
-                            <img src={skeletonCircle} alt="" width={36} height={36} />
+                            <span className="size-9 shrink-0 animate-pulse rounded-full bg-[#e4def0]" />
                             <div className="flex flex-col gap-2">
                                 <span className="h-3 w-[170px] max-w-[38vw] animate-pulse rounded-full bg-[#e4def0]" />
                                 <span className="h-2.5 w-[110px] max-w-[28vw] animate-pulse rounded-full bg-[#e4def0]" />

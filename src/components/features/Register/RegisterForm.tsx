@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { inventraIcons } from "../../../assets/icons/inventra-v2";
+import supervisorIcon from "../../../assets/icons/supervisor.svg";
 import Button from "../../ui/Button";
 import Input from "../../ui/Input";
 import { ApiError } from "../../../services/api";
@@ -149,7 +149,7 @@ function PasswordInput({
 function RegistrationProgress() {
     return (
         <p className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#efe7fe] px-2.5 py-1 text-login-message font-bold leading-tight text-login-brand-end">
-            <img className="h-5 w-auto shrink-0 object-contain" src={inventraIcons.supervisor} alt="" aria-hidden="true" />
+            <img className="h-5 w-auto shrink-0 object-contain" src={supervisorIcon} alt="" aria-hidden="true" />
             Etapa 1 de 2 · Conta de supervisor
         </p>
     );

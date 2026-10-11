@@ -1,8 +1,6 @@
 import type { RequisitionStatus } from "../../../types/api";
 import type { HistoryStatusBadgeProps } from "../../../types/history";
-import approvedIcon from "../../../assets/icons/history-v2/status-approved.svg";
-import pendingIcon from "../../../assets/icons/history-2-status-observation.svg";
-import rejectedIcon from "../../../assets/icons/history-2-status-pending.svg";
+import approvedIcon from "../../../assets/icons/aprovado.svg";
 
 const statusLabels: Record<RequisitionStatus, string> = {
     APPROVED: "Aprovada",
@@ -18,17 +16,21 @@ const statusStyles: Record<RequisitionStatus, string> = {
     CANCELLED: "bg-[#f0edf5] text-[#68647a]",
 };
 
-const statusIcons: Record<RequisitionStatus, string> = {
-    APPROVED: approvedIcon,
-    UNDER_REVIEW: pendingIcon,
-    REJECTED: rejectedIcon,
-    CANCELLED: pendingIcon,
+const statusIndicatorStyles: Record<RequisitionStatus, string> = {
+    APPROVED: "",
+    UNDER_REVIEW: "bg-[#d9ae00]",
+    REJECTED: "bg-[#b20707]",
+    CANCELLED: "bg-[#d9ae00]",
 };
 
 function HistoryStatusBadge({ status }: HistoryStatusBadgeProps) {
     return (
         <span className={`inline-flex shrink-0 items-center gap-[7px] rounded-full px-3 py-1.5 font-k2d text-sm font-bold whitespace-nowrap ${statusStyles[status]}`}>
-            <img src={statusIcons[status]} alt="" aria-hidden="true" width={16} height={16} />
+            {status === "APPROVED" ? (
+                <img src={approvedIcon} alt="" aria-hidden="true" width={16} height={16} />
+            ) : (
+                <span className={`size-4 rounded-full ${statusIndicatorStyles[status]}`} aria-hidden="true" />
+            )}
             {statusLabels[status]}
         </span>
     );

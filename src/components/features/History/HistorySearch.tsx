@@ -1,5 +1,5 @@
 import type { HistoryMode } from "../../../types/history";
-import searchIcon from "../../../assets/icons/history-v2/search.svg";
+import searchIcon from "../../../assets/icons/busca.svg";
 
 interface HistorySearchProps {
     mode: HistoryMode;

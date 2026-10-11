@@ -1,7 +1,7 @@
 import type { HistoryCardProps, HistoryItem } from "../../../types/history";
 import HistoryStatusBadge from "./HistoryStatusBadge";
-import expandIcon from "../../../assets/icons/history-v2/accordion-up.svg";
-import collapseIcon from "../../../assets/icons/history-v2/accordion-down.svg";
+import expandIcon from "../../../assets/icons/seta-cima.svg";
+import collapseIcon from "../../../assets/icons/seta-baixo.svg";
 
 function getInitials(name: string): string {
     const parts = name.trim().split(/\s+/).filter(Boolean);

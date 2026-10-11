@@ -1,10 +1,8 @@
 import { NavLink } from "react-router-dom";
 
 import type { HistoryProps } from "../../../types/history";
-import withdrawalTabIcon from "../../../assets/icons/history-v2/tab-withdrawal-active.svg";
-import purchaseTabIcon from "../../../assets/icons/history-v2/tab-purchase.svg";
-import purchaseTabInactiveIcon from "../../../assets/icons/history-2-tab-withdrawal.svg";
-import purchaseTabActiveIcon from "../../../assets/icons/history-2-tab-purchase.svg";
+import withdrawalTabIcon from "../../../assets/icons/retirada.svg";
+import purchaseTabIcon from "../../../assets/icons/solicitacao.svg";
 
 function HistoryTabs({ mode }: HistoryProps) {
     return (
@@ -13,14 +11,14 @@ function HistoryTabs({ mode }: HistoryProps) {
                 className={({ isActive }) => `flex items-center gap-2 rounded-2xl px-5 py-[11px] font-k2d text-[15px] font-semibold whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5700bb] ${isActive ? "bg-sidebar-purple font-bold text-white shadow-history-tab" : "text-history-muted hover:bg-history-card-header"}`}
                 to="/historico/solicitacoes"
             >
-                <img src={mode === "purchase" ? purchaseTabActiveIcon : purchaseTabIcon} alt="" aria-hidden="true" width={18} height={18} />
+                <img className={mode === "purchase" ? "brightness-0 invert" : ""} src={purchaseTabIcon} alt="" aria-hidden="true" width={18} height={18} />
                 Solicitações de compra
             </NavLink>
             <NavLink
                 className={({ isActive }) => `flex items-center gap-2 rounded-2xl px-5 py-[11px] font-k2d text-[15px] whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5700bb] ${isActive ? "bg-sidebar-purple font-bold text-white shadow-history-tab" : "font-semibold text-history-muted hover:bg-history-card-header"}`}
                 to="/historico/retiradas"
             >
-                <img src={mode === "withdrawal" ? withdrawalTabIcon : purchaseTabInactiveIcon} alt="" aria-hidden="true" width={18} height={18} />
+                <img className={mode === "withdrawal" ? "brightness-0 invert" : ""} src={withdrawalTabIcon} alt="" aria-hidden="true" width={18} height={18} />
                 Retirada do estoque
             </NavLink>
         </div>
