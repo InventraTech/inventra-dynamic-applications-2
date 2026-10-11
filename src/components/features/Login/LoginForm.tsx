@@ -109,7 +109,7 @@ function LoginForm() {
                             aria-describedby={error ? "login-error" : undefined}
                         />
                         <Button
-                            className="absolute right-3 top-1/2 size-9 -translate-y-1/2"
+                            className="absolute right-3 top-1/2 size-9 -translate-y-1/2 rounded-lg text-login-muted hover:text-login-brand-end focus-visible:outline-login-brand-start"
                             variant="icon"
                             type="button"
                             aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}

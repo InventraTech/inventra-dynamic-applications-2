@@ -128,7 +128,7 @@ function PasswordInput({
                     aria-describedby={describedBy}
                 />
                 <Button
-                    className="absolute right-3 top-1/2 size-9 -translate-y-1/2 !p-0 text-login-brand-end"
+                    className="absolute right-3 top-1/2 size-9 -translate-y-1/2 rounded-lg !p-0 text-login-brand-end hover:text-login-brand-start focus-visible:outline-login-brand-start"
                     variant="icon"
                     type="button"
                     aria-label={visible ? `Ocultar ${label.toLocaleLowerCase("pt-BR")}` : `Mostrar ${label.toLocaleLowerCase("pt-BR")}`}
