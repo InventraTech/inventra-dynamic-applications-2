@@ -1,12 +1,12 @@
 import { useState, type FormEvent } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import mascotHead from "../../../assets/login/login-mascot-head.svg";
 import Button from "../../ui/Button";
 import Input from "../../ui/Input";
-import { ApiError, apiRequest } from "../../../services/api";
+import { ApiError } from "../../../services/api";
+import { login } from "../../../services/authService";
 import { saveSession } from "../../../services/authSession";
-import type { LoginResponse } from "../../../types/auth";
 
 interface LoginNavigationState {
     from?: {
@@ -35,11 +35,7 @@ function LoginForm() {
         setIsSubmitting(true);
 
         try {
-            const response = await apiRequest<LoginResponse>("/auth/login", {
-                method: "POST",
-                authenticated: false,
-                body: JSON.stringify({ email: submittedEmail, password: submittedPassword }),
-            });
+            const response = await login(submittedEmail, submittedPassword);
 
             if (!response.token || !response.user) {
                 throw new Error("A API retornou uma resposta de autenticação incompleta.");
@@ -178,19 +174,13 @@ function LoginForm() {
 
                 <div className="flex flex-wrap items-center justify-center gap-login-access-gap text-login-access text-login-muted">
                     <span>Não tem conta?</span>
-                    <Button
-                        variant="link"
-                        type="button"
-                        onClick={() => setSupportNote("A solicitação de acesso ainda não está disponível pela API. Peça acesso ao administrador do Inventra.")}
-                    >
+                    <Link className="font-bold text-login-brand-end hover:text-login-brand-start hover:underline hover:underline-offset-2 focus-visible:outline-2 focus-visible:outline-login-brand-start focus-visible:outline-offset-4" to="/cadastro">
                         Solicite acesso
-                    </Button>
+                    </Link>
                 </div>
 
                 {supportNote && <p className="-mt-login-message-offset text-login-message leading-snug text-login-muted" role="status">{supportNote}</p>}
             </form>
-
-            <footer className="absolute inset-x-0 bottom-login-footer-bottom text-center text-login-footer leading-snug text-login-footer-copy/80 max-lg:static max-lg:mt-8 max-lg:text-login-mobile-footer">Inventra · Versão 1.0.0</footer>
         </section>
     );
 }

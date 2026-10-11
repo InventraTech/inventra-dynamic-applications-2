@@ -11,7 +11,6 @@ function Sidebar({ logo, logoMark, menuSections = [], fixo, setFixo }: SidebarPr
     const dividerStyle = fixo
         ? "bg-linear-to-r from-sidebar-line to-transparent"
         : "bg-sidebar-divider group-hover:bg-linear-to-r group-hover:from-sidebar-line group-hover:to-transparent";
-    const dividerThickness = fixo ? "h-px" : "h-0.5";
     const sectionHeadingLayout = fixo
         ? "gap-3 pl-3"
         : "justify-center gap-0 group-hover:justify-start group-hover:gap-3 group-hover:pl-3";
@@ -42,11 +41,11 @@ function Sidebar({ logo, logoMark, menuSections = [], fixo, setFixo }: SidebarPr
 
                     {menuSections.map((section) => (
                         <section className="flex w-full flex-col gap-2.5" key={section.sectionTitle}>
-                            <div className={`flex w-full items-center overflow-hidden ${sectionHeadingLayout}`}>
-                                <h2 className={`shrink-0 overflow-hidden font-k2d text-sidebar-label font-bold uppercase tracking-sidebar-label ${labelTransition} ${labelState}`}>
+                            <div className={`flex h-5 w-full items-center overflow-hidden ${sectionHeadingLayout}`}>
+                                <h2 className={`shrink-0 overflow-hidden font-k2d text-sidebar-label font-bold uppercase leading-5 tracking-sidebar-label ${labelTransition} ${labelState}`}>
                                     {section.sectionTitle}
                                 </h2>
-                                <span className={`${dividerThickness} ${dividerLayout} ${dividerStyle}`} aria-hidden="true" />
+                                <span className={`h-px ${dividerLayout} ${dividerStyle}`} aria-hidden="true" />
                             </div>
 
                             <ul className="flex w-full flex-col gap-1">

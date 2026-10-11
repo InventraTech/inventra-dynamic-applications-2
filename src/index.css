@@ -191,19 +191,21 @@ body {
 }
 
 .topbar-accent {
-  width: 43.75rem;
-  height: 100%;
+  width: 48rem;
+  height: 110%;
+  top: auto;
+  bottom: 0;
 }
 
 @media (max-width: 64rem) {
   .topbar-accent {
-    width: 36rem;
+    width: 39.5rem;
   }
 }
 
 @media (max-width: 48rem) {
   .topbar-accent {
-    width: 24rem;
+    width: 26.25rem;
   }
 }
 
@@ -263,9 +265,4 @@ body {
 
 .sidebar-scrollbar::-webkit-scrollbar-corner {
   background: transparent;
-}
-
-.history-chatbot-art {
-  position: absolute;
-  inset: -14px -24px -34px;
 }

@@ -3,8 +3,10 @@ import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
 
 import Home from "../pages/Home";
-import Historico from "../pages/Historico";
+import Historico from "../pages/Historic";
 import Login from "../pages/Login";
+import Register from "../pages/Register";
+import KitchenRegistration from "../pages/KitchenRegistration";
 
 export default function AppRoutes() {
     return (
@@ -13,6 +15,8 @@ export default function AppRoutes() {
                 {/* Páginas Públicas */}
                 <Route path="/" element={<Login />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/cadastro" element={<Register />} />
+                <Route path="/cadastro/cozinha" element={<KitchenRegistration />} />
                 <Route path="/accessibilityconfig" element={<Home />} />
 
                 {/* Páginas Privadas */}

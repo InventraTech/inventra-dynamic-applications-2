@@ -15,7 +15,7 @@ const variantClasses: Record<ButtonVariant, string> = {
 function Button({ className = "", variant, ...props }: ButtonProps) {
     return (
         <button
-            className={`${variantClasses[variant]} ${className}`.trim()}
+            className={`${variantClasses[variant]} ${className} cursor-pointer`.trim()}
             {...props}
         />
     );

@@ -24,6 +24,15 @@ export interface LoginResponse {
     user: AuthUser;
 }
 
+export type AuthAccessType = "SUPERVISOR" | "ESTOQUISTA" | "COMPRADOR";
+
+export interface RegisterRequest {
+    name: string;
+    email: string;
+    password: string;
+    accessType: AuthAccessType;
+}
+
 export interface AuthSession {
     token: string;
     expiresAt: number;
