@@ -1,5 +1,5 @@
 import { apiRequest } from "./api";
-import type { LoginResponse, RegisterRequest } from "../types/auth";
+import type { AuthUser, LoginResponse, RegisterRequest } from "../types/auth";
 
 export async function login(email: string, password: string): Promise<LoginResponse> {
     return apiRequest<LoginResponse>("/auth/login", {
@@ -7,6 +7,10 @@ export async function login(email: string, password: string): Promise<LoginRespo
         authenticated: false,
         body: JSON.stringify({ email: email.trim(), password }),
     });
+}
+
+export async function getCurrentUser(signal?: AbortSignal): Promise<AuthUser> {
+    return apiRequest<AuthUser>("/users/me", { signal });
 }
 
 export async function register(request: RegisterRequest): Promise<LoginResponse> {

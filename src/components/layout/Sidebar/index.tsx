@@ -20,7 +20,7 @@ function Sidebar({ logo, logoMark, menuSections = [], fixo, setFixo }: SidebarPr
     const scrollbarState = fixo ? "sidebar-scrollbar" : "sidebar-scrollbar sidebar-scrollbar-collapsed";
 
     return (
-        <aside className={`group fixed left-0 top-0 z-50 flex h-screen flex-col overflow-hidden rounded-r-3xl bg-white shadow-sidebar sidebar-width-transition ${sidebarState}`}>
+        <aside className={`group fixed left-0 top-0 z-50 flex h-screen flex-col overflow-hidden rounded-r-3xl bg-white shadow-sidebar sidebar-width-transition  ${sidebarState}`}>
             <button
                 className="absolute left-2 top-1 z-20 cursor-pointer text-sidebar-purple"
                 onClick={() => setFixo(!fixo)}

@@ -7,11 +7,14 @@ import { getSession } from "../../services/authSession";
 
 function Historico({ mode }: HistoryProps) {
     const [session] = useState(() => getSession());
-    const userName = session?.user.name ?? "Usuário";
-    const userInitials = userName
-        .trim()
-        .split(/\s+/)
-        .slice(0, 2)
+    const nameParts = (session?.user.name ?? "Usuário").trim().split(/\s+/).filter(Boolean);
+    const userName = nameParts.length > 1
+        ? `${nameParts[0]} ${nameParts[nameParts.length - 1]}`
+        : nameParts[0] ?? "Usuário";
+    const initialsParts = nameParts.length > 1
+        ? [nameParts[0], nameParts[nameParts.length - 1]]
+        : nameParts;
+    const userInitials = initialsParts
         .map((part) => [...part][0]?.toLocaleUpperCase("pt-BR") ?? "")
         .join("") || "IN";
     const profile = session?.user.profile;

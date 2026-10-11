@@ -6,6 +6,14 @@ export interface RequisitionDto {
     type: RequisitionType;
     status: RequisitionStatus;
     reason?: string | null;
+    requester: {
+        id: string;
+        name: string;
+    };
+    approver?: {
+        id: string;
+        name: string;
+    } | null;
     createdAt: string;
     approvedAt?: string | null;
 }
@@ -28,4 +36,7 @@ export interface RequisitionItemDto {
 export interface ProductDto {
     id: number;
     brand?: string | null;
+    unit?: {
+        symbol: string;
+    } | null;
 }
