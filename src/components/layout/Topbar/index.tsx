@@ -24,7 +24,7 @@ function Topbar({
 
             <div className="absolute right-7 top-4 z-10 flex items-center gap-4 whitespace-nowrap max-lg:right-5 max-md:right-4 max-md:gap-2">
                 <label className="flex h-11 w-75 items-center gap-2.5 overflow-hidden rounded-full border border-topbar-border bg-topbar-search px-4 max-lg:w-60 max-md:h-10 max-md:w-10 max-md:justify-center max-md:px-2.5">
-                    <img className="h-[18px] w-[18px] shrink-0 brightness-0 invert opacity-80" src={searchIcon} alt="" aria-hidden="true" />
+                    <img className="size-4.5 shrink-0 brightness-0 invert opacity-80" src={searchIcon} alt="" aria-hidden="true" />
                     <input
                         className="min-w-0 flex-1 bg-transparent font-k2d text-topbar-search text-topbar-placeholder outline-none placeholder:text-topbar-placeholder max-md:hidden"
                         type="search"
@@ -41,7 +41,7 @@ function Topbar({
                 >
                     <img className="size-6" src={notificationIcon} alt="" aria-hidden="true" />
                     {hasNotifications && (
-                        <span className="absolute right-1.5 top-1.5 size-3 rounded-full border-2 border-[#3e0490] bg-[#f5a623]" aria-hidden="true" />
+                        <span className="absolute right-1.5 top-1.5 size-3 rounded-full border-2 border-[#3e0490] bg-login-gold" aria-hidden="true" />
                     )}
                 </Button>
 

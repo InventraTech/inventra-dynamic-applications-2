@@ -80,7 +80,7 @@ function KitchenSetupForm() {
             <div className="relative z-2 w-login-form-width max-w-login-form-max max-lg:w-full max-lg:max-w-xl">
                 <form className="flex flex-col gap-login-form-gap max-lg:gap-4" onSubmit={handleSubmit} noValidate>
                     <header className="contents">
-                        <p className="inline-flex w-fit shrink-0 items-center rounded-full bg-[#efe7fe] px-2.5 py-1 text-login-message font-bold leading-tight text-login-brand-end">
+                        <p className="inline-flex w-fit shrink-0 items-center rounded-full bg-sidebar-active px-2.5 py-1 text-login-message font-bold leading-tight text-login-brand-end">
                             Etapa 2 de 2
                         </p>
                         <h1 className="text-login-form-title font-bold leading-tight text-login-brand-start">Agora, a sua cozinha</h1>

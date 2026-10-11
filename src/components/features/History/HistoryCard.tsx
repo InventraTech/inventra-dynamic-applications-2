@@ -52,20 +52,20 @@ function HistoryCard({ request, mode, expanded, onToggle }: HistoryCardProps) {
     const extraItems = request.items.length - 2;
 
     return (
-        <article className={`rounded-3xl border-2 bg-white px-6 py-4 shadow-history-card transition-colors max-sm:px-4 ${expanded ? "border-[#5700bb]" : "border-transparent"}`}>
+        <article className={`rounded-3xl border-2 bg-white px-6 py-4 shadow-history-card transition-colors max-sm:px-4 ${expanded ? "border-sidebar-indicator" : "border-transparent"}`}>
             <div className="grid grid-cols-1 items-center gap-x-5 gap-y-4 min-[1100px]:grid-cols-[minmax(150px,0.8fr)_minmax(170px,1fr)_minmax(190px,1.2fr)] min-[1700px]:grid-cols-[230px_250px_minmax(180px,1fr)_200px_auto]">
-                <div className="flex min-w-0 flex-col gap-[3px]">
-                    <h3 className="truncate font-k2d text-[19px] font-bold text-[#221b2e]">Requisição #{request.id}</h3>
-                    <p className="font-k2d text-sm text-[#6b647a]">{formatSummaryDate(request, mode)}</p>
+                <div className="flex min-w-0 flex-col gap-0.75">
+                    <h3 className="truncate font-k2d text-[19px] font-bold text-sidebar-text">Requisição #{request.id}</h3>
+                    <p className="font-k2d text-sm text-login-footer-copy">{formatSummaryDate(request, mode)}</p>
                 </div>
 
                 <div className="flex min-w-0 items-center gap-3">
-                    <span className="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full bg-[#efe7fe] font-k2d text-sm font-bold text-[#5700bb]">
+                    <span className="flex size-9.5 shrink-0 items-center justify-center rounded-full bg-sidebar-active font-k2d text-sm font-bold text-sidebar-indicator">
                         {getInitials(request.requester.name)}
                     </span>
                     <div className="min-w-0">
-                        <p className="truncate font-k2d text-base font-bold text-[#221b2e]">{request.requester.name}</p>
-                        <p className="truncate font-k2d text-sm text-[#6b647a]">
+                        <p className="truncate font-k2d text-base font-bold text-sidebar-text">{request.requester.name}</p>
+                        <p className="truncate font-k2d text-sm text-login-footer-copy">
                             Aprovador: {request.approver?.name ?? (request.status === "UNDER_REVIEW" ? "Aguardando aprovação" : "—")}
                         </p>
                     </div>
@@ -73,24 +73,24 @@ function HistoryCard({ request, mode, expanded, onToggle }: HistoryCardProps) {
 
                 <div className="flex min-w-0 flex-wrap items-center gap-2" aria-label="Produtos da requisição">
                     {request.items.slice(0, 2).map((item) => (
-                        <span className="inline-flex min-w-0 max-w-full items-center gap-2 rounded-full border border-[#e4def0] bg-[#f7f5fc] py-1.5 pl-2 pr-3" key={item.id}>
-                            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#efe7fe] font-k2d text-xs font-bold text-[#5700bb]">
+                        <span className="inline-flex min-w-0 max-w-full items-center gap-2 rounded-full border border-[#e4def0] bg-history-card-header py-1.5 pl-2 pr-3" key={item.id}>
+                            <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-sidebar-active font-k2d text-xs font-bold text-sidebar-indicator">
                                 {getFirstLetter(item.product.name)}
                             </span>
-                            <span className="max-w-32 truncate font-k2d text-sm font-medium text-[#221b2e]">{item.product.name}</span>
-                            <span className="font-k2d text-sm font-bold text-[#5700bb]">{formatQuantity(item.quantity)}</span>
+                            <span className="max-w-32 truncate font-k2d text-sm font-medium text-sidebar-text">{item.product.name}</span>
+                            <span className="font-k2d text-sm font-bold text-sidebar-indicator">{formatQuantity(item.quantity)}</span>
                         </span>
                     ))}
                     {extraItems > 0 && (
-                        <span className="rounded-full bg-[#efe7fe] px-3 py-1.5 font-k2d text-sm font-bold text-[#5700bb]">
+                        <span className="rounded-full bg-sidebar-active px-3 py-1.5 font-k2d text-sm font-bold text-sidebar-indicator">
                             +{extraItems} {extraItems === 1 ? "item" : "itens"}
                         </span>
                     )}
                 </div>
 
                 <div className="min-w-0 min-[1100px]:col-span-2 min-[1700px]:col-span-1">
-                    <p className="font-k2d text-[13px] text-[#6b647a]">Motivo</p>
-                    <p className="truncate font-k2d text-sm text-[#221b2e]">{request.reason || "—"}</p>
+                    <p className="font-k2d text-[13px] text-login-footer-copy">Motivo</p>
+                    <p className="truncate font-k2d text-sm text-sidebar-text">{request.reason || "—"}</p>
                 </div>
 
                 <div className="flex items-center justify-between gap-3 min-[1100px]:col-span-2 min-[1700px]:col-span-1 min-[1700px]:justify-end">
@@ -99,7 +99,7 @@ function HistoryCard({ request, mode, expanded, onToggle }: HistoryCardProps) {
                         aria-label={`${expanded ? "Recolher" : "Expandir"} requisição #${request.id}`}
                         aria-controls={detailsId}
                         aria-expanded={expanded}
-                        className={`flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5700bb] ${expanded ? "bg-[#efe7fe]" : "bg-[#f7f5fc] hover:bg-[#efe7fe]"}`}
+                        className={`flex size-9.5 shrink-0 items-center justify-center rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sidebar-indicator ${expanded ? "bg-sidebar-active" : "bg-history-card-header hover:bg-sidebar-active"}`}
                         onClick={onToggle}
                         type="button"
                     >
@@ -111,29 +111,29 @@ function HistoryCard({ request, mode, expanded, onToggle }: HistoryCardProps) {
             <div className="mt-4 border-t border-[#edeaf5] pt-4" id={detailsId} hidden={!expanded}>
                 {expanded && (
                     <div className="flex flex-col gap-5 lg:flex-row lg:gap-10">
-                        <dl className="flex shrink-0 flex-col gap-3 lg:w-[280px]">
+                        <dl className="flex shrink-0 flex-col gap-3 lg:w-70">
                             <div>
-                                <dt className="font-k2d text-[13px] text-[#6b647a]">Motivo da requisição</dt>
-                                <dd className="break-words font-k2d text-base text-[#221b2e]">{request.reason || "—"}</dd>
+                                <dt className="font-k2d text-[13px] text-login-footer-copy">Motivo da requisição</dt>
+                                <dd className="break-words font-k2d text-base text-sidebar-text">{request.reason || "—"}</dd>
                             </div>
                             <div>
-                                <dt className="font-k2d text-[13px] text-[#6b647a]">Solicitante</dt>
-                                <dd className="break-words font-k2d text-base text-[#221b2e]">{request.requester.name}</dd>
+                                <dt className="font-k2d text-[13px] text-login-footer-copy">Solicitante</dt>
+                                <dd className="break-words font-k2d text-base text-sidebar-text">{request.requester.name}</dd>
                             </div>
                             <div>
-                                <dt className="font-k2d text-[13px] text-[#6b647a]">Aprovador</dt>
-                                <dd className="break-words font-k2d text-base text-[#221b2e]">
+                                <dt className="font-k2d text-[13px] text-login-footer-copy">Aprovador</dt>
+                                <dd className="break-words font-k2d text-base text-sidebar-text">
                                     {request.approver?.name ?? (request.status === "UNDER_REVIEW" ? "Aguardando aprovação" : "—")}
                                     {mode === "withdrawal" && request.status === "APPROVED" && request.approvedAt && (
-                                        <span className="block text-sm text-[#6b647a]">aprovada em {formatSummaryDate(request, mode).replace("Aprovada em ", "")}</span>
+                                        <span className="block text-sm text-login-footer-copy">aprovada em {formatSummaryDate(request, mode).replace("Aprovada em ", "")}</span>
                                     )}
                                 </dd>
                             </div>
                         </dl>
 
                         <div className="min-w-0 flex-1 overflow-x-auto">
-                            <table className={`w-full border-collapse text-left font-k2d ${mode === "purchase" ? "min-w-[760px]" : "min-w-[520px]"}`}>
-                                <thead className="bg-[#f7f5fc] text-[13px] text-[#6b647a]">
+                            <table className={`w-full border-collapse text-left font-k2d ${mode === "purchase" ? "min-w-190" : "min-w-130"}`}>
+                                <thead className="bg-history-card-header text-[13px] text-login-footer-copy">
                                     <tr>
                                         <th className="rounded-l-xl px-3 py-2 font-medium" scope="col">Produto</th>
                                         <th className="px-3 py-2 font-medium" scope="col">Qtd.</th>
@@ -151,23 +151,23 @@ function HistoryCard({ request, mode, expanded, onToggle }: HistoryCardProps) {
                                         <tr className="border-b border-[#edeaf5] last:border-0" key={item.id}>
                                             <td className="px-3 py-2.5">
                                                 <div className="flex items-center gap-3">
-                                                    <span className="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-xl bg-[#efe7fe] font-k2d text-sm font-bold text-[#5700bb]">
+                                                    <span className="flex size-9.5 shrink-0 items-center justify-center rounded-xl bg-sidebar-active font-k2d text-sm font-bold text-sidebar-indicator">
                                                         {getFirstLetter(item.product.name)}
                                                     </span>
                                                     <span className="min-w-0">
-                                                        <span className="block truncate font-k2d text-sm font-bold text-[#221b2e]">{item.product.name}</span>
-                                                        <span className="block truncate font-k2d text-[13px] text-[#6b647a]">{item.product.brand}</span>
+                                                        <span className="block truncate font-k2d text-sm font-bold text-sidebar-text">{item.product.name}</span>
+                                                        <span className="block truncate font-k2d text-[13px] text-login-footer-copy">{item.product.brand}</span>
                                                     </span>
                                                 </div>
                                             </td>
-                                            <td className="whitespace-nowrap px-3 py-2.5 font-k2d text-base font-bold text-[#221b2e]">{formatProductQuantity(item)}</td>
+                                            <td className="whitespace-nowrap px-3 py-2.5 font-k2d text-base font-bold text-sidebar-text">{formatProductQuantity(item)}</td>
                                             {mode === "purchase" && (
                                                 <>
-                                                    <td className="px-3 py-2.5 font-k2d text-sm text-[#221b2e]">{item.suggestedSupplier?.legalName ?? "—"}</td>
-                                                    <td className="whitespace-nowrap px-3 py-2.5 font-k2d text-sm text-[#221b2e]">{formatCurrency(item.estimatedPrice)}</td>
+                                                    <td className="px-3 py-2.5 font-k2d text-sm text-sidebar-text">{item.suggestedSupplier?.legalName ?? "—"}</td>
+                                                    <td className="whitespace-nowrap px-3 py-2.5 font-k2d text-sm text-sidebar-text">{formatCurrency(item.estimatedPrice)}</td>
                                                 </>
                                             )}
-                                            <td className="px-3 py-2.5 font-k2d text-sm text-[#221b2e]">{item.note?.trim() || "—"}</td>
+                                            <td className="px-3 py-2.5 font-k2d text-sm text-sidebar-text">{item.note?.trim() || "—"}</td>
                                         </tr>
                                     ))}
                                 </tbody>

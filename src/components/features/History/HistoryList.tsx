@@ -81,20 +81,20 @@ function HistoryList({
 
     if (loading) {
         return (
-            <div className="flex min-h-[340px] flex-col gap-3 rounded-[20px] bg-[#f7f5fc] px-7 py-6" aria-busy="true" aria-label="Carregando requisições">
+            <div className="flex min-h-85 flex-col gap-3 rounded-[20px] bg-history-card-header px-7 py-6" aria-busy="true" aria-label="Carregando requisições">
                 <div className="flex flex-col gap-3" aria-hidden="true">
                     {[1, 2, 3].map((item) => (
-                        <div className="flex min-h-[62px] items-center gap-3.5 rounded-[18px] bg-white p-4" key={item}>
+                        <div className="flex min-h-15.5 items-center gap-3.5 rounded-[18px] bg-white p-4" key={item}>
                             <span className="size-9 shrink-0 animate-pulse rounded-full bg-[#e4def0]" />
                             <div className="flex flex-col gap-2">
-                                <span className="h-3 w-[170px] max-w-[38vw] animate-pulse rounded-full bg-[#e4def0]" />
-                                <span className="h-2.5 w-[110px] max-w-[28vw] animate-pulse rounded-full bg-[#e4def0]" />
+                                <span className="h-3 w-42.5 max-w-[38vw] animate-pulse rounded-full bg-[#e4def0]" />
+                                <span className="h-2.5 w-27.5 max-w-[28vw] animate-pulse rounded-full bg-[#e4def0]" />
                             </div>
-                            <span className="ml-auto h-6 w-[70px] animate-pulse rounded-full bg-[#e4def0]" />
+                            <span className="ml-auto h-6 w-17.5 animate-pulse rounded-full bg-[#e4def0]" />
                         </div>
                     ))}
                 </div>
-                <p className="mt-auto pt-1 text-center font-k2d text-[15px] text-[#6b647a]" role="status" aria-live="polite">
+                <p className="mt-auto pt-1 text-center font-k2d text-[15px] text-login-footer-copy" role="status" aria-live="polite">
                     Buscando as requisições da cozinha…
                 </p>
             </div>
@@ -103,21 +103,21 @@ function HistoryList({
 
     if (kitchenMissing) {
         return (
-            <div className="flex min-h-[340px] flex-col items-center justify-center gap-3 rounded-[20px] bg-[#f7f5fc] px-7 py-6 text-center">
+            <div className="flex min-h-85 flex-col items-center justify-center gap-3 rounded-[20px] bg-history-card-header px-7 py-6 text-center">
                 <Mascote size="amplo" />
-                <h2 className="font-k2d text-xl font-bold text-[#221b2e]">Você ainda não tem uma cozinha</h2>
-                <p className="max-w-[420px] font-k2d text-base text-[#6b647a]">
+                <h2 className="font-k2d text-xl font-bold text-sidebar-text">Você ainda não tem uma cozinha</h2>
+                <p className="max-w-105 font-k2d text-base text-login-footer-copy">
                     Crie a sua para acompanhar as requisições e as retiradas do estoque.
                 </p>
                 {canCreateKitchen ? (
                     <Link
-                        className="mt-1 inline-flex min-h-12 items-center justify-center rounded-2xl bg-[#5700bb] px-[26px] py-[13px] font-k2d text-base font-bold text-white transition-colors hover:bg-[#360082] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5700bb]"
+                        className="mt-1 inline-flex min-h-12 items-center justify-center rounded-2xl bg-sidebar-indicator px-6.5 py-3.25 font-k2d text-base font-bold text-white transition-colors hover:bg-sidebar-purple focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sidebar-indicator"
                         to="/cadastro/cozinha"
                     >
                         Criar cozinha
                     </Link>
                 ) : (
-                    <p className="font-k2d text-sm text-[#6b647a]">Peça ao administrador para vincular uma cozinha à sua conta.</p>
+                    <p className="font-k2d text-sm text-login-footer-copy">Peça ao administrador para vincular uma cozinha à sua conta.</p>
                 )}
             </div>
         );
@@ -125,17 +125,17 @@ function HistoryList({
 
     if (error) {
         return (
-            <div className="flex min-h-[340px] flex-col items-center justify-center gap-3 rounded-[20px] bg-[#f7f5fc] p-7 text-center" role="alert">
-                <span className="flex h-[79px] w-[79px] items-center justify-center rounded-[22px] bg-[#f1ecf6]">
+            <div className="flex min-h-85 flex-col items-center justify-center gap-3 rounded-[20px] bg-history-card-header p-7 text-center" role="alert">
+                <span className="flex size-19.75 items-center justify-center rounded-history-tabs bg-login-field">
                     <img src={errorGlyph} alt="" aria-hidden="true" width={44} height={44} />
                 </span>
-                <h2 className="max-w-[440px] font-k2d text-xl font-bold text-[#221b2e]">Não foi possível carregar as requisições</h2>
-                <p className="max-w-[420px] font-k2d text-base text-[#6b647a]">
+                <h2 className="max-w-110 font-k2d text-xl font-bold text-sidebar-text">Não foi possível carregar as requisições</h2>
+                <p className="max-w-105 font-k2d text-base text-login-footer-copy">
                     Verifique a sua conexão e tente de novo. Se continuar, avise o suporte.
                 </p>
                 {canRetry && (
                     <button
-                        className="mt-1 min-h-12 rounded-2xl bg-[#5700bb] px-[26px] py-[13px] font-k2d text-base font-bold text-white transition-colors hover:bg-[#360082] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5700bb]"
+                        className="mt-1 min-h-12 rounded-2xl bg-sidebar-indicator px-6.5 py-3.25 font-k2d text-base font-bold text-white transition-colors hover:bg-sidebar-purple focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sidebar-indicator"
                         type="button"
                         onClick={onRetry}
                     >
@@ -149,18 +149,18 @@ function HistoryList({
     if (requests.length === 0) {
         if (search.trim()) {
             return (
-                <div className="flex min-h-[340px] flex-col items-center justify-center gap-3 rounded-[20px] bg-[#f7f5fc] p-7 text-center">
-                    <span className="flex h-[79px] w-[79px] items-center justify-center rounded-[22px] bg-[#f1ecf6]">
+                <div className="flex min-h-85 flex-col items-center justify-center gap-3 rounded-[20px] bg-history-card-header p-7 text-center">
+                    <span className="flex size-19.75 items-center justify-center rounded-history-tabs bg-login-field">
                         <img src={searchGlyph} alt="" aria-hidden="true" width={44} height={44} />
                     </span>
-                    <h2 className="max-w-[440px] break-words font-k2d text-xl font-bold text-[#221b2e]">
+                    <h2 className="max-w-110 wrap-break-word font-k2d text-xl font-bold text-sidebar-text">
                         Nada encontrado para “{search.trim()}”
                     </h2>
-                    <p className="max-w-[420px] font-k2d text-base text-[#6b647a]">
+                    <p className="max-w-105 font-k2d text-base text-login-footer-copy">
                         Confira o nome do produto, da pessoa ou o número da requisição.
                     </p>
                     <button
-                        className="mt-1 min-h-12 rounded-2xl border-[1.5px] border-[#5700bb] bg-white px-[26px] py-[13px] font-k2d text-base font-bold text-[#5700bb] transition-colors hover:bg-[#efe7fe] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5700bb]"
+                        className="mt-1 min-h-12 rounded-2xl border-[1.5px] border-sidebar-indicator bg-white px-6.5 py-3.25 font-k2d text-base font-bold text-sidebar-indicator transition-colors hover:bg-sidebar-active focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sidebar-indicator"
                         type="button"
                         onClick={onClearSearch}
                     >
@@ -171,18 +171,18 @@ function HistoryList({
         }
 
         return (
-            <div className="flex min-h-[340px] flex-col items-center justify-center gap-3 rounded-[20px] bg-[#f7f5fc] px-7 py-6 text-center">
+            <div className="flex min-h-85 flex-col items-center justify-center gap-3 rounded-[20px] bg-history-card-header px-7 py-6 text-center">
                 <Mascote size="amplo" />
-                <h2 className="font-k2d text-xl font-bold text-[#221b2e]">
+                <h2 className="font-k2d text-xl font-bold text-sidebar-text">
                     {mode === "purchase" ? "Nenhuma solicitação por aqui" : "Nenhuma retirada aprovada ainda"}
                 </h2>
-                <p className="max-w-[420px] font-k2d text-base text-[#6b647a]">
+                <p className="max-w-105 font-k2d text-base text-login-footer-copy">
                     {mode === "purchase"
                         ? "Quando alguém pedir uma compra, ela aparece nesta lista."
                         : "Quando uma requisição de consumo for aprovada, ela aparecerá nesta lista."}
                 </p>
                 {mode === "purchase" && (
-                    <p className="max-w-[440px] font-k2d text-sm text-[#5700bb]">
+                    <p className="max-w-110 font-k2d text-sm text-sidebar-indicator">
                         Na aba Retirada do estoque: “Nenhuma retirada aprovada ainda.”
                     </p>
                 )}
@@ -200,8 +200,8 @@ function HistoryList({
 
     return (
         <div className="flex flex-col gap-3" aria-busy={loading}>
-            <p className="font-k2d text-sm text-[#6b647a]" role="status">
-                <strong className="font-bold text-[#221b2e]">{countLabel}</strong>
+            <p className="font-k2d text-sm text-login-footer-copy" role="status">
+                <strong className="font-bold text-sidebar-text">{countLabel}</strong>
                 <span> · {sortLabel}</span>
             </p>
             {groups.map((group) => {
@@ -209,12 +209,12 @@ function HistoryList({
 
                 return (
                     <section className="flex flex-col gap-2" key={group.key} aria-label={`Requisições de ${formatGroupDate(group.date)}`}>
-                        <h2 className="flex items-center gap-2 font-k2d text-[17px] font-bold text-[#221b2e]">
-                            <span className="flex h-5 w-[18px] shrink-0 items-center justify-center">
+                        <h2 className="flex items-center gap-2 font-k2d text-[17px] font-bold text-sidebar-text">
+                            <span className="flex h-5 w-4.5 shrink-0 items-center justify-center">
                                 <img src={dateMarker} alt="" aria-hidden="true" width={15.5885} height={20} />
                             </span>
                             {relativeLabel && <span>{relativeLabel}</span>}
-                            <span className="font-normal text-[#6b647a]">{formatGroupDate(group.date)}</span>
+                            <span className="font-normal text-login-footer-copy">{formatGroupDate(group.date)}</span>
                         </h2>
                         <div className="flex flex-col gap-2.5">
                             {group.requests.map((request) => {
