@@ -1,9 +1,9 @@
 import { useState, type FormEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-import mascotHead from "../../../assets/login/login-mascot-head.svg";
 import Button from "../../ui/Button";
 import Input from "../../ui/Input";
+import Mascote from "../../ui/Mascot";
 import { ApiError } from "../../../services/api";
 import { login } from "../../../services/authService";
 import { saveSession } from "../../../services/authSession";
@@ -67,7 +67,7 @@ function LoginForm() {
                         <h1 className="text-login-form-title font-bold leading-tight text-login-brand-start">Bem-vindo de volta</h1>
                         <p className="mt-login-form-copy-top text-login-form-copy leading-snug text-login-muted">Entre com sua conta Inventra para continuar.</p>
                     </div>
-                    <img className="mt-0.5 w-login-form-mascot shrink-0" src={mascotHead} alt="" aria-hidden="true" />
+                    <Mascote className="mt-0.5 shrink-0" size="compacto" />
                 </header>
 
                 <div className="flex min-w-0 flex-col gap-login-field-gap">
@@ -109,7 +109,7 @@ function LoginForm() {
                             aria-describedby={error ? "login-error" : undefined}
                         />
                         <Button
-                            className="absolute right-3 top-1/2 size-9 -translate-y-1/2"
+                            className="absolute right-3 top-1/2 size-9 -translate-y-1/2 rounded-lg text-login-muted hover:text-login-brand-end focus-visible:outline-login-brand-start"
                             variant="icon"
                             type="button"
                             aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}

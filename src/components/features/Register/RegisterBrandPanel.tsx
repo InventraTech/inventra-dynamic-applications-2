@@ -1,7 +1,9 @@
-import logo from "../../../assets/icons/favicon.svg";
-import { inventraIcons } from "../../../assets/icons/inventra-v2";
-import hexagon from "../../../assets/login/login-hexagon.svg";
-import mascot from "../../../assets/login/login-mascot.svg";
+import logo from "../../../assets/icons/logo-inventra.svg";
+import accountIcon from "../../../assets/icons/conta.svg";
+import kitchenIcon from "../../../assets/icons/caixa.svg";
+import teamIcon from "../../../assets/icons/adicionar.svg";
+import hexagon from "../../../assets/images/mascote-hexagono.svg";
+import mascot from "../../../assets/images/mascote-inventra.svg";
 import BrandConfetti from "../Auth/BrandConfetti";
 
 type RegistrationStepIcon = "account" | "kitchen" | "team";
@@ -14,9 +16,9 @@ interface RegistrationStep {
 }
 
 const registrationStepIcons: Record<RegistrationStepIcon, string> = {
-    account: inventraIcons.registerAccount,
-    kitchen: inventraIcons.registerKitchen,
-    team: inventraIcons.registerInvite,
+    account: accountIcon,
+    kitchen: kitchenIcon,
+    team: teamIcon,
 };
 
 const registrationSteps: RegistrationStep[] = [

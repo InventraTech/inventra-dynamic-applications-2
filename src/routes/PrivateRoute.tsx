@@ -2,7 +2,7 @@ import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 import Sidebar from "../components/layout/Sidebar";
 import type { MenuSection } from "../types/sidebar";
-import logoInventra from "../assets/icons/favicon.svg";
+import logoInventra from "../assets/icons/logo-inventra.svg";
 import { useState } from "react";
 import { getSession } from "../services/authSession";
 

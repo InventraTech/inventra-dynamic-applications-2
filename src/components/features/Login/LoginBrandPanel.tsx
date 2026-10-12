@@ -1,9 +1,9 @@
-import logo from "../../../assets/icons/favicon.svg";
-import hexagon from "../../../assets/login/login-hexagon.svg";
-import mascot from "../../../assets/login/login-mascot.svg";
-import stockIcon from "../../../assets/login/login-icon-stock.svg";
-import expiryIcon from "../../../assets/login/login-icon-expiry.svg";
-import requisitionIcon from "../../../assets/login/login-icon-requisition.svg";
+import logo from "../../../assets/icons/logo-inventra.svg";
+import hexagon from "../../../assets/images/mascote-hexagono.svg";
+import mascot from "../../../assets/images/mascote-inventra.svg";
+import stockIcon from "../../../assets/icons/caixa.svg";
+import expiryIcon from "../../../assets/icons/vencimento.svg";
+import requisitionIcon from "../../../assets/icons/requisicao.svg";
 import LoginFeatureItem from "./LoginFeatureItem";
 
 function LoginBrandPanel() {

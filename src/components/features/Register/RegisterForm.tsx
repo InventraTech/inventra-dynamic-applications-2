@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { inventraIcons } from "../../../assets/icons/inventra-v2";
+import supervisorIcon from "../../../assets/icons/supervisor.svg";
 import Button from "../../ui/Button";
 import Input from "../../ui/Input";
 import { ApiError } from "../../../services/api";
@@ -72,7 +72,7 @@ function PasswordStrength({ password }: { password: string }) {
             <div className="flex gap-login-field-gap" aria-hidden="true">
                 {[0, 1, 2, 3].map((segment) => (
                     <span
-                        className={`h-1.5 flex-1 rounded-full ${segment < strength ? "bg-[#0d8302]" : "bg-[#e4def0]"}`}
+                        className={`h-1.5 flex-1 rounded-full ${segment < strength ? "bg-history-status-complete-text" : "bg-[#e4def0]"}`}
                         key={segment}
                     />
                 ))}
@@ -128,7 +128,7 @@ function PasswordInput({
                     aria-describedby={describedBy}
                 />
                 <Button
-                    className="absolute right-3 top-1/2 size-9 -translate-y-1/2 !p-0 text-login-brand-end"
+                    className="absolute right-3 top-1/2 size-9 -translate-y-1/2 rounded-lg !p-0 text-login-brand-end hover:text-login-brand-start focus-visible:outline-login-brand-start"
                     variant="icon"
                     type="button"
                     aria-label={visible ? `Ocultar ${label.toLocaleLowerCase("pt-BR")}` : `Mostrar ${label.toLocaleLowerCase("pt-BR")}`}
@@ -148,8 +148,8 @@ function PasswordInput({
 
 function RegistrationProgress() {
     return (
-        <p className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#efe7fe] px-2.5 py-1 text-login-message font-bold leading-tight text-login-brand-end">
-            <img className="h-5 w-auto shrink-0 object-contain" src={inventraIcons.supervisor} alt="" aria-hidden="true" />
+        <p className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-sidebar-active px-2.5 py-1 text-login-message font-bold leading-tight text-login-brand-end">
+            <img className="h-5 w-auto shrink-0 object-contain" src={supervisorIcon} alt="" aria-hidden="true" />
             Etapa 1 de 2 · Conta de supervisor
         </p>
     );

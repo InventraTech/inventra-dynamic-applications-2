@@ -5,4 +5,5 @@ export interface TopbarProps {
     userName?: string;
     userRole?: string;
     searchPlaceholder?: string;
+    hasNotifications?: boolean;
 }
