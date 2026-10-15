@@ -1,4 +1,15 @@
 @import "tailwindcss";
+@import "./styles/accessibility.css";
+
+@custom-variant large-text (&:where([data-accessibility-large-text="true"], [data-accessibility-large-text="true"] *));
+@custom-variant adjusted-contrast (&:where([data-accessibility-contrast]:not([data-accessibility-contrast="normal"]), [data-accessibility-contrast]:not([data-accessibility-contrast="normal"]) *));
+
+:root {
+  color-scheme: light;
+  --accessibility-scale: 1;
+  --accessibility-letter-spacing: 0em;
+  --accessibility-line-height: 1.5;
+}
 
 html,
 body,
@@ -7,45 +18,63 @@ body,
 }
 
 body {
+  overflow-wrap: anywhere;
+  color: var(--color-ink);
+  font-family: var(--font-k2d);
   background-image:
     linear-gradient(to bottom, var(--color-topbar-surface) 0 5rem, transparent 5rem),
     linear-gradient(to bottom, var(--color-history-background-start), var(--color-history-background-end));
 }
 
 @theme {
+  --color-surface: #ffffff;
+  --color-ink: #221b2e;
+  --color-brand: #5700bb;
+  --color-brand-strong: #360082;
+  --color-on-brand: #ffffff;
+  --color-heading: #360082;
+  --color-link: #5700bb;
+  --color-focus: #5700bb;
+  --color-feedback-error: #a51c30;
+  --color-feedback-error-bg: #fff1f2;
+  --color-feedback-success: #216330;
+  --color-feedback-success-bg: #eaf6ed;
+  --color-feedback-info: #41407a;
+  --color-feedback-info-bg: #f0edfa;
   --font-k2d: "K2D", sans-serif;
-  --color-sidebar-purple: #360082;
-  --color-sidebar-indicator: #5700bb;
+  --font-opendyslexic: "OpenDyslexic", sans-serif;
+  --color-sidebar-purple: var(--color-heading);
+  --color-sidebar-indicator: var(--color-link);
   --color-sidebar-active: #efe7fe;
-  --color-sidebar-text: #221b2e;
+  --color-sidebar-text: var(--color-ink);
   --color-sidebar-label: #68647a;
   --color-sidebar-line: #dccbf5;
   --color-sidebar-divider: #b9a2dc;
   --shadow-sidebar: 0 4.856px 19.426px 0 rgb(54 0 130 / 10%);
-  --text-sidebar-logo: 36px;
-  --text-sidebar-nav: 18px;
-  --text-sidebar-label: 13px;
+  --text-sidebar-logo: 2.25rem;
+  --text-sidebar-nav: 1.125rem;
+  --text-sidebar-label: 0.8125rem;
   --tracking-sidebar-label: 1.3px;
   --radius-sidebar-indicator: 3px;
   --color-topbar-surface: #e8e3f2;
   --color-topbar-search: rgb(255 255 255 / 12%);
   --color-topbar-border: rgb(255 255 255 / 16%);
-  --color-topbar-placeholder: #d8c4f0;
-  --color-topbar-purple: #5700bb;
-  --text-topbar-title: 28px;
-  --text-topbar-description: 13px;
-  --text-topbar-search: 14px;
-  --text-topbar-user: 16px;
-  --text-topbar-role: 13px;
+  --color-topbar-placeholder: #efe5fa;
+  --color-topbar-purple: var(--color-brand);
+  --text-topbar-title: 1.75rem;
+  --text-topbar-description: 0.8125rem;
+  --text-topbar-search: 0.875rem;
+  --text-topbar-user: 1rem;
+  --text-topbar-role: 0.8125rem;
   --color-history-background-start: #f7f6fc;
   --color-history-background-end: #ece8f6;
   --color-history-card-header: #f7f5fc;
   --color-history-border: #efeaf9;
   --color-history-muted: #68647a;
   --color-history-avatar: #efeaf9;
-  --color-history-search-placeholder: #a59fb8;
+  --color-history-search-placeholder: #68647a;
   --color-history-status-complete-bg: #e7f5e5;
-  --color-history-status-complete-text: #0d8302;
+  --color-history-status-complete-text: #216330;
   --color-history-status-pending-bg: #fbe4e4;
   --color-history-status-pending-text: #b20707;
   --color-history-status-observation-bg: #fbf3cc;
@@ -54,22 +83,22 @@ body {
   --shadow-history-tab: 0 6px 14px 0 rgb(87 0 187 / 25%);
   --radius-history-card: 36px;
   --radius-history-tabs: 22px;
-  --text-history-header: 12px;
-  --text-history-body: 14px;
-  --text-history-tab: 14px;
+  --text-history-header: 0.75rem;
+  --text-history-body: 0.875rem;
+  --text-history-tab: 0.875rem;
   --tracking-history-header: 0.72px;
-    --color-login-brand-start: #360082;
-  --color-login-brand-end: #5700bb;
+  --color-login-brand-start: var(--color-heading);
+  --color-login-brand-end: var(--color-link);
   --color-login-gold: #f5a623;
   --color-login-accent: #ecc506;
   --color-login-copy: #d8c4f0;
   --color-login-footer-copy: #6b647a;
-  --color-login-ink: #221b2e;
+  --color-login-ink: var(--color-ink);
   --color-login-field: #f1ecf6;
   --color-login-field-border: #e2d5ef;
   --color-login-muted: #616161;
-  --color-login-placeholder: #929292;
-  --color-login-error: #b20707;
+  --color-login-placeholder: #66606f;
+  --color-login-error: var(--color-feedback-error);
   --color-login-confetti-white: rgb(255 255 255 / 50%);
   --color-login-confetti-soft: rgb(255 255 255 / 40%);
   --color-login-confetti-gold: rgb(245 166 35 / 90%);
@@ -79,15 +108,15 @@ body {
   --spacing-login-logo-top: 5.5%;
   --spacing-login-logo-icon: clamp(1.25rem, 1.98vw, 2.4rem);
   --spacing-login-logo-gap: clamp(0.25rem, 0.5vw, 0.6rem);
-  --text-login-logo: clamp(0.8rem, 1.22vw, 1.5rem);
+  --text-login-logo: clamp(0.8rem, calc(1.22vw * var(--accessibility-scale)), 1.5rem);
   --spacing-login-hero-top: 21%;
   --spacing-login-hero-left: 8.25%;
   --spacing-login-hero-width: 68%;
   --spacing-login-accent-width: clamp(2rem, 3vw, 3.6rem);
   --spacing-login-accent-gap: clamp(0.65rem, 1.05vw, 1.3rem);
-  --text-login-hero: clamp(1.35rem, 2.25vw, 2.7rem);
+  --text-login-hero: clamp(1.35rem, calc(2.25vw * var(--accessibility-scale)), 2.7rem);
   --spacing-login-description-top: clamp(1.15rem, 1.95vw, 2.35rem);
-  --text-login-description: clamp(0.65rem, 1.08vw, 1.3rem);
+  --text-login-description: clamp(0.65rem, calc(1.08vw * var(--accessibility-scale)), 1.3rem);
   --spacing-login-features-top: 47.6%;
   --spacing-login-features-left: 8.25%;
   --spacing-login-features-width: 41.2%;
@@ -98,8 +127,8 @@ body {
   --spacing-login-feature-copy-gap: 0.2rem;
   --spacing-login-feature-copy-width: clamp(8.5rem, 13.55vw, 15rem);
   --spacing-login-feature-copy-offset: clamp(0.6rem, 1.15vw, 1.3rem);
-  --text-login-feature-title: clamp(0.58rem, 1.02vw, 1.22rem);
-  --text-login-feature-copy: clamp(0.48rem, 0.74vw, 0.88rem);
+  --text-login-feature-title: clamp(0.58rem, calc(1.02vw * var(--accessibility-scale)), 1.22rem);
+  --text-login-feature-copy: clamp(0.48rem, calc(0.74vw * var(--accessibility-scale)), 0.88rem);
   --spacing-login-hex-top: 44.4%;
   --spacing-login-hex-left: 55.4%;
   --spacing-login-hex-width: clamp(13rem, 19vw, 23rem);
@@ -131,29 +160,29 @@ body {
   --spacing-login-form-width: 56%;
   --container-login-form-max: 32.5rem;
   --spacing-login-form-gap: clamp(0.95rem, 1.3vw, 1.5rem);
-  --text-login-form-title: clamp(1.25rem, 1.9vw, 2.15rem);
-  --text-login-form-copy: clamp(0.72rem, 1.02vw, 1.2rem);
+  --text-login-form-title: clamp(1.25rem, calc(1.9vw * var(--accessibility-scale)), 2.15rem);
+  --text-login-form-copy: clamp(0.72rem, calc(1.02vw * var(--accessibility-scale)), 1.2rem);
   --spacing-login-form-copy-top: clamp(0.55rem, 1.2vw, 1.4rem);
   --spacing-login-field-gap: clamp(0.3rem, 0.5vw, 0.6rem);
-  --text-login-label: clamp(0.58rem, 0.8vw, 0.95rem);
+  --text-login-label: clamp(0.58rem, calc(0.8vw * var(--accessibility-scale)), 0.95rem);
   --spacing-login-input-height: clamp(2.25rem, 3.2vw, 3.75rem);
   --spacing-login-input-x: clamp(0.7rem, 1.05vw, 1.25rem);
-  --text-login-input: clamp(0.72rem, 1.08vw, 1.25rem);
+  --text-login-input: clamp(0.72rem, calc(1.08vw * var(--accessibility-scale)), 1.25rem);
   --spacing-login-options-height: clamp(1rem, 1.2vw, 1.4rem);
-  --text-login-options: clamp(0.6rem, 0.8vw, 0.95rem);
+  --text-login-options: clamp(0.6rem, calc(0.8vw * var(--accessibility-scale)), 0.95rem);
   --spacing-login-checkbox: clamp(0.85rem, 1.08vw, 1.25rem);
   --spacing-login-checkbox-gap: clamp(0.35rem, 0.48vw, 0.55rem);
   --spacing-login-button-height: clamp(2.5rem, 3.55vw, 4rem);
-  --text-login-button: clamp(0.78rem, 0.98vw, 1.1rem);
+  --text-login-button: clamp(0.78rem, calc(0.98vw * var(--accessibility-scale)), 1.1rem);
   --spacing-login-separator-gap: clamp(0.55rem, 0.76vw, 0.9rem);
-  --text-login-separator: clamp(0.6rem, 0.8vw, 0.95rem);
+  --text-login-separator: clamp(0.6rem, calc(0.8vw * var(--accessibility-scale)), 0.95rem);
   --spacing-login-access-gap: clamp(0.3rem, 0.4vw, 0.45rem);
-  --text-login-access: clamp(0.65rem, 0.86vw, 1rem);
+  --text-login-access: clamp(0.65rem, calc(0.86vw * var(--accessibility-scale)), 1rem);
   --spacing-login-message-offset: 0.6rem;
-  --text-login-message: clamp(0.65rem, 0.8vw, 0.9rem);
+  --text-login-message: clamp(0.65rem, calc(0.8vw * var(--accessibility-scale)), 0.9rem);
   --spacing-login-form-mascot: clamp(2.75rem, 4.5vw, 5rem);
   --spacing-login-footer-bottom: 4.39%;
-  --text-login-footer: clamp(0.5rem, 0.68vw, 0.8rem);
+  --text-login-footer: clamp(0.5rem, calc(0.68vw * var(--accessibility-scale)), 0.8rem);
   --spacing-login-mobile-brand: 16rem;
   --spacing-login-mobile-brand-small: 14rem;
   --spacing-login-mobile-hero-top: 5.7rem;
@@ -168,7 +197,7 @@ body {
   --spacing-login-mobile-mascot-right: 1.25rem;
   --spacing-login-mobile-mascot-width: 9.3rem;
   --spacing-login-mobile-description: 0.75rem;
-  --text-login-mobile-description: clamp(0.62rem, 1.8vw, 0.82rem);
+  --text-login-mobile-description: clamp(0.62rem, calc(1.8vw * var(--accessibility-scale)), 0.82rem);
   --spacing-login-mobile-form-top: 2.5rem;
   --spacing-login-mobile-form-bottom: 4.5rem;
   --spacing-login-mobile-footer-bottom: 1.1rem;
@@ -190,28 +219,9 @@ body {
   transition: gap 300ms ease-out;
 }
 
-.topbar-accent {
-  width: 48rem;
-  height: 110%;
-  top: auto;
-  bottom: 0;
-}
-
-@media (max-width: 64rem) {
-  .topbar-accent {
-    width: 39.5rem;
-  }
-}
-
-@media (max-width: 48rem) {
-  .topbar-accent {
-    width: 26.25rem;
-  }
-}
-
 .sidebar-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: #5700bb transparent;
+  scrollbar-color: var(--color-sidebar-indicator) transparent;
 }
 
 .sidebar-scrollbar-collapsed {
@@ -222,11 +232,13 @@ body {
   width: 0;
 }
 
-.group:hover .sidebar-scrollbar-collapsed {
+.group:hover .sidebar-scrollbar-collapsed,
+.group:focus-within .sidebar-scrollbar-collapsed {
   scrollbar-width: thin;
 }
 
-.group:hover .sidebar-scrollbar-collapsed::-webkit-scrollbar {
+.group:hover .sidebar-scrollbar-collapsed::-webkit-scrollbar,
+.group:focus-within .sidebar-scrollbar-collapsed::-webkit-scrollbar {
   width: 8px;
 }
 
@@ -240,12 +252,12 @@ body {
 }
 
 .sidebar-scrollbar::-webkit-scrollbar-thumb {
-  background: #5700bb;
+  background: var(--color-sidebar-indicator);
   border-radius: 2px;
 }
 
 .sidebar-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #360082;
+  background: var(--color-sidebar-purple);
 }
 
 .sidebar-scrollbar::-webkit-scrollbar-button {

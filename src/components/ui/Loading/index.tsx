@@ -2,9 +2,9 @@ import type { LoadingProps } from "../../../types/loading";
 
 function Loading({loadingText = "Carregando..."}: LoadingProps) {
     return (
-        <div className="flex flex-col justify-center items-center z-10">
-            <div className="bg-white border-4 border-amber-300 border-t-purple-600 w-9 h-9 rounded-full animate-spin"></div>
-            <h1 className="font-black text-purple-900 text-2xl">{loadingText}</h1>
+        <div className="z-10 flex flex-col items-center justify-center gap-3" role="status" aria-live="polite">
+            <div className="size-9 animate-spin rounded-full border-4 border-sidebar-divider border-t-sidebar-purple bg-surface" aria-hidden="true" />
+            <p className="text-lg font-semibold text-sidebar-purple">{loadingText}</p>
         </div>
     );
 }

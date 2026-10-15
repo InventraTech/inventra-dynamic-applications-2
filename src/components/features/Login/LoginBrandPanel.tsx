@@ -8,7 +8,7 @@ import LoginFeatureItem from "./LoginFeatureItem";
 
 function LoginBrandPanel() {
     return (
-        <aside className="relative min-h-screen w-login-brand-width shrink-0 overflow-hidden bg-linear-to-br from-login-brand-start to-login-brand-end text-white max-lg:h-login-mobile-brand max-lg:min-h-login-mobile-brand max-lg:w-full max-sm:h-login-mobile-brand-small max-sm:min-h-login-mobile-brand-small" aria-label="Sobre a plataforma Inventra">
+        <aside className="relative min-h-screen w-login-brand-width large-text:hidden shrink-0 overflow-hidden bg-linear-to-br from-brand-strong to-brand text-on-brand max-lg:h-login-mobile-brand max-lg:min-h-login-mobile-brand max-lg:w-full max-sm:h-login-mobile-brand-small max-sm:min-h-login-mobile-brand-small" aria-label="Sobre a plataforma Inventra">
             <div className="absolute left-login-logo-left top-login-logo-top z-4 flex items-center gap-login-logo-gap text-login-logo font-bold leading-none max-lg:left-6 max-lg:top-4 max-lg:gap-2 max-lg:text-xl sm:max-lg:text-2xl">
                 <img className="w-login-logo-icon" src={logo} alt="" aria-hidden="true" />
                 <span>Inventra</span>

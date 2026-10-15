@@ -52,10 +52,10 @@ function HistoryCard({ request, mode, expanded, onToggle }: HistoryCardProps) {
     const extraItems = request.items.length - 2;
 
     return (
-        <article className={`rounded-3xl border-2 bg-white px-6 py-4 shadow-history-card transition-colors max-sm:px-4 ${expanded ? "border-sidebar-indicator" : "border-transparent"}`}>
-            <div className="grid grid-cols-1 items-center gap-x-5 gap-y-4 min-[1100px]:grid-cols-[minmax(150px,0.8fr)_minmax(170px,1fr)_minmax(190px,1.2fr)] min-[1700px]:grid-cols-[230px_250px_minmax(180px,1fr)_200px_auto]">
+        <article className={`rounded-3xl border-2 bg-surface px-6 py-4 shadow-history-card transition-colors max-sm:px-4 ${expanded ? "border-sidebar-indicator" : "border-transparent"}`}>
+            <div className="grid min-w-0 grid-cols-1 items-center gap-x-5 gap-y-4 xl:grid-cols-3 2xl:grid-cols-5 large-text:grid-cols-1">
                 <div className="flex min-w-0 flex-col gap-0.75">
-                    <h3 className="truncate font-k2d text-[19px] font-bold text-sidebar-text">Requisição #{request.id}</h3>
+                    <h3 className="wrap-anywhere font-k2d text-xl font-bold text-sidebar-text">Requisição #{request.id}</h3>
                     <p className="font-k2d text-sm text-login-footer-copy">{formatSummaryDate(request, mode)}</p>
                 </div>
 
@@ -64,8 +64,8 @@ function HistoryCard({ request, mode, expanded, onToggle }: HistoryCardProps) {
                         {getInitials(request.requester.name)}
                     </span>
                     <div className="min-w-0">
-                        <p className="truncate font-k2d text-base font-bold text-sidebar-text">{request.requester.name}</p>
-                        <p className="truncate font-k2d text-sm text-login-footer-copy">
+                        <p className="wrap-anywhere font-k2d text-base font-bold text-sidebar-text">{request.requester.name}</p>
+                        <p className="wrap-anywhere font-k2d text-sm text-login-footer-copy">
                             Aprovador: {request.approver?.name ?? (request.status === "UNDER_REVIEW" ? "Aguardando aprovação" : "—")}
                         </p>
                     </div>
@@ -73,11 +73,11 @@ function HistoryCard({ request, mode, expanded, onToggle }: HistoryCardProps) {
 
                 <div className="flex min-w-0 flex-wrap items-center gap-2" aria-label="Produtos da requisição">
                     {request.items.slice(0, 2).map((item) => (
-                        <span className="inline-flex min-w-0 max-w-full items-center gap-2 rounded-full border border-[#e4def0] bg-history-card-header py-1.5 pl-2 pr-3" key={item.id}>
+                        <span className="inline-flex min-w-0 max-w-full items-center gap-2 rounded-full border border-history-border bg-history-card-header py-1.5 pl-2 pr-3" key={item.id}>
                             <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-sidebar-active font-k2d text-xs font-bold text-sidebar-indicator">
                                 {getFirstLetter(item.product.name)}
                             </span>
-                            <span className="max-w-32 truncate font-k2d text-sm font-medium text-sidebar-text">{item.product.name}</span>
+                            <span className="max-w-32 wrap-anywhere font-k2d text-sm font-medium text-sidebar-text">{item.product.name}</span>
                             <span className="font-k2d text-sm font-bold text-sidebar-indicator">{formatQuantity(item.quantity)}</span>
                         </span>
                     ))}
@@ -88,18 +88,18 @@ function HistoryCard({ request, mode, expanded, onToggle }: HistoryCardProps) {
                     )}
                 </div>
 
-                <div className="min-w-0 min-[1100px]:col-span-2 min-[1700px]:col-span-1">
-                    <p className="font-k2d text-[13px] text-login-footer-copy">Motivo</p>
-                    <p className="truncate font-k2d text-sm text-sidebar-text">{request.reason || "—"}</p>
+                <div className="min-w-0 xl:col-span-2 2xl:col-span-1 large-text:col-span-1">
+                    <p className="font-k2d text-sm text-login-footer-copy">Motivo</p>
+                    <p className="wrap-anywhere font-k2d text-sm text-sidebar-text">{request.reason || "—"}</p>
                 </div>
 
-                <div className="flex items-center justify-between gap-3 min-[1100px]:col-span-2 min-[1700px]:col-span-1 min-[1700px]:justify-end">
+                <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 xl:col-span-2 2xl:col-span-1 2xl:justify-end large-text:col-span-1 large-text:justify-between">
                     <HistoryStatusBadge status={request.status} />
                     <button
                         aria-label={`${expanded ? "Recolher" : "Expandir"} requisição #${request.id}`}
                         aria-controls={detailsId}
                         aria-expanded={expanded}
-                        className={`flex size-9.5 shrink-0 items-center justify-center rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sidebar-indicator ${expanded ? "bg-sidebar-active" : "bg-history-card-header hover:bg-sidebar-active"}`}
+                        className={`flex size-11 shrink-0 items-center justify-center rounded-full border border-history-border transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sidebar-indicator ${expanded ? "bg-sidebar-active" : "bg-history-card-header hover:bg-sidebar-active"}`}
                         onClick={onToggle}
                         type="button"
                     >
@@ -108,20 +108,20 @@ function HistoryCard({ request, mode, expanded, onToggle }: HistoryCardProps) {
                 </div>
             </div>
 
-            <div className="mt-4 border-t border-[#edeaf5] pt-4" id={detailsId} hidden={!expanded}>
+            <div className="mt-4 border-t border-history-border pt-4" id={detailsId} hidden={!expanded}>
                 {expanded && (
-                    <div className="flex flex-col gap-5 lg:flex-row lg:gap-10">
-                        <dl className="flex shrink-0 flex-col gap-3 lg:w-70">
+                    <div className="flex min-w-0 flex-col gap-5 lg:flex-row lg:gap-10 large-text:flex-col">
+                        <dl className="flex min-w-0 shrink-0 flex-col gap-3 lg:w-70 large-text:w-full">
                             <div>
-                                <dt className="font-k2d text-[13px] text-login-footer-copy">Motivo da requisição</dt>
+                                <dt className="font-k2d text-sm text-login-footer-copy">Motivo da requisição</dt>
                                 <dd className="break-words font-k2d text-base text-sidebar-text">{request.reason || "—"}</dd>
                             </div>
                             <div>
-                                <dt className="font-k2d text-[13px] text-login-footer-copy">Solicitante</dt>
+                                <dt className="font-k2d text-sm text-login-footer-copy">Solicitante</dt>
                                 <dd className="break-words font-k2d text-base text-sidebar-text">{request.requester.name}</dd>
                             </div>
                             <div>
-                                <dt className="font-k2d text-[13px] text-login-footer-copy">Aprovador</dt>
+                                <dt className="font-k2d text-sm text-login-footer-copy">Aprovador</dt>
                                 <dd className="break-words font-k2d text-base text-sidebar-text">
                                     {request.approver?.name ?? (request.status === "UNDER_REVIEW" ? "Aguardando aprovação" : "—")}
                                     {mode === "withdrawal" && request.status === "APPROVED" && request.approvedAt && (
@@ -131,9 +131,10 @@ function HistoryCard({ request, mode, expanded, onToggle }: HistoryCardProps) {
                             </div>
                         </dl>
 
-                        <div className="min-w-0 flex-1 overflow-x-auto">
+                        <div className="min-w-0 flex-1 overflow-x-auto rounded-xl" tabIndex={0} role="region" aria-label={`Itens da requisição ${request.id}; tabela com rolagem horizontal`}>
                             <table className={`w-full border-collapse text-left font-k2d ${mode === "purchase" ? "min-w-190" : "min-w-130"}`}>
-                                <thead className="bg-history-card-header text-[13px] text-login-footer-copy">
+                                <caption className="sr-only">Itens da requisição {request.id}</caption>
+                                <thead className="bg-history-card-header text-sm text-login-footer-copy">
                                     <tr>
                                         <th className="rounded-l-xl px-3 py-2 font-medium" scope="col">Produto</th>
                                         <th className="px-3 py-2 font-medium" scope="col">Qtd.</th>
@@ -148,15 +149,15 @@ function HistoryCard({ request, mode, expanded, onToggle }: HistoryCardProps) {
                                 </thead>
                                 <tbody>
                                     {request.items.map((item) => (
-                                        <tr className="border-b border-[#edeaf5] last:border-0" key={item.id}>
+                                        <tr className="border-b border-history-border last:border-0" key={item.id}>
                                             <td className="px-3 py-2.5">
                                                 <div className="flex items-center gap-3">
                                                     <span className="flex size-9.5 shrink-0 items-center justify-center rounded-xl bg-sidebar-active font-k2d text-sm font-bold text-sidebar-indicator">
                                                         {getFirstLetter(item.product.name)}
                                                     </span>
                                                     <span className="min-w-0">
-                                                        <span className="block truncate font-k2d text-sm font-bold text-sidebar-text">{item.product.name}</span>
-                                                        <span className="block truncate font-k2d text-[13px] text-login-footer-copy">{item.product.brand}</span>
+                                                        <span className="block wrap-anywhere font-k2d text-sm font-bold text-sidebar-text">{item.product.name}</span>
+                                                        <span className="block wrap-anywhere font-k2d text-sm text-login-footer-copy">{item.product.brand}</span>
                                                     </span>
                                                 </div>
                                             </td>

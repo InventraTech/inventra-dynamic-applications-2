@@ -10,27 +10,23 @@ const statusLabels: Record<RequisitionStatus, string> = {
 };
 
 const statusStyles: Record<RequisitionStatus, string> = {
-    APPROVED: "bg-[#e7f5ec] text-history-status-complete-text",
-    UNDER_REVIEW: "bg-[#fff3d4] text-[#8a6200]",
+    APPROVED: "bg-history-status-complete-bg text-history-status-complete-text",
+    UNDER_REVIEW: "bg-history-status-observation-bg text-history-status-observation-text",
     REJECTED: "bg-history-status-pending-bg text-history-status-pending-text",
-    CANCELLED: "bg-[#f0edf5] text-history-muted",
+    CANCELLED: "bg-history-card-header text-history-muted",
 };
 
-const statusIndicatorStyles: Record<RequisitionStatus, string> = {
-    APPROVED: "",
-    UNDER_REVIEW: "bg-[#d9ae00]",
-    REJECTED: "bg-history-status-pending-text",
-    CANCELLED: "bg-[#d9ae00]",
+const statusIcons: Record<RequisitionStatus, string> = {
+    APPROVED: "✓",
+    UNDER_REVIEW: "…",
+    REJECTED: "×",
+    CANCELLED: "−",
 };
 
 function HistoryStatusBadge({ status }: HistoryStatusBadgeProps) {
     return (
-        <span className={`inline-flex shrink-0 items-center gap-1.75 rounded-full px-3 py-1.5 font-k2d text-sm font-bold whitespace-nowrap ${statusStyles[status]}`}>
-            {status === "APPROVED" ? (
-                <img src={approvedIcon} alt="" aria-hidden="true" width={16} height={16} />
-            ) : (
-                <span className={`size-4 rounded-full ${statusIndicatorStyles[status]}`} aria-hidden="true" />
-            )}
+        <span className={`inline-flex max-w-full items-center gap-2 rounded-full border border-current px-3 py-1.5 font-k2d text-sm font-bold ${statusStyles[status]}`}>
+            {status === "APPROVED" ? <span className="size-4 shrink-0 mask-contain mask-no-repeat bg-current" style={{ maskImage: `url(${approvedIcon})` }} aria-hidden="true" /> : <span aria-hidden="true">{statusIcons[status]}</span>}
             {statusLabels[status]}
         </span>
     );

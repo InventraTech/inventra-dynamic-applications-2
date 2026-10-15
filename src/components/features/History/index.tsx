@@ -41,8 +41,6 @@ function HistoryContent({ mode }: HistoryProps) {
         if (!session || session.user.kitchen) return;
 
         const controller = new AbortController();
-        setCheckingKitchen(true);
-        setKitchenFailure(null);
 
         getCurrentUser(controller.signal)
             .then((user) => {
@@ -93,7 +91,7 @@ function HistoryContent({ mode }: HistoryProps) {
 
     return (
         <section className="flex min-h-0 min-w-0 flex-1 flex-col gap-4 overflow-y-auto px-10 pb-10 pt-8 max-xl:px-6 max-md:px-4 max-sm:px-3">
-            <div className="flex shrink-0 flex-col items-stretch gap-3 min-[1280px]:flex-row min-[1280px]:items-center min-[1280px]:justify-between">
+            <div className="flex shrink-0 flex-col items-stretch gap-3 xl:flex-row xl:items-center xl:justify-between large-text:flex-col large-text:items-stretch">
                 <HistoryTabs mode={mode} />
                 <HistorySearch
                     mode={mode}
@@ -110,7 +108,11 @@ function HistoryContent({ mode }: HistoryProps) {
                 canCreateKitchen={canCreateKitchen}
                 canRetry={Boolean(session)}
                 search={search}
-                onRetry={() => setRetryKey((key) => key + 1)}
+                onRetry={() => {
+                    setCheckingKitchen(Boolean(session && !session.user.kitchen));
+                    setKitchenFailure(null);
+                    setRetryKey((key) => key + 1);
+                }}
                 onClearSearch={() => setSearchState({ mode, value: "" })}
             />
         </section>

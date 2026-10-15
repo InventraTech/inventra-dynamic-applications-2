@@ -6,4 +6,6 @@ export interface TopbarProps {
     userRole?: string;
     searchPlaceholder?: string;
     hasNotifications?: boolean;
+    onSearch?: (value: string) => void;
+    onNotifications?: () => void;
 }

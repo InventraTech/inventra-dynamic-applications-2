@@ -1,3 +1,14 @@
+#vlibras-wrapper,
 #vlibras-access-wrapper {
     display: none;
+}
+
+html[data-accessibility-libras="true"] #vlibras-wrapper,
+html[data-accessibility-libras="true"] #vlibras-access-wrapper {
+    display: block;
+}
+
+#vlibras-wrapper [vw-plugin-wrapper] {
+    max-width: calc(100vw - 2rem);
+    max-height: calc(100dvh - 2rem);
 }

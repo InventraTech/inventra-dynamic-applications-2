@@ -11,7 +11,7 @@ function LoginFeatureItem({ icon, title, description }: LoginFeatureItemProps) {
                 <img className="h-1/2 w-1/2 object-contain" src={icon} alt="" aria-hidden="true" />
             </span>
             <span className="flex min-w-0 w-login-feature-copy-width flex-col gap-login-feature-copy-gap leading-tight">
-                <strong className="text-login-feature-title font-bold text-white">{title}</strong>
+                <strong className="text-login-feature-title font-bold text-on-brand">{title}</strong>
                 <span className="text-login-feature-copy text-login-copy">{description}</span>
             </span>
         </div>
