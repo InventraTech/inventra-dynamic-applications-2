@@ -26,10 +26,7 @@ export async function getHistoryRequests(
     );
 
     const requestedType = mode === "purchase" ? "PURCHASE" : "CONSUMPTION";
-    const relevantRequisitions = requisitions.filter((requisition) =>
-        requisition.type === requestedType &&
-        (mode === "purchase" || requisition.status === "APPROVED"),
-    );
+    const relevantRequisitions = requisitions.filter((requisition) => requisition.type === requestedType);
 
     const requisitionsWithItems = await mapInBatches(relevantRequisitions, 8, async (requisition) => ({
         requisition,

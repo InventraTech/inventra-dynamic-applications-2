@@ -2,6 +2,7 @@
 @import "./styles/accessibility.css";
 
 @custom-variant large-text (&:where([data-accessibility-large-text="true"], [data-accessibility-large-text="true"] *));
+@custom-variant dyslexia-font (&:where([data-accessibility-font="readable"], [data-accessibility-font="readable"] *));
 @custom-variant adjusted-contrast (&:where([data-accessibility-contrast]:not([data-accessibility-contrast="normal"]), [data-accessibility-contrast]:not([data-accessibility-contrast="normal"]) *));
 
 :root {

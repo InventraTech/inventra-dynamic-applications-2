@@ -49,11 +49,10 @@ function formatProductQuantity(item: HistoryItem): string {
 
 function HistoryCard({ request, mode, expanded, onToggle }: HistoryCardProps) {
     const detailsId = `history-request-${mode}-${request.id}-details`;
-    const extraItems = request.items.length - 2;
 
     return (
         <article className={`rounded-3xl border-2 bg-surface px-6 py-4 shadow-history-card transition-colors max-sm:px-4 ${expanded ? "border-sidebar-indicator" : "border-transparent"}`}>
-            <div className="grid min-w-0 grid-cols-1 items-center gap-x-5 gap-y-4 xl:grid-cols-3 2xl:grid-cols-5 large-text:grid-cols-1">
+            <div className="grid min-w-0 grid-cols-1 items-center gap-x-5 gap-y-4 xl:grid-cols-4 large-text:grid-cols-1">
                 <div className="flex min-w-0 flex-col gap-0.75">
                     <h3 className="wrap-anywhere font-k2d text-xl font-bold text-sidebar-text">Requisição #{request.id}</h3>
                     <p className="font-k2d text-sm text-login-footer-copy">{formatSummaryDate(request, mode)}</p>
@@ -71,29 +70,12 @@ function HistoryCard({ request, mode, expanded, onToggle }: HistoryCardProps) {
                     </div>
                 </div>
 
-                <div className="flex min-w-0 flex-wrap items-center gap-2" aria-label="Produtos da requisição">
-                    {request.items.slice(0, 2).map((item) => (
-                        <span className="inline-flex min-w-0 max-w-full items-center gap-2 rounded-full border border-history-border bg-history-card-header py-1.5 pl-2 pr-3" key={item.id}>
-                            <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-sidebar-active font-k2d text-xs font-bold text-sidebar-indicator">
-                                {getFirstLetter(item.product.name)}
-                            </span>
-                            <span className="max-w-32 wrap-anywhere font-k2d text-sm font-medium text-sidebar-text">{item.product.name}</span>
-                            <span className="font-k2d text-sm font-bold text-sidebar-indicator">{formatQuantity(item.quantity)}</span>
-                        </span>
-                    ))}
-                    {extraItems > 0 && (
-                        <span className="rounded-full bg-sidebar-active px-3 py-1.5 font-k2d text-sm font-bold text-sidebar-indicator">
-                            +{extraItems} {extraItems === 1 ? "item" : "itens"}
-                        </span>
-                    )}
+                <div className="min-w-0 xl:text-right">
+                    <p className="font-k2d text-sm text-login-footer-copy">Total estimado</p>
+                    <p className="wrap-anywhere font-k2d text-base font-bold text-sidebar-text">{formatCurrency(request.estimatedTotal)}</p>
                 </div>
 
-                <div className="min-w-0 xl:col-span-2 2xl:col-span-1 large-text:col-span-1">
-                    <p className="font-k2d text-sm text-login-footer-copy">Motivo</p>
-                    <p className="wrap-anywhere font-k2d text-sm text-sidebar-text">{request.reason || "—"}</p>
-                </div>
-
-                <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 xl:col-span-2 2xl:col-span-1 2xl:justify-end large-text:col-span-1 large-text:justify-between">
+                <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 xl:justify-end large-text:justify-between">
                     <HistoryStatusBadge status={request.status} />
                     <button
                         aria-label={`${expanded ? "Recolher" : "Expandir"} requisição #${request.id}`}

@@ -25,16 +25,16 @@ function Sidebar({ logo, logoMark, menuSections = [], fixo, setFixo }: SidebarPr
             : "pointer-events-none opacity-0 group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:opacity-100";
 
         return (
-            <header className={`relative flex h-24 w-full shrink-0 items-center overflow-hidden transition-all duration-300 ease-out motion-reduce:transition-none ${layout}`}>
+            <header className={`relative flex h-24 w-full shrink-0 items-center overflow-hidden transition-all duration-300 ease-out motion-reduce:transition-none dyslexia-font:h-auto dyslexia-font:min-h-24 dyslexia-font:flex-wrap dyslexia-font:justify-start dyslexia-font:gap-2 dyslexia-font:overflow-visible dyslexia-font:py-3 ${layout}`}>
                 <img className="size-16 shrink-0 object-contain" src={logo} alt="Inventra" />
-                <span className={`overflow-hidden whitespace-nowrap font-k2d text-sidebar-logo font-bold leading-none text-sidebar-purple sidebar-label-transition ${wordmark}`}>
+                <span className={`overflow-hidden whitespace-nowrap font-k2d text-sidebar-logo font-bold leading-none text-sidebar-purple sidebar-label-transition dyslexia-font:flex-1 dyslexia-font:max-w-full dyslexia-font:overflow-visible dyslexia-font:whitespace-normal dyslexia-font:wrap-anywhere ${wordmark}`}>
                     {logoMark}
                 </span>
                 {showToggle && (
                     <Button
                         variant="icon"
                         type="button"
-                        className={`absolute right-3 top-1/2 size-11 -translate-y-1/2 rounded-2xl text-sidebar-purple transition-opacity duration-200 ease-out motion-reduce:transition-none focus-visible:outline-brand ${toggleVisibility}`}
+                        className={`absolute right-3 top-1/2 size-11 -translate-y-1/2 rounded-2xl text-sidebar-purple transition-opacity duration-200 ease-out motion-reduce:transition-none focus-visible:outline-brand dyslexia-font:static dyslexia-font:ml-auto dyslexia-font:translate-y-0 ${toggleVisibility}`}
                         aria-label={fixo ? "Desafixar sidebar" : "Fixar sidebar"}
                         aria-pressed={fixo}
                         title={fixo ? "Desafixar sidebar" : "Fixar sidebar"}
@@ -65,8 +65,8 @@ function Sidebar({ logo, logoMark, menuSections = [], fixo, setFixo }: SidebarPr
             <nav className="flex min-w-0 w-full flex-col gap-7" aria-label="Navegação principal">
                 {menuSections.map((section) => (
                     <section className="flex min-w-0 flex-col gap-2.5" key={section.sectionTitle}>
-                        <div className={`flex h-5 w-full items-center overflow-hidden large-text:h-auto large-text:min-h-5 ${headingLayout}`}>
-                            <h2 className={`shrink-0 overflow-hidden font-k2d text-sidebar-label font-bold uppercase leading-5 tracking-sidebar-label text-sidebar-label sidebar-label-transition large-text:shrink ${label}`}>{section.sectionTitle}</h2>
+                        <div className={`flex h-5 w-full items-center overflow-hidden large-text:h-auto large-text:min-h-5 dyslexia-font:h-auto dyslexia-font:min-h-5 dyslexia-font:flex-wrap dyslexia-font:overflow-visible ${headingLayout}`}>
+                            <h2 className={`shrink-0 overflow-hidden font-k2d text-sidebar-label font-bold uppercase leading-5 tracking-sidebar-label text-sidebar-label sidebar-label-transition large-text:shrink dyslexia-font:h-auto dyslexia-font:min-h-5 dyslexia-font:flex-wrap dyslexia-font:overflow-visible ${label}`}>{section.sectionTitle}</h2>
                             <span className={`h-px ${dividerLayout} ${dividerColor}`} aria-hidden="true" />
                         </div>
                         <ul className="flex flex-col gap-1">
@@ -76,7 +76,7 @@ function Sidebar({ logo, logoMark, menuSections = [], fixo, setFixo }: SidebarPr
                                             {({ isActive }) => <>
                                                 {isActive && <span className="absolute left-0 top-4 h-7 w-1 rounded-r-sidebar-indicator bg-sidebar-indicator" aria-hidden="true" />}
                                                 <img className="h-9.5 w-10.75 shrink-0 object-contain" src={option.pageIcon} alt="" />
-                                                <span className={`min-w-0 overflow-hidden sidebar-label-transition ${label}`}>{option.page}</span>
+                                                <span className={`min-w-0 overflow-hidden sidebar-label-transition dyslexia-font:max-w-none dyslexia-font:overflow-visible dyslexia-font:whitespace-normal dyslexia-font:wrap-anywhere ${label}`}>{option.page}</span>
                                             </>}
                                         </NavLink>
                                 </li>

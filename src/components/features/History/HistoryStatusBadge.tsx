@@ -13,7 +13,7 @@ const statusStyles: Record<RequisitionStatus, string> = {
     APPROVED: "bg-history-status-complete-bg text-history-status-complete-text",
     UNDER_REVIEW: "bg-history-status-observation-bg text-history-status-observation-text",
     REJECTED: "bg-history-status-pending-bg text-history-status-pending-text",
-    CANCELLED: "bg-history-card-header text-history-muted",
+    CANCELLED: "bg-history-status-pending-bg text-history-status-pending-text",
 };
 
 const statusIcons: Record<RequisitionStatus, string> = {

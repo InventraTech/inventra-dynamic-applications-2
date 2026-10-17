@@ -48,11 +48,11 @@ interface RegistrationStepItemProps {
 
 function RegistrationStepItem({ step }: RegistrationStepItemProps) {
     return (
-        <li className="flex min-w-0 items-center gap-login-feature-copy-offset">
+        <li className="flex min-w-0 items-center gap-login-feature-copy-offset dyslexia-font:items-start">
             <span className="flex size-login-feature-icon shrink-0 items-center justify-center rounded-login-feature-icon-radius bg-login-field" aria-hidden="true">
                 <img className="h-1/2 w-1/2 object-contain" src={registrationStepIcons[step.icon]} alt="" />
             </span>
-            <span className="flex min-w-0 w-login-feature-copy-width flex-col gap-login-feature-copy-gap leading-tight">
+            <span className="flex min-w-0 w-login-feature-copy-width flex-col gap-login-feature-copy-gap leading-tight dyslexia-font:w-auto dyslexia-font:flex-1 dyslexia-font:wrap-anywhere">
                 <strong className="text-login-feature-title font-bold text-on-brand">{step.title}</strong>
                 <span className="text-login-feature-copy text-login-copy">{step.description}</span>
             </span>
@@ -63,7 +63,7 @@ function RegistrationStepItem({ step }: RegistrationStepItemProps) {
 function RegisterBrandPanel() {
     return (
         <aside
-            className="relative min-h-screen w-login-brand-width large-text:hidden shrink-0 overflow-hidden bg-linear-to-br from-brand-strong to-brand text-on-brand max-lg:h-48 max-lg:min-h-48 max-lg:w-full max-sm:h-14 max-sm:min-h-14"
+            className="relative min-h-screen w-login-brand-width large-text:hidden shrink-0 overflow-hidden bg-linear-to-br from-brand-strong to-brand text-on-brand max-lg:h-48 max-lg:min-h-48 max-lg:w-full max-sm:h-14 max-sm:min-h-14 dyslexia-font:flex dyslexia-font:h-auto dyslexia-font:min-h-0 dyslexia-font:flex-col dyslexia-font:gap-8 dyslexia-font:overflow-visible dyslexia-font:pt-28 dyslexia-font:px-8 dyslexia-font:pb-8 lg:dyslexia-font:min-h-screen max-lg:dyslexia-font:gap-6 max-lg:dyslexia-font:pt-20 max-lg:dyslexia-font:px-6 max-lg:dyslexia-font:pb-6"
             aria-label="Etapas para começar a usar o Inventra"
         >
             <div className="absolute left-login-logo-left top-login-logo-top z-4 flex items-center gap-login-logo-gap text-login-logo font-bold leading-none max-lg:left-6 max-lg:top-4 max-lg:gap-2 max-lg:text-xl sm:max-lg:text-2xl max-sm:left-4 max-sm:top-3">
@@ -71,7 +71,7 @@ function RegisterBrandPanel() {
                 <span>Inventra</span>
             </div>
 
-            <div className="absolute left-login-hero-left top-login-hero-top z-2 w-login-hero-width max-lg:left-6 max-lg:top-14 max-lg:w-login-mobile-hero-width max-sm:top-login-mobile-hero-top-small max-sm:w-4/5 max-sm:sr-only">
+            <div className="absolute left-login-hero-left top-login-hero-top z-2 w-login-hero-width max-lg:left-6 max-lg:top-14 max-lg:w-login-mobile-hero-width max-sm:top-login-mobile-hero-top-small max-sm:w-4/5 max-sm:sr-only dyslexia-font:static dyslexia-font:w-auto dyslexia-font:max-w-none">
                 <span className="mb-login-accent-gap block h-1 w-login-accent-width rounded-full bg-login-accent" aria-hidden="true" />
                 <h2 className="text-login-hero font-bold leading-tight">
                     Bora montar<br />
@@ -82,14 +82,14 @@ function RegisterBrandPanel() {
                 </p>
             </div>
 
-            <ol className="absolute left-login-features-left top-login-features-top z-2 flex w-login-features-width flex-col gap-login-feature-gap max-lg:hidden">
+            <ol className="absolute left-login-features-left top-login-features-top z-2 flex w-login-features-width flex-col gap-login-feature-gap max-lg:hidden dyslexia-font:static dyslexia-font:w-auto dyslexia-font:max-w-none">
                 {registrationSteps.map((step) => <RegistrationStepItem key={step.id} step={step} />)}
             </ol>
 
-            <div className="absolute left-login-hex-left top-login-hex-top z-0 aspect-login-hex w-login-hex-width max-lg:left-auto max-lg:right-login-mobile-hex-right max-lg:top-login-mobile-hex-top max-lg:w-login-mobile-hex-width max-sm:top-login-mobile-hex-top-small max-sm:w-login-mobile-hex-width-small max-sm:hidden" aria-hidden="true">
+            <div className="absolute left-login-hex-left top-login-hex-top z-0 aspect-login-hex w-login-hex-width max-lg:left-auto max-lg:right-login-mobile-hex-right max-lg:top-login-mobile-hex-top max-lg:w-login-mobile-hex-width max-sm:top-login-mobile-hex-top-small max-sm:w-login-mobile-hex-width-small max-sm:hidden dyslexia-font:hidden" aria-hidden="true">
                 <img className="size-full object-contain" src={hexagon} alt="" />
             </div>
-            <div className="absolute left-login-mascot-left top-login-mascot-top z-1 aspect-login-mascot w-login-mascot-width max-lg:left-auto max-lg:right-login-mobile-mascot-right max-lg:top-login-mobile-mascot-top max-lg:w-login-mobile-mascot-width max-sm:hidden" aria-hidden="true">
+            <div className="absolute left-login-mascot-left top-login-mascot-top z-1 aspect-login-mascot w-login-mascot-width max-lg:left-auto max-lg:right-login-mobile-mascot-right max-lg:top-login-mobile-mascot-top max-lg:w-login-mobile-mascot-width max-sm:hidden dyslexia-font:static dyslexia-font:mt-4 dyslexia-font:w-40 dyslexia-font:self-center" aria-hidden="true">
                 <img className="size-full object-contain" src={mascot} alt="" />
             </div>
 
