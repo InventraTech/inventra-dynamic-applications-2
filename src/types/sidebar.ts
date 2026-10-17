@@ -1,4 +1,5 @@
 export interface MenuOption {
+    id?: string;
     page: string;
     pageIcon: string;
     pagePath: string;

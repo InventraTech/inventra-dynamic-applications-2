@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import Button from "../../ui/Button";
 import Input from "../../ui/Input";
 import Mascote from "../../ui/Mascot";
+import Feedback from "../../ui/Feedback";
 import { ApiError } from "../../../services/api";
 import { login } from "../../../services/authService";
 import { saveSession } from "../../../services/authSession";
@@ -27,6 +28,7 @@ function LoginForm() {
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
+        if (isSubmitting) return;
         const submittedFields = new FormData(event.currentTarget);
         const submittedEmail = String(submittedFields.get("email") ?? "").trim();
         const submittedPassword = String(submittedFields.get("password") ?? "");
@@ -60,14 +62,14 @@ function LoginForm() {
     }
 
     return (
-        <section className="relative flex min-h-screen min-w-0 flex-1 items-center justify-center overflow-hidden bg-white px-6 max-lg:min-h-0 max-lg:flex-none max-lg:flex-col max-lg:items-stretch max-lg:justify-start max-lg:overflow-visible max-lg:px-6 max-lg:pb-login-mobile-form-bottom max-lg:pt-login-mobile-form-top" aria-label="Entrar na Inventra">
-            <form className="relative z-2 flex w-login-form-width max-w-login-form-max flex-col gap-login-form-gap max-lg:w-full max-lg:max-w-xl max-lg:gap-4" onSubmit={handleSubmit}>
+        <section className="relative flex min-h-screen min-w-0 flex-1 items-center justify-center bg-surface px-6 py-12 max-lg:min-h-0 max-lg:flex-none max-lg:flex-col max-lg:items-stretch max-lg:justify-start max-lg:px-6 max-lg:pb-login-mobile-form-bottom max-lg:pt-login-mobile-form-top large-text:min-h-0 large-text:items-stretch large-text:py-10 large-text:px-3" aria-label="Entrar na Inventra">
+            <form className="relative z-2 flex w-login-form-width max-w-login-form-max flex-col gap-login-form-gap max-lg:w-full max-lg:max-w-xl max-lg:gap-4 large-text:w-full large-text:max-w-none" onSubmit={handleSubmit} aria-busy={isSubmitting}>
                 <header className="flex items-start justify-between gap-3">
                     <div className="min-w-0 flex-1">
                         <h1 className="text-login-form-title font-bold leading-tight text-login-brand-start">Bem-vindo de volta</h1>
                         <p className="mt-login-form-copy-top text-login-form-copy leading-snug text-login-muted">Entre com sua conta Inventra para continuar.</p>
                     </div>
-                    <Mascote className="mt-0.5 shrink-0" size="compacto" />
+                    <Mascote className="mt-0.5 shrink-0 large-text:hidden" size="compacto" />
                 </header>
 
                 <div className="flex min-w-0 flex-col gap-login-field-gap">
@@ -137,10 +139,11 @@ function LoginForm() {
                 </div>
 
                 <div className="flex min-h-login-options-height flex-wrap items-center justify-between gap-x-3 gap-y-2">
-                    <label className="flex shrink-0 cursor-pointer items-center gap-login-checkbox-gap text-login-options text-login-muted">
+                    <label className="flex min-h-11 min-w-0 cursor-pointer items-center gap-login-checkbox-gap text-login-options text-login-muted" htmlFor="login-remember">
                         <Input
                             variant="checkbox"
                             type="checkbox"
+                            id="login-remember"
                             checked={rememberMe}
                             onChange={(event) => setRememberMe(event.target.checked)}
                         />
@@ -156,7 +159,8 @@ function LoginForm() {
                     </Button>
                 </div>
 
-                {error && <p className="-mt-login-message-offset text-login-message leading-snug text-login-error" id="login-error" role="alert">{error}</p>}
+                {error && <Feedback severity="error" id="login-error">{error}</Feedback>}
+                <p className="sr-only" role="status">{isSubmitting ? "Entrando na sua conta…" : ""}</p>
 
                 <Button
                     variant="primary"
@@ -179,7 +183,7 @@ function LoginForm() {
                     </Link>
                 </div>
 
-                {supportNote && <p className="-mt-login-message-offset text-login-message leading-snug text-login-muted" role="status">{supportNote}</p>}
+                {supportNote && <Feedback>{supportNote}</Feedback>}
             </form>
         </section>
     );

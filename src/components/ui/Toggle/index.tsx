@@ -1,29 +1,21 @@
-interface ToggleProps {
-    enabled: boolean,
-    onToggle: () => void,
-    ariaLabel: string
+import type { ComponentPropsWithoutRef } from "react";
+
+interface ToggleProps extends Omit<ComponentPropsWithoutRef<"button">, "onClick" | "aria-label"> {
+    enabled: boolean;
+    onToggle: () => void;
+    ariaLabel: string;
 }
 
-function Toggle({ enabled, onToggle, ariaLabel }: ToggleProps) {
-    const styles = enabled ? {
-        toggleTrack: "bg-purple-800",
-        toggleThumb: "translate-x-5.5"
-
-    } : {
-        toggleTrack: "bg-gray-300",
-        toggleThumb: ""
-    }
+function Toggle({ enabled, onToggle, ariaLabel, className = "", ...props }: ToggleProps) {
+    const trackColor = enabled
+        ? "bg-brand adjusted-contrast:bg-sidebar-purple"
+        : "bg-gray-300 adjusted-contrast:bg-history-card-header";
 
     return (
-        <main>
-            <button 
-                className={` ${styles.toggleTrack} rounded-full w-14 h-8.5 cursor-pointer flex relative transition-all`}
-                onClick={onToggle}
-                aria-label={ariaLabel}>
-                <span className={`${styles.toggleThumb} bg-white rounded-full h-6.5 w-6.5 absolute top-1 left-1 transition-transform duration-250`}></span>
-            </button>
-        </main>
-    )
+        <button {...props} className={`relative flex h-8.5 w-14 shrink-0 cursor-pointer rounded-full transition-all focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-sidebar-purple disabled:cursor-not-allowed disabled:opacity-50 ${trackColor} ${className}`} onClick={onToggle} type="button" role="switch" aria-checked={enabled} aria-label={ariaLabel}>
+            <span className={`absolute left-1 top-1 size-6.5 rounded-full bg-white transition-transform duration-250 adjusted-contrast:bg-surface ${enabled ? "translate-x-5.5" : "translate-x-0"}`} aria-hidden="true" />
+        </button>
+    );
 }
 
 export default Toggle;

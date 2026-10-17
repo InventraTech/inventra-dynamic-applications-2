@@ -16,6 +16,7 @@ export interface RequisitionDto {
     } | null;
     createdAt: string;
     approvedAt?: string | null;
+    estimatedTotal?: number | null;
 }
 
 export interface RequisitionItemDto {

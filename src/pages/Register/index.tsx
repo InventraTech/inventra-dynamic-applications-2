@@ -4,7 +4,7 @@ import RegisterFeature from "../../components/features/Register";
 import { getSession } from "../../services/authSession";
 
 function Register() {
-    if (getSession()) return <Navigate to="/historico" replace />;
+    if (getSession()) return <Navigate to="/home" replace />;
 
     return <RegisterFeature />;
 }
