@@ -7,17 +7,29 @@ import Historico from "../pages/Historic";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import KitchenRegistration from "../pages/KitchenRegistration";
+import Accessibility from "../pages/Accessibility";
+import NotFound from "../pages/NotFound";
+import RouteAccessibility from "../components/layout/RouteAccessibility";
+import PublicLayout from "./PublicLayout";
 
 export default function AppRoutes() {
     return (
         <BrowserRouter>
+            <RouteAccessibility />
             <Routes>
                 {/* Páginas Públicas */}
-                <Route path="/" element={<Login />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/cadastro" element={<Register />} />
-                <Route path="/cadastro/cozinha" element={<KitchenRegistration />} />
-                <Route path="/accessibilityconfig" element={<Home />} />
+                <Route element={<PublicLayout />}>
+                    <Route path="/" element={<Login />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/cadastro" element={<Register />} />
+                    <Route path="/cadastro/cozinha" element={<KitchenRegistration />} />
+                    <Route path="/accessibilityconfig" element={<Navigate to="/acessibilidade" replace />} />
+                    <Route path="*" element={<NotFound />} />
+                </Route>
+
+                <Route element={<PrivateRoute allowPublic />}>
+                    <Route path="/acessibilidade" element={<Accessibility />} />
+                </Route>
 
                 {/* Páginas Privadas */}
                 <Route element={<PrivateRoute />}>

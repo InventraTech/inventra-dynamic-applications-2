@@ -31,7 +31,7 @@ function Historico({ mode }: HistoryProps) {
                 userName={userName}
                 userRole={userRole}
             />
-            <HistoryContent mode={mode} />
+            <main id="conteudo-principal" tabIndex={-1} className="min-w-0"><HistoryContent mode={mode} /></main>
         </div>
     );
 }

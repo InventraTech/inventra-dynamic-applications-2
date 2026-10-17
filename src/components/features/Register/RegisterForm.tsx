@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import supervisorIcon from "../../../assets/icons/supervisor.svg";
 import Button from "../../ui/Button";
 import Input from "../../ui/Input";
+import Feedback from "../../ui/Feedback";
+import { focusFirstInvalidField } from "../../../utils/formAccessibility";
 import { ApiError } from "../../../services/api";
 import { register } from "../../../services/authService";
 import { saveSession } from "../../../services/authSession";
@@ -41,7 +43,7 @@ function RegistrationField({ id, label }: RegistrationFieldProps) {
 
 function FieldError({ id, message }: { id: string; message?: string }) {
     if (!message) return null;
-    return <p className="text-sm leading-snug text-login-error" id={id} role="alert">{message}</p>;
+    return <Feedback severity="error" id={id}>{message}</Feedback>;
 }
 
 function EyeIcon({ visible }: { visible: boolean }) {
@@ -72,12 +74,12 @@ function PasswordStrength({ password }: { password: string }) {
             <div className="flex gap-login-field-gap" aria-hidden="true">
                 {[0, 1, 2, 3].map((segment) => (
                     <span
-                        className={`h-1.5 flex-1 rounded-full ${segment < strength ? "bg-history-status-complete-text" : "bg-[#e4def0]"}`}
+                        className={`h-1.5 flex-1 rounded-full ${segment < strength ? "bg-history-status-complete-text" : "bg-history-avatar"}`}
                         key={segment}
                     />
                 ))}
             </div>
-            <p className="text-login-message leading-snug text-login-muted">
+            <p className="text-login-message leading-snug text-login-muted max-sm:sr-only">
                 Use de 8 a 100 caracteres. Quanto mais longa, mais forte.
             </p>
         </div>
@@ -114,7 +116,7 @@ function PasswordInput({
             <RegistrationField id={id} label={label} />
             <div className="relative min-w-0">
                 <Input
-                    className="pr-12"
+                    className="pr-12 max-sm:min-h-11"
                     id={id}
                     name={name}
                     type={visible ? "text" : "password"}
@@ -148,9 +150,9 @@ function PasswordInput({
 
 function RegistrationProgress() {
     return (
-        <p className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-sidebar-active px-2.5 py-1 text-login-message font-bold leading-tight text-login-brand-end">
+        <p className="inline-flex min-w-0 flex-wrap items-center gap-1.5 rounded-full bg-sidebar-active px-2.5 py-1 text-login-message font-bold leading-tight text-login-brand-end">
             <img className="h-5 w-auto shrink-0 object-contain" src={supervisorIcon} alt="" aria-hidden="true" />
-            Etapa 1 de 2 · Conta de supervisor
+            Etapa 1/2
         </p>
     );
 }
@@ -179,12 +181,13 @@ function RegisterForm() {
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
+        if (isSubmitting) return;
         const validation = validateRegistration({ ...form, accessType: "SUPERVISOR" });
         setFieldErrors(validation.errors);
         setRequestError(null);
         setTermsError(form.acceptedTerms ? null : "Aceite os termos para continuar.");
 
-        if (!validation.request || !form.acceptedTerms) return;
+        if (!validation.request || !form.acceptedTerms) { focusFirstInvalidField(event.currentTarget); return; }
 
         setIsSubmitting(true);
         let accountCreated = false;
@@ -214,17 +217,17 @@ function RegisterForm() {
 
     return (
         <section
-            className="relative flex min-h-screen min-w-0 flex-1 items-center justify-center overflow-x-hidden overflow-y-auto bg-white px-6 max-lg:min-h-0 max-lg:flex-none max-lg:flex-col max-lg:items-stretch max-lg:justify-start max-lg:overflow-visible max-lg:px-6 max-lg:pb-login-mobile-form-bottom max-lg:pt-login-mobile-form-top"
+            className="relative flex min-h-screen min-w-0 flex-1 items-center justify-center bg-surface px-6 py-12 [@media(min-width:64rem)_and_(max-height:50rem)]:py-0 max-lg:min-h-0 max-lg:flex-none max-lg:flex-col max-lg:items-stretch max-lg:justify-start max-lg:px-6 max-lg:py-8 max-sm:px-4 max-sm:py-1 large-text:min-h-0 large-text:items-stretch large-text:py-10 large-text:px-3"
             aria-label="Criar conta de supervisor"
         >
-            <div className="relative z-2 w-login-form-width max-w-login-form-max max-lg:w-full max-lg:max-w-xl">
-                <form className="flex flex-col gap-login-form-gap max-lg:gap-4" onSubmit={handleSubmit} noValidate>
+            <div className="relative z-2 min-w-0 w-login-form-width max-w-login-form-max max-lg:w-full max-lg:max-w-xl large-text:w-full large-text:max-w-none">
+                <form className="flex min-w-0 flex-col gap-login-form-gap [@media(min-width:64rem)_and_(max-height:50rem)]:gap-4 max-lg:gap-4 max-sm:gap-1" onSubmit={handleSubmit} noValidate aria-busy={isSubmitting}>
                     <header>
-                        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+                        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 max-sm:gap-x-2 max-sm:gap-y-1">
                             <h1 className="min-w-0 flex-1 text-login-form-title font-bold leading-tight text-login-brand-start">Crie sua conta</h1>
                             <RegistrationProgress />
                         </div>
-                        <p className="mt-login-form-copy-top text-login-form-copy leading-snug text-login-muted">
+                        <p className="mt-login-form-copy-top text-login-form-copy leading-snug text-login-muted max-sm:sr-only">
                             Crie sua conta de supervisor. Depois você monta a sua cozinha.
                         </p>
                     </header>
@@ -232,6 +235,7 @@ function RegisterForm() {
                     <div className="flex min-w-0 flex-col gap-login-field-gap">
                         <RegistrationField id="register-name" label="Nome completo" />
                         <Input
+                            className="max-sm:min-h-11"
                             id="register-name"
                             name="name"
                             autoComplete="name"
@@ -249,6 +253,7 @@ function RegisterForm() {
                     <div className="flex min-w-0 flex-col gap-login-field-gap">
                         <RegistrationField id="register-email" label="E-mail" />
                         <Input
+                            className="max-sm:min-h-11"
                             id="register-email"
                             name="email"
                             type="email"
@@ -311,7 +316,7 @@ function RegisterForm() {
 
                     {requestError && (
                         <div className="flex flex-col gap-2">
-                            <p className="text-sm leading-snug text-login-error" role="alert">{requestError}</p>
+                            <Feedback severity="error">{requestError}</Feedback>
                             {requestError.includes("Entre com ela") && (
                                 <Link className="w-fit font-bold text-login-brand-end underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-login-brand-start focus-visible:outline-offset-4" to="/login">
                                     Ir para entrar
@@ -323,6 +328,7 @@ function RegisterForm() {
                     {isSubmitting && <p className="sr-only" role="status" aria-live="polite">Criando sua conta…</p>}
 
                     <Button variant="primary"
+                        className="max-sm:min-h-11 max-sm:py-2"
                         type="submit"
                         disabled={isSubmitting}
                     >

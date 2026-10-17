@@ -1,57 +1,27 @@
 import accent from "../../../assets/images/onda-topbar.svg";
-import searchIcon from "../../../assets/icons/busca.svg";
 import notificationIcon from "../../../assets/icons/sino.svg";
 import type { TopbarProps } from "../../../types/topbar";
 import Button from "../../ui/Button";
+import SearchField from "../../ui/SearchField";
 
-function Topbar({
-    title,
-    description,
-    userInitials = "FJ",
-    userName = "fulano jr.",
-    userRole = "Gerente estoque",
-    searchPlaceholder = "Buscar produtos, lotes, cozinhas…",
-    hasNotifications = false,
-}: TopbarProps) {
+function Topbar({ title, description, userInitials = "IN", userName = "Usuário", userRole = "", searchPlaceholder = "Buscar produtos, lotes, cozinhas…", hasNotifications = false, onSearch, onNotifications }: TopbarProps) {
     return (
-        <header className="relative flex h-20 min-h-20 w-full shrink-0 items-start justify-between overflow-hidden bg-topbar-surface px-10 py-4 max-lg:px-6 max-md:px-4">
-            <div className="relative z-10 flex h-full shrink-0 flex-col justify-center gap-2 whitespace-nowrap text-black max-md:max-w-44">
-                <h1 className="font-k2d text-topbar-title font-bold leading-none max-md:text-xl">{title}</h1>
-                <p className="font-k2d text-topbar-description leading-none max-md:hidden">{description}</p>
+        <header className="relative isolate grid min-h-20 min-w-0 grid-cols-1 items-center gap-4 overflow-hidden bg-topbar-surface px-10 py-4 xl:grid-cols-[minmax(0,1fr)_auto] max-lg:px-6 max-md:px-4 large-text:grid-cols-1">
+            <div className="relative z-10 min-w-0 text-ink">
+                <h1 className="font-k2d text-topbar-title font-bold leading-tight wrap-anywhere">{title}</h1>
+                <p className="mt-1 font-k2d text-topbar-description leading-normal wrap-anywhere">{description}</p>
             </div>
-
-            <img className="topbar-accent absolute right-0 top-0 z-1" src={accent} alt="" aria-hidden="true" />
-
-            <div className="absolute right-7 top-4 z-10 flex items-center gap-4 whitespace-nowrap max-lg:right-5 max-md:right-4 max-md:gap-2">
-                <label className="flex h-11 w-75 items-center gap-2.5 overflow-hidden rounded-full border border-topbar-border bg-topbar-search px-4 max-lg:w-60 max-md:h-10 max-md:w-10 max-md:justify-center max-md:px-2.5">
-                    <img className="size-4.5 shrink-0 brightness-0 invert opacity-80" src={searchIcon} alt="" aria-hidden="true" />
-                    <input
-                        className="min-w-0 flex-1 bg-transparent font-k2d text-topbar-search text-topbar-placeholder outline-none placeholder:text-topbar-placeholder max-md:hidden"
-                        type="search"
-                        aria-label="Buscar"
-                        placeholder={searchPlaceholder}
-                    />
-                </label>
-
-                <Button
-                    className="relative size-11 shrink-0 rounded-full bg-white/12 text-white hover:bg-white/20 focus-visible:outline-white"
-                    variant="icon"
-                    type="button"
-                    aria-label={hasNotifications ? "Abrir notificações. Há notificações." : "Abrir notificações"}
-                >
-                    <img className="size-6" src={notificationIcon} alt="" aria-hidden="true" />
-                    {hasNotifications && (
-                        <span className="absolute right-1.5 top-1.5 size-3 rounded-full border-2 border-[#3e0490] bg-login-gold" aria-hidden="true" />
-                    )}
+            <img className="topbar-accent pointer-events-none absolute right-0 bottom-0 -z-10 h-11/10 w-192 max-lg:w-158 max-md:w-105 max-xl:hidden large-text:hidden" src={accent} alt="" />
+            <div className="relative flex min-w-0 flex-wrap items-center gap-3 rounded-2xl bg-brand px-3 py-2 xl:bg-transparent xl:p-0 large-text:bg-brand large-text:px-3 large-text:py-2">
+                <SearchField className="w-75 max-w-full flex-1" variant="brand" label="Buscar no Inventra" placeholder={searchPlaceholder} onChange={(event) => onSearch?.(event.target.value)} />
+                <Button className="relative min-h-11 min-w-11 shrink-0 rounded-full bg-white/12 text-on-brand hover:bg-white/20 focus-visible:outline-on-brand" variant="icon" type="button" onClick={onNotifications} aria-label={hasNotifications ? "Notificações. Há notificações." : "Notificações"}>
+                    <img className="size-6" src={notificationIcon} alt="" />
+                    {hasNotifications && <span className="absolute right-1.5 top-1.5 size-3 rounded-full border-2 border-brand-strong bg-login-gold" aria-hidden="true" />}
                 </Button>
-
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-white/35 bg-topbar-purple max-md:h-10 max-md:w-10">
-                    <span className="font-k2d text-topbar-user font-bold text-white max-md:text-sm">{userInitials}</span>
-                </div>
-
-                <div className="flex flex-col items-start gap-0.5 font-k2d leading-normal max-md:hidden">
-                    <span className="text-topbar-user font-bold text-white">{userName}</span>
-                    <span className="text-topbar-role text-topbar-placeholder">{userRole}</span>
+                <div className="flex size-11 shrink-0 items-center justify-center rounded-full border-2 border-white/50 bg-brand text-sm font-bold text-on-brand" aria-hidden="true">{userInitials}</div>
+                <div className="min-w-0 font-k2d text-on-brand max-sm:w-full">
+                    <p className="text-topbar-user font-bold leading-normal wrap-anywhere">{userName}</p>
+                    <p className="text-topbar-role leading-normal wrap-anywhere">{userRole}</p>
                 </div>
             </div>
         </header>
