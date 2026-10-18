@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Navigate, Outlet, Routes, Route } from "react-router-dom";
 
 import PrivateRoute from "./PrivateRoute";
 
@@ -9,8 +9,19 @@ import Register from "../pages/Register";
 import KitchenRegistration from "../pages/KitchenRegistration";
 import Accessibility from "../pages/Accessibility";
 import NotFound from "../pages/NotFound";
+import TeamAccess from "../pages/TeamAccess";
 import RouteAccessibility from "../components/layout/RouteAccessibility";
 import PublicLayout from "./PublicLayout";
+import { getSession } from "../services/authSession";
+
+function SupervisorOnlyRoute() {
+    const profile = getSession()?.user.profile;
+    const accessType = typeof profile === "string" ? profile : profile?.accessType;
+
+    return accessType?.toLocaleUpperCase("pt-BR") === "SUPERVISOR"
+        ? <Outlet />
+        : <Navigate to="/home" replace />;
+}
 
 export default function AppRoutes() {
     return (
@@ -37,6 +48,9 @@ export default function AppRoutes() {
                     <Route path="/historico" element={<Navigate to="/historico/retiradas" replace />} />
                     <Route path="/historico/retiradas" element={<Historico mode="withdrawal" />} />
                     <Route path="/historico/solicitacoes" element={<Historico mode="purchase" />} />
+                    <Route element={<SupervisorOnlyRoute />}>
+                        <Route path="/equipe-acessos" element={<TeamAccess />} />
+                    </Route>
                 </Route>
             </Routes>
         </BrowserRouter>

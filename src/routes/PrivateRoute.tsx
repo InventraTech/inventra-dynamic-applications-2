@@ -29,6 +29,7 @@ const menuSections: MenuSection[] = [
         { id: "cozinhas-cadastros-1", page: "Cozinhas", pageIcon: logoInventra, pagePath: "/cozinhas" },
         { id: "cozinhas-cadastros-2", page: "Cozinhas", pageIcon: logoInventra, pagePath: "/cozinhas" },
         { id: "cozinhas-cadastros-3", page: "Cozinhas", pageIcon: logoInventra, pagePath: "/cozinhas" },
+        { page: "Equipe e acessos", pageIcon: logoInventra, pagePath: "/equipe-acessos" },
     ] },
 ];
 

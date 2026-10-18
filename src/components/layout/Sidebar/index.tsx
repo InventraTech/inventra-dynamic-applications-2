@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import type { SidebarProps } from "../../../types/sidebar";
 import Button from "../../ui/Button";
@@ -6,12 +6,38 @@ import fixIcon from "../../../assets/icons/fixar.svg";
 import unfixIcon from "../../../assets/icons/desafixar.svg";
 
 function Sidebar({ logo, logoMark, menuSections = [], fixo, setFixo }: SidebarProps) {
+    const sidebar = useRef<HTMLElement>(null);
     const dialog = useRef<HTMLDialogElement>(null);
     const menuButton = useRef<HTMLButtonElement>(null);
     const [menuOpen, setMenuOpen] = useState(false);
+    const [suppressHoverExpansion, setSuppressHoverExpansion] = useState(false);
+    const [hoverReentryArmed, setHoverReentryArmed] = useState(false);
     const { pathname } = useLocation();
 
     useEffect(() => { dialog.current?.close(); }, [pathname]);
+
+    function handlePinPointerDown(event: ReactPointerEvent<HTMLButtonElement>) {
+        if (fixo && event.pointerType === "mouse" && sidebar.current) {
+            setHoverReentryArmed(false);
+            setSuppressHoverExpansion(true);
+        }
+    }
+
+    function togglePinned(event: ReactMouseEvent<HTMLButtonElement>) {
+        setFixo(!fixo);
+        if (event.detail > 0) event.currentTarget.blur();
+    }
+
+    function handleSidebarPointerLeave(event: ReactPointerEvent<HTMLElement>) {
+        if (suppressHoverExpansion && event.pointerType === "mouse") setHoverReentryArmed(true);
+    }
+
+    function handleSidebarPointerEnter(event: ReactPointerEvent<HTMLElement>) {
+        if (suppressHoverExpansion && hoverReentryArmed && event.pointerType === "mouse") {
+            setHoverReentryArmed(false);
+            setSuppressHoverExpansion(false);
+        }
+    }
 
     function brandHeader(expanded: boolean, showToggle: boolean) {
         const layout = expanded
@@ -38,7 +64,8 @@ function Sidebar({ logo, logoMark, menuSections = [], fixo, setFixo }: SidebarPr
                         aria-label={fixo ? "Desafixar sidebar" : "Fixar sidebar"}
                         aria-pressed={fixo}
                         title={fixo ? "Desafixar sidebar" : "Fixar sidebar"}
-                        onClick={() => setFixo(!fixo)}
+                        onPointerDown={handlePinPointerDown}
+                        onClick={togglePinned}
                     >
                         <img className="size-6 rotate-12 object-contain" src={fixo ? unfixIcon : fixIcon} alt="" aria-hidden="true" />
                     </Button>
@@ -90,7 +117,12 @@ function Sidebar({ logo, logoMark, menuSections = [], fixo, setFixo }: SidebarPr
 
     return (
         <>
-            <aside className={`group fixed inset-y-0 left-0 z-50 hidden flex-col overflow-hidden rounded-r-3xl bg-surface shadow-sidebar sidebar-width-transition lg:flex large-text:hidden ${fixo ? "w-70" : "w-24 hover:w-70 focus-within:w-70"}`}>
+            <aside
+                ref={sidebar}
+                className={`${suppressHoverExpansion ? "" : "group"} fixed inset-y-0 left-0 z-50 hidden flex-col overflow-hidden rounded-r-3xl bg-surface shadow-sidebar sidebar-width-transition lg:flex large-text:hidden ${fixo ? "w-70" : suppressHoverExpansion ? "w-24" : "w-24 hover:w-70 focus-within:w-70"}`}
+                onPointerLeave={handleSidebarPointerLeave}
+                onPointerEnter={handleSidebarPointerEnter}
+            >
                 {brandHeader(fixo, true)}
                 <div className={`sidebar-scrollbar ${fixo ? "" : "sidebar-scrollbar-collapsed"} mb-2 mr-2 flex min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden px-3 pb-3 pt-6`}>{navigation(fixo)}</div>
             </aside>
