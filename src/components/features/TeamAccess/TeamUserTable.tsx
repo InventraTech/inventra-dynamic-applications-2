@@ -92,6 +92,7 @@ function TeamUserTable({ users, allUsers, profiles, currentUserId, busyUserId, o
                             {users.map((user) => {
                                 const profile = profiles.find((item) => item.id === user.profile.id) ?? user.profile;
                                 const isSelf = user.id === currentUserId;
+                                const editUnavailableReason = isSelf ? "Você não pode alterar a própria conta nesta tela." : "";
                                 const isLastActiveSupervisor = user.active
                                     && user.profile.accessType.toLocaleUpperCase("pt-BR") === "SUPERVISOR"
                                     && activeSupervisors <= 1;
@@ -135,10 +136,11 @@ function TeamUserTable({ users, allUsers, profiles, currentUserId, busyUserId, o
                                                 <Button
                                                     variant="icon"
                                                     type="button"
-                                                    className="size-10 rounded-xl bg-sidebar-active text-sidebar-purple hover:bg-sidebar-line focus-visible:outline-focus disabled:cursor-wait disabled:opacity-60"
+                                                    className={`size-10 rounded-xl bg-sidebar-active text-sidebar-purple hover:bg-sidebar-line focus-visible:outline-focus ${isSelf ? "disabled:cursor-not-allowed" : "disabled:cursor-wait"} disabled:opacity-60`}
                                                     aria-label={`Editar ${user.name}`}
-                                                    title={`Editar ${user.name}`}
-                                                    disabled={busyUserId === user.id}
+                                                    title={editUnavailableReason || `Editar ${user.name}`}
+                                                    aria-describedby={editUnavailableReason ? `editar-restricao-${user.id}` : undefined}
+                                                    disabled={busyUserId === user.id || isSelf}
                                                     onClick={(event) => onEdit(user, event.currentTarget)}
                                                 >
                                                     <img className="size-4.5" src={editIcon} alt="" aria-hidden="true" />
@@ -156,6 +158,7 @@ function TeamUserTable({ users, allUsers, profiles, currentUserId, busyUserId, o
                                                     <img className="size-4.5" src={user.active ? deactivateIcon : activateIcon} alt="" aria-hidden="true" />
                                                 </Button>
                                                 {unavailableReason && <span className="sr-only" id={`restricao-${user.id}`}>{unavailableReason}</span>}
+                                                {editUnavailableReason && <span className="sr-only" id={`editar-restricao-${user.id}`}>{editUnavailableReason}</span>}
                                             </div>
                                         </td>
                                     </tr>

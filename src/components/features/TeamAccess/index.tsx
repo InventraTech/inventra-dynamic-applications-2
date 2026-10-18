@@ -186,6 +186,7 @@ function TeamAccessContent() {
     }
 
     function openEditDialog(user: TeamUser, trigger: HTMLButtonElement) {
+        if (user.id === data?.currentUser.id) return;
         returnFocusTarget.current = trigger;
         setEditingUser(user);
         setUserDialogError(null);
@@ -200,6 +201,10 @@ function TeamAccessContent() {
 
     async function saveUser(values: TeamUserFormValues) {
         if (!data?.kitchen) return;
+        if (editingUser?.id === data.currentUser.id) {
+            setUserDialogError("Você não pode alterar a própria conta nesta tela.");
+            return;
+        }
         setSavingUser(true);
         setUserDialogError(null);
         try {
