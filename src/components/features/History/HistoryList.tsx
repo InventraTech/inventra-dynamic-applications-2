@@ -180,11 +180,6 @@ function HistoryList({
                         ? "Quando alguém pedir uma compra, ela aparece nesta lista."
                         : "Quando uma requisição de consumo for aprovada, ela aparecerá nesta lista."}
                 </p>
-                {mode === "purchase" && (
-                    <p className="max-w-110 font-k2d text-sm text-sidebar-indicator">
-                        Na aba Retirada do estoque: “Nenhuma retirada aprovada ainda.”
-                    </p>
-                )}
             </div>
         );
     }

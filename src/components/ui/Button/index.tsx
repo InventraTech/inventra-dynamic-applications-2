@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef } from "react";
+import { forwardRef, type ComponentPropsWithoutRef } from "react";
 
 type ButtonVariant = "primary" | "link" | "icon";
 
@@ -12,13 +12,17 @@ const variantClasses: Record<ButtonVariant, string> = {
     icon: "flex min-h-11 min-w-11 items-center justify-center transition-colors focus-visible:outline-2 focus-visible:outline-offset-2",
 };
 
-function Button({ className = "", variant, ...props }: ButtonProps) {
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
+    { className = "", variant, ...props },
+    ref,
+) {
     return (
         <button
+            ref={ref}
             className={`${variantClasses[variant]} ${className} cursor-pointer`.trim()}
             {...props}
         />
     );
-}
+});
 
 export default Button;
