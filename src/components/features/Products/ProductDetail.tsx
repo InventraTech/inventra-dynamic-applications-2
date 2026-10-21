@@ -5,7 +5,7 @@ import type { ProductKitchenParameters, ProductRecord, ProductSupplier } from ".
 import { ApiError } from "../../../services/api";
 import { getCurrentUser } from "../../../services/authService";
 import { getSession, updateSessionKitchen } from "../../../services/authSession";
-import { deleteProductPhoto, getProduct, getProductKitchenParameters, getProductSuppliers } from "../../../services/products";
+import { deleteProductPhoto, getProduct, getProductKitchenParameters, getProductSuppliers, setProductActive } from "../../../services/products";
 import Button from "../../ui/Button";
 import Feedback from "../../ui/Feedback";
 import ProductDetailSkeleton from "./ProductDetailSkeleton";
@@ -34,8 +34,13 @@ function ProductDetail() {
     const [removingPhoto, setRemovingPhoto] = useState(false);
     const [photoDialogOpen, setPhotoDialogOpen] = useState(false);
     const [photoError, setPhotoError] = useState<string | null>(null);
+    const [statusDialogOpen, setStatusDialogOpen] = useState(false);
+    const [statusError, setStatusError] = useState<string | null>(null);
+    const [updatingStatus, setUpdatingStatus] = useState(false);
     const photoDialogRef = useRef<HTMLDialogElement>(null);
     const photoTriggerRef = useRef<HTMLButtonElement | null>(null);
+    const statusDialogRef = useRef<HTMLDialogElement>(null);
+    const statusTriggerRef = useRef<HTMLButtonElement | null>(null);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -76,6 +81,16 @@ function ProductDetail() {
         }
     }, [photoDialogOpen]);
 
+    useEffect(() => {
+        const dialog = statusDialogRef.current;
+        if (!dialog) return;
+        if (statusDialogOpen && !dialog.open) dialog.showModal();
+        if (!statusDialogOpen && dialog.open) {
+            dialog.close();
+            requestAnimationFrame(() => statusTriggerRef.current?.focus());
+        }
+    }, [statusDialogOpen]);
+
     async function confirmPhotoRemoval() {
         if (!product) return;
         setRemovingPhoto(true);
@@ -92,6 +107,23 @@ function ProductDetail() {
         }
     }
 
+    async function confirmProductStatus() {
+        if (!product) return;
+        const nextActive = !product.active;
+        setUpdatingStatus(true);
+        setStatusError(null);
+        try {
+            await setProductActive(product.id, nextActive);
+            setProduct((current) => current ? { ...current, active: nextActive } : current);
+            setNotice(`Produto ${nextActive ? "ativado" : "desativado"}.`);
+            setStatusDialogOpen(false);
+        } catch (statusChangeError: unknown) {
+            setStatusError(getErrorMessage(statusChangeError));
+        } finally {
+            setUpdatingStatus(false);
+        }
+    }
+
     const currentKitchenParameters = parameters.find((item) => item.kitchen.id === kitchen?.id) ?? parameters[0] ?? null;
 
     if (loading) return <section className="px-6 pb-8 pt-6 max-md:px-4 max-sm:px-3"><ProductDetailSkeleton /></section>;
@@ -99,7 +131,7 @@ function ProductDetail() {
 
     return (
         <section className="flex min-w-0 flex-col gap-5 px-6 pb-8 pt-6 max-md:px-4 max-sm:px-3">
-            <div className="flex min-w-0 flex-wrap items-center justify-between gap-3"><div><Link className="text-sm font-semibold text-link underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to="/produtos">‹ Produtos</Link><p className="mt-2 text-sm text-history-muted">Detalhes do produto</p></div><div className="flex flex-wrap gap-2"><Link className="inline-flex min-h-10 items-center rounded-xl border border-brand px-4 py-2 font-k2d text-sm font-bold text-brand hover:bg-sidebar-active focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to={`/produtos/${product.id}/editar`}>Editar produto</Link>{product.photoUrl && <Button ref={photoTriggerRef} variant="icon" className="min-h-10 rounded-xl border border-history-border bg-surface px-4 font-k2d text-sm font-bold text-feedback-error hover:bg-feedback-error-bg" type="button" onClick={() => setPhotoDialogOpen(true)}>Remover foto</Button>}</div></div>
+            <div className="flex min-w-0 flex-wrap items-center justify-between gap-3"><div><Link className="text-sm font-semibold text-link underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to="/produtos">‹ Produtos</Link><p className="mt-2 text-sm text-history-muted">Detalhes do produto</p></div><div className="flex flex-wrap gap-2"><Link className="inline-flex min-h-10 items-center rounded-xl border border-brand px-4 py-2 font-k2d text-sm font-bold text-brand hover:bg-sidebar-active focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to={`/produtos/${product.id}/editar`}>Editar produto</Link><Button ref={statusTriggerRef} variant="icon" className="min-h-10 rounded-xl border border-history-border bg-surface px-4 font-k2d text-sm font-bold text-sidebar-purple hover:bg-history-card-header" type="button" onClick={() => { setStatusError(null); setStatusDialogOpen(true); }}>{product.active ? "Desativar produto" : "Ativar produto"}</Button>{product.photoUrl && <Button ref={photoTriggerRef} variant="icon" className="min-h-10 rounded-xl border border-history-border bg-surface px-4 font-k2d text-sm font-bold text-feedback-error hover:bg-feedback-error-bg" type="button" onClick={() => setPhotoDialogOpen(true)}>Remover foto</Button>}</div></div>
             {notice && <Feedback severity="success">{notice}</Feedback>}
             <div className="grid min-w-0 items-start gap-5 xl:grid-cols-[minmax(0,1.4fr)_minmax(18rem,0.8fr)]">
                 <div className="flex min-w-0 flex-col gap-5">
@@ -116,6 +148,9 @@ function ProductDetail() {
 
             <dialog ref={photoDialogRef} className="m-auto max-h-dvh w-11/12 max-w-112 rounded-3xl border border-history-border bg-surface p-0 text-sidebar-text shadow-2xl backdrop:bg-black/50" aria-labelledby="remover-foto-titulo" onCancel={(event) => { event.preventDefault(); setPhotoDialogOpen(false); }}>
                 <div className="flex flex-col gap-4 p-6"><div><h2 id="remover-foto-titulo" className="font-k2d text-xl font-bold text-sidebar-purple">Remover foto do produto?</h2><p className="mt-2 text-sm leading-relaxed text-history-muted">A imagem será removida do produto e do armazenamento de fotos.</p></div>{photoError && <Feedback severity="error">{photoError}</Feedback>}<div className="flex flex-wrap justify-end gap-2"><Button variant="icon" className="min-h-10 rounded-xl border border-history-border px-4 font-k2d text-sm font-bold text-sidebar-purple hover:bg-history-card-header" type="button" disabled={removingPhoto} onClick={() => setPhotoDialogOpen(false)}>Cancelar</Button><Button variant="primary" className="min-h-10 rounded-xl bg-feedback-error px-4 py-2 text-sm hover:bg-feedback-error/90" type="button" disabled={removingPhoto} onClick={() => void confirmPhotoRemoval()}>{removingPhoto ? "Removendo…" : "Remover foto"}</Button></div></div>
+            </dialog>
+            <dialog ref={statusDialogRef} className="m-auto max-h-dvh w-11/12 max-w-112 rounded-3xl border border-history-border bg-surface p-0 text-sidebar-text shadow-2xl backdrop:bg-black/50" aria-labelledby="situacao-produto-titulo" onCancel={(event) => { event.preventDefault(); setStatusDialogOpen(false); }}>
+                <div className="flex flex-col gap-4 p-6"><div><h2 id="situacao-produto-titulo" className="font-k2d text-xl font-bold text-sidebar-purple">{product.active ? "Desativar produto?" : "Ativar produto?"}</h2><p className="mt-2 text-sm leading-relaxed text-history-muted">{product.active ? `“${product.name}” deixará de aparecer entre os produtos ativos.` : `“${product.name}” voltará a aparecer entre os produtos ativos.`}</p></div>{statusError && <Feedback severity="error">{statusError}</Feedback>}<div className="flex flex-wrap justify-end gap-2"><Button variant="icon" className="min-h-10 min-w-0 rounded-xl border border-history-border px-4 font-k2d text-sm font-bold text-sidebar-purple hover:bg-history-card-header" type="button" disabled={updatingStatus} onClick={() => setStatusDialogOpen(false)}>Cancelar</Button><Button variant="primary" className={`min-h-10 rounded-xl px-4 py-2 text-sm ${product.active ? "bg-feedback-error hover:bg-feedback-error/90" : ""}`} type="button" disabled={updatingStatus} onClick={() => void confirmProductStatus()}>{updatingStatus ? "Salvando…" : product.active ? "Desativar produto" : "Ativar produto"}</Button></div></div>
             </dialog>
         </section>
     );
