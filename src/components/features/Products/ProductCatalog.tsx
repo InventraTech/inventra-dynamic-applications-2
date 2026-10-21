@@ -29,13 +29,15 @@ function ProductCatalog() {
     const [pageData, setPageData] = useState<ProductPage | null>(null);
     const [categories, setCategories] = useState<ProductCategory[]>([]);
     const [searchParams, setSearchParams] = useSearchParams();
-    const [query, setQuery] = useState(() => searchParams.get("name") ?? "");
+    const query = searchParams.get("name") ?? "";
     const deferredQuery = useDeferredValue(query);
     const [categoryId, setCategoryId] = useState("");
     const [status, setStatus] = useState<ProductStatusFilter>("all");
     const [page, setPage] = useState(0);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const [completedLoadKey, setCompletedLoadKey] = useState<string | null>(null);
+    const [loadFailure, setLoadFailure] = useState<{ key: string; message: string } | null>(null);
+    const [categoryFailure, setCategoryFailure] = useState<{ key: number; message: string } | null>(null);
+    const [actionError, setActionError] = useState<string | null>(null);
     const [notice, setNotice] = useState<string | null>(null);
     const [retryKey, setRetryKey] = useState(0);
     const [statusTarget, setStatusTarget] = useState<{ product: ProductRecord; active: boolean } | null>(null);
@@ -43,22 +45,20 @@ function ProductCatalog() {
     const statusDialog = useRef<HTMLDialogElement>(null);
     const statusTrigger = useRef<HTMLButtonElement | null>(null);
 
-    useEffect(() => {
-        setQuery(searchParams.get("name") ?? "");
-    }, [searchParams]);
+    const loadKey = `${deferredQuery}:${categoryId}:${status}:${page}:${retryKey}`;
+    const loading = completedLoadKey !== loadKey;
+    const error = categoryFailure?.key === retryKey ? categoryFailure.message : loadFailure?.key === loadKey ? loadFailure.message : null;
 
     useEffect(() => {
         const controller = new AbortController();
         getProductCategories(controller.signal).then(setCategories).catch((loadError: unknown) => {
-            if (!controller.signal.aborted) setError(getErrorMessage(loadError));
+            if (!controller.signal.aborted) setCategoryFailure({ key: retryKey, message: getErrorMessage(loadError) });
         });
         return () => controller.abort();
-    }, []);
+    }, [retryKey]);
 
     useEffect(() => {
         const controller = new AbortController();
-        setLoading(true);
-        setError(null);
         searchProducts({
             name: deferredQuery,
             ...(categoryId ? { categoryId: Number(categoryId) } : {}),
@@ -66,13 +66,13 @@ function ProductCatalog() {
             page,
             size: PAGE_SIZE,
         }, controller.signal)
-            .then((result) => setPageData(result))
+            .then((result) => { if (!controller.signal.aborted) setPageData(result); })
             .catch((loadError: unknown) => {
-                if (!controller.signal.aborted) setError(getErrorMessage(loadError));
+                if (!controller.signal.aborted) setLoadFailure({ key: loadKey, message: getErrorMessage(loadError) });
             })
-            .finally(() => { if (!controller.signal.aborted) setLoading(false); });
+            .finally(() => { if (!controller.signal.aborted) setCompletedLoadKey(loadKey); });
         return () => controller.abort();
-    }, [categoryId, deferredQuery, page, retryKey, status]);
+    }, [categoryId, deferredQuery, loadKey, page, retryKey, status]);
 
     useEffect(() => {
         const dialog = statusDialog.current;
@@ -94,7 +94,7 @@ function ProductCatalog() {
     async function confirmStatus() {
         if (!statusTarget) return;
         setUpdatingId(statusTarget.product.id);
-        setError(null);
+        setActionError(null);
         try {
             await setProductActive(statusTarget.product.id, statusTarget.active);
             setNotice(`Produto ${statusTarget.active ? "ativado" : "desativado"}.`);
@@ -102,7 +102,7 @@ function ProductCatalog() {
             setRetryKey((current) => current + 1);
             requestAnimationFrame(() => statusTrigger.current?.focus());
         } catch (actionError: unknown) {
-            setError(getErrorMessage(actionError));
+            setActionError(getErrorMessage(actionError));
         } finally {
             setUpdatingId(null);
         }
@@ -125,7 +125,7 @@ function ProductCatalog() {
                     </select>
                 </div>
                 <div className="flex min-w-0 flex-wrap items-center gap-2">
-                    <SearchField className="w-full shadow-history-card sm:w-72" label="Buscar produtos" placeholder="Buscar produto por nome" value={query} onChange={(event) => { const value = event.target.value; changeFilter(() => setQuery(value)); setSearchParams(value.trim() ? { name: value } : {}, { replace: true }); }} />
+                    <SearchField className="w-full shadow-history-card sm:w-72" label="Buscar produtos" placeholder="Buscar produto por nome" value={query} onChange={(event) => { const value = event.target.value; changeFilter(() => setSearchParams(value.trim() ? { name: value } : {}, { replace: true })); }} />
                     <Link className="inline-flex min-h-10 items-center justify-center rounded-full bg-brand px-4 py-2 font-k2d text-sm font-bold text-on-brand hover:bg-brand-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to="/produtos/novo">Novo produto</Link>
                 </div>
             </div>
@@ -137,14 +137,14 @@ function ProductCatalog() {
 
             {notice && <Feedback severity="success">{notice}</Feedback>}
             {error && <Feedback severity="error">{error}</Feedback>}
-            {error && <Button variant="icon" className="min-h-10 w-fit rounded-full border border-history-border bg-surface px-4 font-k2d text-sm font-bold text-sidebar-purple hover:bg-history-card-header" type="button" onClick={() => { setError(null); setLoading(true); setRetryKey((current) => current + 1); }}>Tentar novamente</Button>}
+            {error && <Button variant="icon" className="min-h-10 w-fit rounded-full border border-history-border bg-surface px-4 font-k2d text-sm font-bold text-sidebar-purple hover:bg-history-card-header" type="button" onClick={() => setRetryKey((current) => current + 1)}>Tentar novamente</Button>}
 
             {loading ? <ProductCatalogSkeleton /> : error ? null : products.length === 0 ? (
                 <div className="flex min-h-80 flex-col items-center justify-center gap-3 rounded-3xl bg-surface p-7 text-center shadow-history-card">
                     <Mascot size="compacto" className="w-20" />
                     <h2 className="font-k2d text-xl font-bold text-sidebar-text">{query || categoryId || status !== "all" ? "Nenhum produto encontrado" : "Seu catálogo ainda está vazio"}</h2>
                     <p className="max-w-110 text-sm leading-relaxed text-history-muted">{query || categoryId || status !== "all" ? "Tente ajustar os filtros ou limpar a busca." : "Cadastre o primeiro produto para começar a organizar o catálogo da cozinha."}</p>
-                    {query || categoryId || status !== "all" ? <Button variant="icon" className="min-h-10 rounded-full border border-history-border px-4 font-k2d text-sm font-bold text-sidebar-purple hover:bg-history-card-header" type="button" onClick={() => { setQuery(""); setSearchParams({}, { replace: true }); setCategoryId(""); setStatus("all"); setPage(0); }}>Limpar filtros</Button> : <Link className="inline-flex min-h-10 items-center rounded-full bg-brand px-4 py-2 font-k2d text-sm font-bold text-on-brand hover:bg-brand-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to="/produtos/novo">Cadastrar produto</Link>}
+                    {query || categoryId || status !== "all" ? <Button variant="icon" className="min-h-10 rounded-full border border-history-border px-4 font-k2d text-sm font-bold text-sidebar-purple hover:bg-history-card-header" type="button" onClick={() => { setSearchParams({}, { replace: true }); setCategoryId(""); setStatus("all"); setPage(0); }}>Limpar filtros</Button> : <Link className="inline-flex min-h-10 items-center rounded-full bg-brand px-4 py-2 font-k2d text-sm font-bold text-on-brand hover:bg-brand-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to="/produtos/novo">Cadastrar produto</Link>}
                 </div>
             ) : (
                 <div className="min-w-0 rounded-3xl bg-surface p-3 shadow-history-card sm:p-5">
@@ -168,7 +168,7 @@ function ProductCatalog() {
             )}
 
             <dialog ref={statusDialog} className="m-auto max-h-dvh w-11/12 max-w-112 rounded-3xl border border-history-border bg-surface p-0 text-sidebar-text shadow-2xl backdrop:bg-black/50" aria-labelledby="confirmar-situacao-titulo" onClose={() => { setStatusTarget(null); requestAnimationFrame(() => statusTrigger.current?.focus()); }} onCancel={() => setStatusTarget(null)}>
-                {statusTarget && <div className="flex flex-col gap-4 p-6"><div><h2 id="confirmar-situacao-titulo" className="font-k2d text-xl font-bold text-sidebar-purple">{statusTarget.active ? "Ativar produto?" : "Desativar produto?"}</h2><p className="mt-2 text-sm leading-relaxed text-history-muted">{statusTarget.active ? `“${statusTarget.product.name}” voltará a aparecer entre os produtos ativos.` : `“${statusTarget.product.name}” deixará de aparecer entre os produtos ativos.`}</p></div>{error && <Feedback severity="error">{error}</Feedback>}<div className="flex flex-wrap justify-end gap-2"><Button variant="icon" className="min-h-10 rounded-xl border border-history-border px-4 font-k2d text-sm font-bold text-sidebar-purple hover:bg-history-card-header" type="button" disabled={updatingId !== null} onClick={() => setStatusTarget(null)}>Cancelar</Button><Button variant="primary" className={statusTarget.active ? "min-h-10 rounded-xl px-4 py-2 text-sm" : "min-h-10 rounded-xl bg-feedback-error px-4 py-2 text-sm hover:bg-feedback-error/90"} type="button" disabled={updatingId !== null} onClick={() => void confirmStatus()}>{updatingId !== null ? "Salvando…" : statusTarget.active ? "Ativar produto" : "Desativar produto"}</Button></div></div>}
+                {statusTarget && <div className="flex flex-col gap-4 p-6"><div><h2 id="confirmar-situacao-titulo" className="font-k2d text-xl font-bold text-sidebar-purple">{statusTarget.active ? "Ativar produto?" : "Desativar produto?"}</h2><p className="mt-2 text-sm leading-relaxed text-history-muted">{statusTarget.active ? `“${statusTarget.product.name}” voltará a aparecer entre os produtos ativos.` : `“${statusTarget.product.name}” deixará de aparecer entre os produtos ativos.`}</p></div>{actionError && <Feedback severity="error">{actionError}</Feedback>}<div className="flex flex-wrap justify-end gap-2"><Button variant="icon" className="min-h-10 rounded-xl border border-history-border px-4 font-k2d text-sm font-bold text-sidebar-purple hover:bg-history-card-header" type="button" disabled={updatingId !== null} onClick={() => setStatusTarget(null)}>Cancelar</Button><Button variant="primary" className={statusTarget.active ? "min-h-10 rounded-xl px-4 py-2 text-sm" : "min-h-10 rounded-xl bg-feedback-error px-4 py-2 text-sm hover:bg-feedback-error/90"} type="button" disabled={updatingId !== null} onClick={() => void confirmStatus()}>{updatingId !== null ? "Salvando…" : statusTarget.active ? "Ativar produto" : "Desativar produto"}</Button></div></div>}
             </dialog>
         </section>
     );
