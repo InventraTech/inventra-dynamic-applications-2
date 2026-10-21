@@ -10,6 +10,8 @@ import KitchenRegistration from "../pages/KitchenRegistration";
 import Accessibility from "../pages/Accessibility";
 import NotFound from "../pages/NotFound";
 import TeamAccess from "../pages/TeamAccess";
+import Products from "../pages/Products";
+import ProductCatalog from "../components/features/Products/ProductCatalog";
 import RouteAccessibility from "../components/layout/RouteAccessibility";
 import PublicLayout from "./PublicLayout";
 import { getSession } from "../services/authSession";
@@ -50,6 +52,9 @@ export default function AppRoutes() {
                     <Route path="/historico/solicitacoes" element={<Historico mode="purchase" />} />
                     <Route element={<SupervisorOnlyRoute />}>
                         <Route path="/equipe-acessos" element={<TeamAccess />} />
+                        <Route path="/produtos" element={<Products />}>
+                            <Route index element={<ProductCatalog />} />
+                        </Route>
                     </Route>
                 </Route>
             </Routes>
