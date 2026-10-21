@@ -1,3 +1,4 @@
+import { lazy, Suspense, type ReactNode } from "react";
 import { BrowserRouter, Navigate, Outlet, Routes, Route } from "react-router-dom";
 
 import PrivateRoute from "./PrivateRoute";
@@ -11,13 +12,22 @@ import Accessibility from "../pages/Accessibility";
 import NotFound from "../pages/NotFound";
 import TeamAccess from "../pages/TeamAccess";
 import Products from "../pages/Products";
-import ProductCatalog from "../components/features/Products/ProductCatalog";
-import ProductEditor from "../components/features/Products/ProductEditor";
-import ProductDetail from "../components/features/Products/ProductDetail";
-import ProductReferenceManagement from "../components/features/Products/ProductReferenceManagement";
 import RouteAccessibility from "../components/layout/RouteAccessibility";
 import PublicLayout from "./PublicLayout";
 import { getSession } from "../services/authSession";
+
+const ProductCatalog = lazy(() => import("../components/features/Products/ProductCatalog"));
+const ProductEditor = lazy(() => import("../components/features/Products/ProductEditor"));
+const ProductDetail = lazy(() => import("../components/features/Products/ProductDetail"));
+const ProductReferenceManagement = lazy(() => import("../components/features/Products/ProductReferenceManagement"));
+
+function ProductRouteLoading() {
+    return <section className="flex min-w-0 flex-col gap-4 px-6 pb-8 pt-6 max-md:px-4 max-sm:px-3" aria-busy="true"><p className="sr-only" role="status" aria-live="polite">Carregando tela de produtos…</p><div className="h-12 w-full rounded-2xl bg-surface motion-safe:animate-pulse" aria-hidden="true" /><div className="min-h-72 rounded-3xl bg-surface shadow-history-card motion-safe:animate-pulse" aria-hidden="true" /></section>;
+}
+
+function withProductLoading(element: ReactNode) {
+    return <Suspense fallback={<ProductRouteLoading />}>{element}</Suspense>;
+}
 
 function SupervisorOnlyRoute() {
     const profile = getSession()?.user.profile;
@@ -56,11 +66,11 @@ export default function AppRoutes() {
                     <Route element={<SupervisorOnlyRoute />}>
                         <Route path="/equipe-acessos" element={<TeamAccess />} />
                         <Route path="/produtos" element={<Products />}>
-                            <Route index element={<ProductCatalog />} />
-                            <Route path="novo" element={<ProductEditor mode="create" />} />
-                            <Route path="categorias-unidades" element={<ProductReferenceManagement />} />
-                            <Route path=":productId" element={<ProductDetail />} />
-                            <Route path=":productId/editar" element={<ProductEditor mode="edit" />} />
+                            <Route index element={withProductLoading(<ProductCatalog />)} />
+                            <Route path="novo" element={withProductLoading(<ProductEditor mode="create" />)} />
+                            <Route path="categorias-unidades" element={withProductLoading(<ProductReferenceManagement />)} />
+                            <Route path=":productId" element={withProductLoading(<ProductDetail />)} />
+                            <Route path=":productId/editar" element={withProductLoading(<ProductEditor mode="edit" />)} />
                         </Route>
                     </Route>
                 </Route>

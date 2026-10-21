@@ -1,5 +1,5 @@
 import { useDeferredValue, useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import type { ProductCategory, ProductPage, ProductRecord, ProductStatusFilter } from "../../../types/products";
 import { ApiError } from "../../../services/api";
 import { getProductCategories, searchProducts, setProductActive } from "../../../services/products";
@@ -28,7 +28,8 @@ function ProductStatus({ active }: { active: boolean }) {
 function ProductCatalog() {
     const [pageData, setPageData] = useState<ProductPage | null>(null);
     const [categories, setCategories] = useState<ProductCategory[]>([]);
-    const [query, setQuery] = useState("");
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [query, setQuery] = useState(() => searchParams.get("name") ?? "");
     const deferredQuery = useDeferredValue(query);
     const [categoryId, setCategoryId] = useState("");
     const [status, setStatus] = useState<ProductStatusFilter>("all");
@@ -41,6 +42,10 @@ function ProductCatalog() {
     const [updatingId, setUpdatingId] = useState<number | null>(null);
     const statusDialog = useRef<HTMLDialogElement>(null);
     const statusTrigger = useRef<HTMLButtonElement | null>(null);
+
+    useEffect(() => {
+        setQuery(searchParams.get("name") ?? "");
+    }, [searchParams]);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -120,7 +125,7 @@ function ProductCatalog() {
                     </select>
                 </div>
                 <div className="flex min-w-0 flex-wrap items-center gap-2">
-                    <SearchField className="w-full shadow-history-card sm:w-72" label="Buscar produtos" placeholder="Buscar produto por nome" value={query} onChange={(event) => changeFilter(() => setQuery(event.target.value))} />
+                    <SearchField className="w-full shadow-history-card sm:w-72" label="Buscar produtos" placeholder="Buscar produto por nome" value={query} onChange={(event) => { const value = event.target.value; changeFilter(() => setQuery(value)); setSearchParams(value.trim() ? { name: value } : {}, { replace: true }); }} />
                     <Link className="inline-flex min-h-10 items-center justify-center rounded-full bg-brand px-4 py-2 font-k2d text-sm font-bold text-on-brand hover:bg-brand-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to="/produtos/novo">Novo produto</Link>
                 </div>
             </div>
@@ -139,7 +144,7 @@ function ProductCatalog() {
                     <Mascot size="compacto" className="w-20" />
                     <h2 className="font-k2d text-xl font-bold text-sidebar-text">{query || categoryId || status !== "all" ? "Nenhum produto encontrado" : "Seu catálogo ainda está vazio"}</h2>
                     <p className="max-w-110 text-sm leading-relaxed text-history-muted">{query || categoryId || status !== "all" ? "Tente ajustar os filtros ou limpar a busca." : "Cadastre o primeiro produto para começar a organizar o catálogo da cozinha."}</p>
-                    {query || categoryId || status !== "all" ? <Button variant="icon" className="min-h-10 rounded-full border border-history-border px-4 font-k2d text-sm font-bold text-sidebar-purple hover:bg-history-card-header" type="button" onClick={() => { setQuery(""); setCategoryId(""); setStatus("all"); setPage(0); }}>Limpar filtros</Button> : <Link className="inline-flex min-h-10 items-center rounded-full bg-brand px-4 py-2 font-k2d text-sm font-bold text-on-brand hover:bg-brand-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to="/produtos/novo">Cadastrar produto</Link>}
+                    {query || categoryId || status !== "all" ? <Button variant="icon" className="min-h-10 rounded-full border border-history-border px-4 font-k2d text-sm font-bold text-sidebar-purple hover:bg-history-card-header" type="button" onClick={() => { setQuery(""); setSearchParams({}, { replace: true }); setCategoryId(""); setStatus("all"); setPage(0); }}>Limpar filtros</Button> : <Link className="inline-flex min-h-10 items-center rounded-full bg-brand px-4 py-2 font-k2d text-sm font-bold text-on-brand hover:bg-brand-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to="/produtos/novo">Cadastrar produto</Link>}
                 </div>
             ) : (
                 <div className="min-w-0 rounded-3xl bg-surface p-3 shadow-history-card sm:p-5">
