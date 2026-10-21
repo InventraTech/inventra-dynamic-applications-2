@@ -6,7 +6,7 @@ import SearchField from "../../ui/SearchField";
 
 function Topbar({ title, description, userInitials = "IN", userName = "Usuário", userRole = "", searchPlaceholder = "Buscar produtos, lotes, cozinhas…", hasNotifications = false, onSearch, onNotifications }: TopbarProps) {
     return (
-        <header className="relative isolate grid min-h-20 min-w-0 grid-cols-1 items-center gap-4 overflow-hidden bg-topbar-surface px-10 py-4 xl:grid-cols-[minmax(0,1fr)_auto] max-lg:px-6 max-md:px-4 large-text:grid-cols-1">
+        <header className="sticky top-0 z-40 isolate grid min-h-20 min-w-0 grid-cols-1 items-center gap-4 overflow-hidden bg-topbar-surface px-10 py-4 xl:grid-cols-[minmax(0,1fr)_auto] max-lg:px-6 max-md:px-4 large-text:grid-cols-1">
             <div className="relative z-10 min-w-0 text-ink">
                 <h1 className="font-k2d text-topbar-title font-bold leading-tight wrap-anywhere">{title}</h1>
                 <p className="mt-1 font-k2d text-topbar-description leading-normal wrap-anywhere">{description}</p>
