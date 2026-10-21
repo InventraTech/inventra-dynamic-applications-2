@@ -10,6 +10,7 @@ import Button from "../../ui/Button";
 import Feedback from "../../ui/Feedback";
 import ProductDetailSkeleton from "./ProductDetailSkeleton";
 import ProductKitchenPanel from "./ProductKitchenPanel";
+import ProductSupplierPanel from "./ProductSupplierPanel";
 import boxIcon from "../../../assets/icons/caixa.svg";
 
 function getErrorMessage(error: unknown): string {
@@ -107,10 +108,7 @@ function ProductDetail() {
                         <dl className="grid min-w-0 gap-3 border-t border-history-border pt-5 sm:grid-cols-2"><div className="rounded-xl bg-history-card-header p-3"><dt className="text-xs font-semibold text-history-muted">Categoria</dt><dd className="mt-1 wrap-anywhere font-semibold text-sidebar-text">{product.category?.name ?? "Sem categoria"}</dd></div><div className="rounded-xl bg-history-card-header p-3"><dt className="text-xs font-semibold text-history-muted">Unidade de medida</dt><dd className="mt-1 font-semibold text-sidebar-text">{product.unit.symbol}</dd></div><div className="rounded-xl bg-history-card-header p-3 sm:col-span-2"><dt className="text-xs font-semibold text-history-muted">Código de barras</dt><dd className="mt-1 wrap-anywhere font-semibold text-sidebar-text">{product.barcode || "Não informado"}</dd></div></dl>
                     </section>
 
-                    <section className="flex min-w-0 flex-col gap-4 rounded-3xl bg-surface p-5 shadow-history-card sm:p-7" aria-labelledby="fornecedores-produto-titulo">
-                        <div className="flex min-w-0 flex-wrap items-start justify-between gap-2"><div><h2 id="fornecedores-produto-titulo" className="font-k2d text-lg font-bold text-sidebar-text">Fornecedores associados</h2><p className="mt-1 text-sm leading-relaxed text-history-muted">Fornecedores e condições registrados para este produto.</p></div><Link className="inline-flex min-h-9 items-center rounded-lg border border-brand px-3 py-2 text-sm font-bold text-brand hover:bg-sidebar-active focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to={`/produtos/${product.id}?fornecedor=novo`}>Vincular fornecedor</Link></div>
-                        {suppliers.length === 0 ? <p className="rounded-xl bg-history-card-header p-4 text-sm text-history-muted">Nenhum fornecedor associado a este produto.</p> : <div className="min-w-0 overflow-x-auto" role="region" aria-label="Fornecedores associados ao produto" tabIndex={0}><table className="w-full min-w-120 text-left font-k2d text-sm"><thead className="bg-history-card-header text-xs text-history-muted"><tr><th className="rounded-l-xl px-3 py-2.5" scope="col">Fornecedor</th><th className="px-3 py-2.5" scope="col">Código</th><th className="px-3 py-2.5" scope="col">Preço de referência</th><th className="rounded-r-xl px-3 py-2.5" scope="col">Prazo</th></tr></thead><tbody className="divide-y divide-history-border">{suppliers.map((supplier) => <tr key={supplier.supplier.id}><th className="px-3 py-3 text-left font-semibold text-sidebar-text" scope="row">{supplier.supplier.legalName}</th><td className="px-3 py-3 text-history-muted">{supplier.supplierCode || "—"}</td><td className="px-3 py-3 text-sidebar-text">{supplier.referencePrice === null ? "—" : new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(supplier.referencePrice)}</td><td className="px-3 py-3 text-sidebar-text">{supplier.leadTimeDays === null ? "—" : `${supplier.leadTimeDays} dias`}</td></tr>)}</tbody></table></div>}
-                    </section>
+                    <ProductSupplierPanel product={product} suppliers={suppliers} onSuppliersChange={setSuppliers} />
                 </div>
 
                 <ProductKitchenPanel product={product} kitchen={kitchen} parameters={currentKitchenParameters} onParametersChange={setParameters} />
