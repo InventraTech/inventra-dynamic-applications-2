@@ -12,6 +12,7 @@ import NotFound from "../pages/NotFound";
 import TeamAccess from "../pages/TeamAccess";
 import Products from "../pages/Products";
 import ProductCatalog from "../components/features/Products/ProductCatalog";
+import ProductEditor from "../components/features/Products/ProductEditor";
 import RouteAccessibility from "../components/layout/RouteAccessibility";
 import PublicLayout from "./PublicLayout";
 import { getSession } from "../services/authSession";
@@ -54,6 +55,8 @@ export default function AppRoutes() {
                         <Route path="/equipe-acessos" element={<TeamAccess />} />
                         <Route path="/produtos" element={<Products />}>
                             <Route index element={<ProductCatalog />} />
+                            <Route path="novo" element={<ProductEditor mode="create" />} />
+                            <Route path=":productId/editar" element={<ProductEditor mode="edit" />} />
                         </Route>
                     </Route>
                 </Route>
