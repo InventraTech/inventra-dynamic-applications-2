@@ -9,17 +9,13 @@ import { deleteProductPhoto, getProduct, getProductKitchenParameters, getProduct
 import Button from "../../ui/Button";
 import Feedback from "../../ui/Feedback";
 import ProductDetailSkeleton from "./ProductDetailSkeleton";
+import ProductKitchenPanel from "./ProductKitchenPanel";
 import boxIcon from "../../../assets/icons/caixa.svg";
 
 function getErrorMessage(error: unknown): string {
     if (error instanceof ApiError) return error.message;
     if (error instanceof TypeError) return "Não foi possível conectar ao back-end. Confira se a API está iniciada e se a URL está configurada.";
     return "Não foi possível carregar os detalhes do produto. Tente novamente.";
-}
-
-function formatQuantity(value: number | null): string {
-    if (value === null) return "Não informado";
-    return new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 3 }).format(value);
 }
 
 function ProductDetail() {
@@ -117,14 +113,7 @@ function ProductDetail() {
                     </section>
                 </div>
 
-                <section className="flex min-w-0 flex-col gap-4 rounded-3xl bg-surface p-5 shadow-history-card sm:p-7" aria-labelledby="parametros-cozinha-titulo">
-                    <div><h2 id="parametros-cozinha-titulo" className="font-k2d text-lg font-bold text-sidebar-text">Parâmetros da cozinha</h2><p className="mt-1 text-sm leading-relaxed text-history-muted">Limites de estoque e consumo médio retornados pela API para a cozinha vinculada.</p></div>
-                    {!kitchen ? <p className="rounded-xl bg-history-card-header p-4 text-sm leading-relaxed text-history-muted">Esta conta ainda não está vinculada a uma cozinha. Os parâmetros aparecem quando houver uma cozinha associada.</p> : currentKitchenParameters ? <>
-                        <p className="rounded-xl bg-sidebar-active px-3 py-2 text-sm font-semibold text-sidebar-purple">{currentKitchenParameters.kitchen.name}</p>
-                        <dl className="grid grid-cols-2 gap-3"><div className="rounded-xl bg-history-card-header p-3"><dt className="text-xs text-history-muted">Estoque mínimo</dt><dd className="mt-1 font-bold text-sidebar-text">{formatQuantity(currentKitchenParameters.minStock)} {product.unit.symbol}</dd></div><div className="rounded-xl bg-history-card-header p-3"><dt className="text-xs text-history-muted">Estoque máximo</dt><dd className="mt-1 font-bold text-sidebar-text">{formatQuantity(currentKitchenParameters.maxStock)} {product.unit.symbol}</dd></div><div className="rounded-xl bg-history-card-header p-3"><dt className="text-xs text-history-muted">Consumo médio diário</dt><dd className="mt-1 font-bold text-sidebar-text">{formatQuantity(currentKitchenParameters.averageDailyConsumption)} {product.unit.symbol}/dia</dd></div><div className="rounded-xl bg-history-card-header p-3"><dt className="text-xs text-history-muted">Quantidade atual</dt><dd className="mt-1 font-bold text-sidebar-text">{formatQuantity(currentKitchenParameters.currentQuantity)} {product.unit.symbol}</dd></div></dl>
-                        <div className={`rounded-xl border p-3 ${currentKitchenParameters.lowStock ? "border-feedback-error/40 bg-feedback-error-bg" : currentKitchenParameters.overStock ? "border-feedback-info/40 bg-feedback-info-bg" : "border-feedback-success/40 bg-feedback-success-bg"}`}><p className="text-sm font-bold text-sidebar-text">{currentKitchenParameters.lowStock ? "Abaixo do estoque mínimo" : currentKitchenParameters.overStock ? "Acima do estoque máximo" : "Dentro dos parâmetros"}</p><p className="mt-1 text-sm text-history-muted">{currentKitchenParameters.estimatedDaysUntilStockout === null ? "Previsão de duração indisponível." : `Estimativa de ${formatQuantity(currentKitchenParameters.estimatedDaysUntilStockout)} dias de estoque.`}</p></div>
-                    </> : <p className="rounded-xl bg-history-card-header p-4 text-sm leading-relaxed text-history-muted">Ainda não há parâmetros cadastrados para {kitchen.name}.</p>}
-                </section>
+                <ProductKitchenPanel product={product} kitchen={kitchen} parameters={currentKitchenParameters} onParametersChange={setParameters} />
             </div>
 
             <dialog ref={photoDialogRef} className="m-auto max-h-dvh w-11/12 max-w-112 rounded-3xl border border-history-border bg-surface p-0 text-sidebar-text shadow-2xl backdrop:bg-black/50" aria-labelledby="remover-foto-titulo" onCancel={(event) => { event.preventDefault(); setPhotoDialogOpen(false); }}>
