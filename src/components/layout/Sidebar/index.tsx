@@ -89,9 +89,9 @@ function Sidebar({ logo, logoMark, menuSections = [], fixo, setFixo }: SidebarPr
             ? "bg-linear-to-r from-sidebar-line to-transparent"
             : "bg-sidebar-divider group-hover:bg-linear-to-r group-hover:from-sidebar-line group-hover:to-transparent group-focus-within:bg-linear-to-r group-focus-within:from-sidebar-line group-focus-within:to-transparent";
         return (
-            <nav className="flex min-w-0 w-full flex-col gap-7" aria-label="Navegação principal">
+            <nav className="flex min-w-0 w-full flex-col gap-4" aria-label="Navegação principal">
                 {menuSections.map((section) => (
-                    <section className="flex min-w-0 flex-col gap-2.5" key={section.sectionTitle}>
+                    <section className="flex min-w-0 flex-col gap-4" key={section.sectionTitle}>
                         <div className={`flex h-5 w-full items-center overflow-hidden large-text:h-auto large-text:min-h-5 dyslexia-font:h-auto dyslexia-font:min-h-5 dyslexia-font:flex-wrap dyslexia-font:overflow-visible ${headingLayout}`}>
                             <h2 className={`shrink-0 overflow-hidden font-k2d text-sidebar-label font-bold uppercase leading-5 tracking-sidebar-label text-sidebar-label sidebar-label-transition large-text:shrink dyslexia-font:h-auto dyslexia-font:min-h-5 dyslexia-font:flex-wrap dyslexia-font:overflow-visible ${label}`}>{section.sectionTitle}</h2>
                             <span className={`h-px ${dividerLayout} ${dividerColor}`} aria-hidden="true" />
