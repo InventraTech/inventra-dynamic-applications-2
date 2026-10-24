@@ -1,8 +1,10 @@
 import { useDeferredValue, useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import type { ProductCategory, ProductPage, ProductRecord, ProductStatusFilter } from "../../../types/products";
+import type { ProductCategory, ProductRecord, ProductStatusFilter } from "../../../types/products";
 import { ApiError } from "../../../services/api";
-import { getProductCategories, searchProducts, setProductActive } from "../../../services/products";
+import { getProductCategories, searchProductsForKitchen, setProductActive } from "../../../services/products";
+import { getCurrentUser } from "../../../services/authService";
+import { updateSessionKitchen } from "../../../services/authSession";
 import Button from "../../ui/Button";
 import Feedback from "../../ui/Feedback";
 import Mascot from "../../ui/Mascot";
@@ -26,7 +28,7 @@ function ProductStatus({ active }: { active: boolean }) {
 }
 
 function ProductCatalog() {
-    const [pageData, setPageData] = useState<ProductPage | null>(null);
+    const [catalogProducts, setCatalogProducts] = useState<ProductRecord[] | null>(null);
     const [categories, setCategories] = useState<ProductCategory[]>([]);
     const [searchParams, setSearchParams] = useSearchParams();
     const query = searchParams.get("name") ?? "";
@@ -37,6 +39,7 @@ function ProductCatalog() {
     const [completedLoadKey, setCompletedLoadKey] = useState<string | null>(null);
     const [loadFailure, setLoadFailure] = useState<{ key: string; message: string } | null>(null);
     const [categoryFailure, setCategoryFailure] = useState<{ key: number; message: string } | null>(null);
+    const [kitchenMissingKey, setKitchenMissingKey] = useState<string | null>(null);
     const [actionError, setActionError] = useState<string | null>(null);
     const [notice, setNotice] = useState<string | null>(null);
     const [retryKey, setRetryKey] = useState(0);
@@ -44,10 +47,20 @@ function ProductCatalog() {
     const [updatingId, setUpdatingId] = useState<number | null>(null);
     const statusDialog = useRef<HTMLDialogElement>(null);
     const statusTrigger = useRef<HTMLButtonElement | null>(null);
+    const kitchenScope = useRef<{ id: number; canReadStock: boolean } | null | undefined>(undefined);
 
-    const loadKey = `${deferredQuery}:${categoryId}:${status}:${page}:${retryKey}`;
+    const loadKey = `${deferredQuery}:${categoryId}:${status}:${retryKey}`;
     const loading = completedLoadKey !== loadKey;
     const error = categoryFailure?.key === retryKey ? categoryFailure.message : loadFailure?.key === loadKey ? loadFailure.message : null;
+    const totalElements = catalogProducts?.length ?? 0;
+    const totalPages = Math.max(1, Math.ceil(totalElements / PAGE_SIZE));
+    const pageData = catalogProducts === null ? null : {
+        content: catalogProducts.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE),
+        totalElements,
+        totalPages,
+        first: page === 0,
+        last: page >= totalPages - 1,
+    };
 
     useEffect(() => {
         const controller = new AbortController();
@@ -59,20 +72,49 @@ function ProductCatalog() {
 
     useEffect(() => {
         const controller = new AbortController();
-        searchProducts({
-            name: deferredQuery,
-            ...(categoryId ? { categoryId: Number(categoryId) } : {}),
-            ...(status === "all" ? {} : { active: status === "active" }),
-            page,
-            size: PAGE_SIZE,
-        }, controller.signal)
-            .then((result) => { if (!controller.signal.aborted) setPageData(result); })
+        async function loadKitchenCatalog() {
+            let scope = kitchenScope.current;
+            if (scope === undefined) {
+                const currentUser = await getCurrentUser(controller.signal);
+                if (controller.signal.aborted) return;
+                if (currentUser.kitchen) updateSessionKitchen(currentUser.kitchen);
+                const accessType = typeof currentUser.profile === "string"
+                    ? currentUser.profile
+                    : currentUser.profile?.accessType ?? currentUser.profile?.name ?? "";
+                const normalizedAccessType = accessType.toLocaleUpperCase("pt-BR");
+                scope = currentUser.kitchen
+                    ? { id: currentUser.kitchen.id, canReadStock: normalizedAccessType === "SUPERVISOR" || normalizedAccessType === "ESTOQUISTA" }
+                    : null;
+                kitchenScope.current = scope;
+            }
+
+            if (!scope) {
+                setCatalogProducts([]);
+                setKitchenMissingKey(loadKey);
+                return;
+            }
+
+            setKitchenMissingKey(null);
+            const result = await searchProductsForKitchen({
+                name: deferredQuery,
+                ...(categoryId ? { categoryId: Number(categoryId) } : {}),
+                ...(status === "all" ? {} : { active: status === "active" }),
+                page: 0,
+                size: PAGE_SIZE,
+            }, scope.id, scope.canReadStock, controller.signal);
+            if (!controller.signal.aborted) setCatalogProducts(result);
+        }
+
+        void loadKitchenCatalog()
             .catch((loadError: unknown) => {
-                if (!controller.signal.aborted) setLoadFailure({ key: loadKey, message: getErrorMessage(loadError) });
+                if (!controller.signal.aborted) {
+                    setKitchenMissingKey(null);
+                    setLoadFailure({ key: loadKey, message: getErrorMessage(loadError) });
+                }
             })
             .finally(() => { if (!controller.signal.aborted) setCompletedLoadKey(loadKey); });
         return () => controller.abort();
-    }, [categoryId, deferredQuery, loadKey, page, retryKey, status]);
+    }, [categoryId, deferredQuery, loadKey, retryKey, status]);
 
     useEffect(() => {
         const dialog = statusDialog.current;
@@ -139,7 +181,12 @@ function ProductCatalog() {
             {error && <Feedback severity="error">{error}</Feedback>}
             {error && <Button variant="icon" className="min-h-10 w-fit rounded-full border border-history-border bg-surface px-4 font-k2d text-sm font-bold text-sidebar-purple hover:bg-history-card-header" type="button" onClick={() => setRetryKey((current) => current + 1)}>Tentar novamente</Button>}
 
-            {loading ? <ProductCatalogSkeleton /> : error ? null : products.length === 0 ? (
+            {loading ? <ProductCatalogSkeleton /> : error ? null : kitchenMissingKey === loadKey ? (
+                <div className="flex min-h-80 flex-col items-center justify-center gap-3 rounded-3xl bg-surface p-7 text-center shadow-history-card">
+                    <h2 className="font-k2d text-xl font-bold text-sidebar-text">Sua conta ainda não está vinculada a uma cozinha</h2>
+                    <p className="max-w-110 text-sm leading-relaxed text-history-muted">O catálogo exibe apenas produtos associados à cozinha da sua conta. Peça ao administrador para vinculá-la.</p>
+                </div>
+            ) : products.length === 0 ? (
                 <div className="flex min-h-80 flex-col items-center justify-center gap-3 rounded-3xl bg-surface p-7 text-center shadow-history-card">
                     <Mascot size="compacto" className="w-20" />
                     <h2 className="font-k2d text-xl font-bold text-sidebar-text">{query || categoryId || status !== "all" ? "Nenhum produto encontrado" : "Seu catálogo ainda está vazio"}</h2>

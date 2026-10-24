@@ -175,7 +175,7 @@ function Accessibility() {
     const activeFeatures = getFeatures(settings);
 
     return (
-        <div className="flex min-h-screen flex-col bg-linear-to-b from-history-background-start to-history-background-end">
+        <div className="flex min-h-screen flex-col bg-linear-to-b from-history-background-start to-history-background-end adjusted-contrast:bg-none adjusted-contrast:bg-history-background-start">
             {signedIn ? <Topbar
                 title="Acessibilidade"
                 description="Ajuste o Inventra ao seu jeito de ver, ouvir e navegar"

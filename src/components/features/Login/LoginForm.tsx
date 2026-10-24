@@ -138,6 +138,8 @@ function LoginForm() {
                     </div>
                 </div>
 
+                {error && <Feedback severity="error" id="login-error">{error}</Feedback>}
+
                 <div className="flex min-h-login-options-height flex-wrap items-center justify-between gap-x-3 gap-y-2">
                     <label className="flex min-h-11 min-w-0 cursor-pointer items-center gap-login-checkbox-gap text-login-options text-login-muted" htmlFor="login-remember">
                         <Input
@@ -159,7 +161,6 @@ function LoginForm() {
                     </Button>
                 </div>
 
-                {error && <Feedback severity="error" id="login-error">{error}</Feedback>}
                 <p className="sr-only" role="status">{isSubmitting ? "Entrando na sua conta…" : ""}</p>
 
                 <Button

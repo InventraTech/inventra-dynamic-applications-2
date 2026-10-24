@@ -1,0 +1,10 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="icon">
+<path id="Vector" d="M7.46667 18.9333C7.46667 18.0139 7.8319 17.1322 8.48203 16.482C9.13216 15.8319 10.0139 15.4667 10.9333 15.4667H17.0667C17.9861 15.4667 18.8678 15.8319 19.518 16.482C20.1681 17.1322 20.5333 18.0139 20.5333 18.9333V25.8667C20.5333 26.7861 20.1681 27.6678 19.518 28.318C18.8678 28.9681 17.9861 29.3333 17.0667 29.3333H10.9333C10.0139 29.3333 9.13216 28.9681 8.48203 28.318C7.8319 27.6678 7.46667 26.7861 7.46667 25.8667V18.9333Z" fill="#0F9D84" fill-opacity="0.2" stroke="#0F9D84" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_2" d="M15.4667 11.4667H11.2C10.4636 11.4667 9.86667 12.0636 9.86667 12.8V14.1333C9.86667 14.8697 10.4636 15.4667 11.2 15.4667H15.4667C16.203 15.4667 16.8 14.8697 16.8 14.1333V12.8C16.8 12.0636 16.203 11.4667 15.4667 11.4667Z" fill="#0F9D84" fill-opacity="0.35" stroke="#0F9D84" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_3" d="M8.53333 8.53333C8.53333 8.10899 8.7019 7.70202 9.00196 7.40196C9.30202 7.1019 9.70899 6.93333 10.1333 6.93333H17.3333L23.2 9.73333V11.4667H10.1333C9.70899 11.4667 9.30202 11.2981 9.00196 10.998C8.7019 10.698 8.53333 10.291 8.53333 9.86667V8.53333Z" fill="#5700BB" fill-opacity="0.2" stroke="#5700BB" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_4" d="M8.26667 21.6H20.2667" stroke="#0F9D84" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_5" d="M26.9333 7.2H26.9467M28.8 11.2H28.8133M25.8667 13.0667H25.88" stroke="#0F9D84" stroke-width="2.93333" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_6" d="M24.8 20V25.8667M21.8667 22.9333H27.7333" stroke="#F5A623" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</svg>

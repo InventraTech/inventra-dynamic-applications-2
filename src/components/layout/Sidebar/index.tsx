@@ -67,7 +67,7 @@ function Sidebar({ logo, logoMark, menuSections = [], fixo, setFixo }: SidebarPr
                         onPointerDown={handlePinPointerDown}
                         onClick={togglePinned}
                     >
-                        <img className="size-6 rotate-12 object-contain" src={fixo ? unfixIcon : fixIcon} alt="" aria-hidden="true" />
+                        <img className="sidebar-navigation-icon size-6 rotate-12 object-contain" src={fixo ? unfixIcon : fixIcon} alt="" aria-hidden="true" />
                     </Button>
                 )}
             </header>
@@ -89,23 +89,33 @@ function Sidebar({ logo, logoMark, menuSections = [], fixo, setFixo }: SidebarPr
             ? "bg-linear-to-r from-sidebar-line to-transparent"
             : "bg-sidebar-divider group-hover:bg-linear-to-r group-hover:from-sidebar-line group-hover:to-transparent group-focus-within:bg-linear-to-r group-focus-within:from-sidebar-line group-focus-within:to-transparent";
         return (
-            <nav className="flex min-w-0 w-full flex-col gap-7" aria-label="Navegação principal">
+            <nav className="flex min-w-0 w-full flex-col gap-4" aria-label="Navegação principal">
                 {menuSections.map((section) => (
-                    <section className="flex min-w-0 flex-col gap-2.5" key={section.sectionTitle}>
+                    <section className="flex min-w-0 flex-col gap-4" key={section.sectionTitle}>
                         <div className={`flex h-5 w-full items-center overflow-hidden large-text:h-auto large-text:min-h-5 dyslexia-font:h-auto dyslexia-font:min-h-5 dyslexia-font:flex-wrap dyslexia-font:overflow-visible ${headingLayout}`}>
                             <h2 className={`shrink-0 overflow-hidden font-k2d text-sidebar-label font-bold uppercase leading-5 tracking-sidebar-label text-sidebar-label sidebar-label-transition large-text:shrink dyslexia-font:h-auto dyslexia-font:min-h-5 dyslexia-font:flex-wrap dyslexia-font:overflow-visible ${label}`}>{section.sectionTitle}</h2>
                             <span className={`h-px ${dividerLayout} ${dividerColor}`} aria-hidden="true" />
                         </div>
                         <ul className="flex flex-col gap-1">
                             {section.menuOptions.map((option) => (
-                                <li className="min-w-0 w-full" key={option.id ?? option.pagePath}>
+                                <li className="min-w-0 w-full" key={option.id}>
+                                    {option.availability === "available" && option.pagePath ? (
                                         <NavLink title={option.page} aria-label={option.page} className={({ isActive }) => `relative flex w-full items-center rounded-2xl px-3.5 py-2.75 font-k2d text-sidebar-nav leading-normal transition-colors duration-200 ${spacing} ${isActive ? "bg-sidebar-active font-bold text-sidebar-purple" : "font-medium text-sidebar-text hover:bg-sidebar-active"}`} to={option.pagePath}>
                                             {({ isActive }) => <>
                                                 {isActive && <span className="absolute left-0 top-4 h-7 w-1 rounded-r-sidebar-indicator bg-sidebar-indicator" aria-hidden="true" />}
-                                                <img className="h-9.5 w-10.75 shrink-0 object-contain" src={option.pageIcon} alt="" />
+                                                <img className="sidebar-navigation-icon size-8 shrink-0 object-contain" src={option.pageIcon} alt="" />
                                                 <span className={`min-w-0 overflow-hidden sidebar-label-transition dyslexia-font:max-w-none dyslexia-font:overflow-visible dyslexia-font:whitespace-normal dyslexia-font:wrap-anywhere ${label}`}>{option.page}</span>
                                             </>}
                                         </NavLink>
+                                    ) : (
+                                        <div aria-disabled="true" aria-label={`${option.page}, em breve`} title={`${option.page} — em breve`} className={`relative flex w-full items-center rounded-2xl px-3.5 py-2.75 font-k2d text-sidebar-nav font-medium leading-normal text-sidebar-text ${spacing}`}>
+                                            <img className="sidebar-navigation-icon size-8 shrink-0 object-contain" src={option.pageIcon} alt="" />
+                                            <span className={`flex min-w-0 items-center overflow-hidden sidebar-label-transition dyslexia-font:max-w-none dyslexia-font:overflow-visible dyslexia-font:whitespace-normal dyslexia-font:wrap-anywhere ${label}`}>
+                                                <span className="min-w-0 truncate">{option.page}</span>
+                                                <span className="ml-auto shrink-0 pl-1 text-xs font-medium leading-5 text-sidebar-label">Em breve</span>
+                                            </span>
+                                        </div>
+                                    )}
                                 </li>
                             ))}
                         </ul>
@@ -119,7 +129,7 @@ function Sidebar({ logo, logoMark, menuSections = [], fixo, setFixo }: SidebarPr
         <>
             <aside
                 ref={sidebar}
-                className={`${suppressHoverExpansion ? "" : "group"} fixed inset-y-0 left-0 z-50 hidden flex-col overflow-hidden rounded-r-3xl bg-surface shadow-sidebar sidebar-width-transition lg:flex large-text:hidden ${fixo ? "w-70" : suppressHoverExpansion ? "w-24" : "w-24 hover:w-70 focus-within:w-70"}`}
+                className={`${suppressHoverExpansion ? "" : "group"} fixed inset-y-0 left-0 z-50 hidden flex-col overflow-hidden rounded-r-3xl bg-surface shadow-sidebar sidebar-width-transition lg:flex large-text:hidden adjusted-contrast:border-r-2 adjusted-contrast:border-history-border ${fixo ? "w-70" : suppressHoverExpansion ? "w-24" : "w-24 hover:w-70 focus-within:w-70"}`}
                 onPointerLeave={handleSidebarPointerLeave}
                 onPointerEnter={handleSidebarPointerEnter}
             >

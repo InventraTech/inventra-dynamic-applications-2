@@ -1,8 +1,9 @@
 export interface MenuOption {
-    id?: string;
+    id: string;
     page: string;
     pageIcon: string;
-    pagePath: string;
+    pagePath?: string;
+    availability: "available" | "coming-soon";
 }
 
 export interface MenuSection {
@@ -16,4 +17,9 @@ export interface SidebarProps {
     menuSections: MenuSection[];
     fixo: boolean;
     setFixo: (valor: boolean) => void;
+}
+
+export interface SidebarPreferences {
+    _versao: 1;
+    fixa: boolean;
 }

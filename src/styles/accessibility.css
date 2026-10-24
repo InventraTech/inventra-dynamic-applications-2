@@ -132,6 +132,12 @@ html[data-accessibility-contrast="dark"] {
   --color-history-card-header: #2b2339;
   --color-history-border: #8e7da2;
   --color-history-muted: #c3b9d0;
+  --color-history-status-complete-bg: #183721;
+  --color-history-status-complete-text: #b4edc0;
+  --color-history-status-pending-bg: #4b1c2b;
+  --color-history-status-pending-text: #ffb6c3;
+  --color-history-status-observation-bg: #35284b;
+  --color-history-status-observation-text: #dfd1ff;
   --color-history-avatar: #39254f;
   --color-history-search-placeholder: #c3b9d0;
   --color-login-field: #30253f;
@@ -146,6 +152,11 @@ html[data-accessibility-contrast="dark"] {
   --color-feedback-success-bg: #183721;
   --color-feedback-info: #dfd1ff;
   --color-feedback-info-bg: #35284b;
+}
+
+html[data-accessibility-contrast="dark"] .sidebar-navigation-icon,
+html[data-accessibility-contrast="yellow-black"] .sidebar-navigation-icon {
+  filter: brightness(0) invert(1);
 }
 
 html[data-accessibility-contrast="reinforced"],
@@ -194,7 +205,7 @@ html[data-accessibility-contrast="yellow-black"] {
 }
 
 html:not([data-accessibility-contrast="normal"]) .topbar-accent {
-  filter: grayscale(1);
+  display: none;
 }
 
 /* Rótulos e ícones continuam indicando os estados quando a paleta é adaptada. */
@@ -224,6 +235,25 @@ html:not([data-accessibility-color-vision="none"]) {
   --color-feedback-error-bg: var(--color-history-status-pending-bg);
   --color-feedback-info: var(--color-history-status-observation-text);
   --color-feedback-info-bg: var(--color-history-status-observation-bg);
+}
+
+html[data-accessibility-contrast="dark"][data-accessibility-color-vision="protanopia"],
+html[data-accessibility-contrast="dark"][data-accessibility-color-vision="deuteranopia"] {
+  --color-history-status-complete-bg: #17314a;
+  --color-history-status-complete-text: #c2e0ff;
+  --color-history-status-pending-bg: #4a2b18;
+  --color-history-status-pending-text: #ffd0a6;
+  --color-history-status-observation-bg: #332641;
+  --color-history-status-observation-text: #e0d2f5;
+}
+
+html[data-accessibility-contrast="dark"][data-accessibility-color-vision="tritanopia"] {
+  --color-history-status-complete-bg: #302343;
+  --color-history-status-complete-text: #e0d2ff;
+  --color-history-status-pending-bg: #4b1c2b;
+  --color-history-status-pending-text: #ffb6c3;
+  --color-history-status-observation-bg: #292f35;
+  --color-history-status-observation-text: #d3dce3;
 }
 
 html:is([data-accessibility-contrast="reinforced"], [data-accessibility-contrast="yellow-black"]) {

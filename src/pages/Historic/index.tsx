@@ -23,7 +23,7 @@ function Historico({ mode }: HistoryProps) {
         : profile?.name ?? profile?.accessType?.replaceAll("_", " ") ?? "Usuário";
 
     return (
-        <div className="flex min-h-screen flex-col bg-linear-to-b from-history-background-start to-history-background-end">
+        <div className="flex min-h-screen flex-col bg-linear-to-b from-history-background-start to-history-background-end adjusted-contrast:bg-none adjusted-contrast:bg-history-background-start">
             <Topbar
                 title="Histórico"
                 description="Retiradas de estoque e solicitações de compra"
