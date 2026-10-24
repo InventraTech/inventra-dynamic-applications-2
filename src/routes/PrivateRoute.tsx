@@ -10,26 +10,29 @@ import { getSession } from "../services/authSession";
 interface PrivateRouteProps { allowPublic?: boolean }
 
 const menuSections: MenuSection[] = [
-    { sectionTitle: "titlo 1", menuOptions: [
-        { page: "Login", pageIcon: logoInventra, pagePath: "/" },
-        { page: "Início", pageIcon: logoInventra, pagePath: "/home" },
-        { page: "Acessibilidade", pageIcon: logoInventra, pagePath: "/acessibilidade" },
+    { sectionTitle: "Painel", menuOptions: [
+        { page: "Dashboard", pageIcon: logoInventra, pagePath: "/" },
     ] },
-    { sectionTitle: "titlo 2", menuOptions: [
+    { sectionTitle: "Operação", menuOptions: [
         { page: "Dashboard", pageIcon: logoInventra, pagePath: "/home" },
         { page: "Produtos", pageIcon: logoInventra, pagePath: "/produtos" },
         { page: "Estoque", pageIcon: logoInventra, pagePath: "/estoque" },
+        { page: "Início", pageIcon: logoInventra, pagePath: "/home" },
         { id: "cozinhas-operacao-1", page: "Cozinhas", pageIcon: logoInventra, pagePath: "/cozinhas" },
         { id: "cozinhas-operacao-2", page: "Cozinhas", pageIcon: logoInventra, pagePath: "/cozinhas" },
         { id: "cozinhas-operacao-3", page: "Cozinhas", pageIcon: logoInventra, pagePath: "/cozinhas" },
     ] },
-    { sectionTitle: "titlo 3", menuOptions: [
+    { sectionTitle: "Administração", menuOptions: [
         { page: "Início", pageIcon: logoInventra, pagePath: "/" },
         { page: "Estoque", pageIcon: logoInventra, pagePath: "/estoque" },
         { id: "cozinhas-cadastros-1", page: "Cozinhas", pageIcon: logoInventra, pagePath: "/cozinhas" },
         { id: "cozinhas-cadastros-2", page: "Cozinhas", pageIcon: logoInventra, pagePath: "/cozinhas" },
         { id: "cozinhas-cadastros-3", page: "Cozinhas", pageIcon: logoInventra, pagePath: "/cozinhas" },
         { page: "Equipe e acessos", pageIcon: logoInventra, pagePath: "/equipe-acessos" },
+    ] },
+    { sectionTitle: "Configurações", menuOptions: [
+        { page: "Configurações", pageIcon: logoInventra, pagePath: "/configuracoes" },
+        { page: "Acessibilidade", pageIcon: logoInventra, pagePath: "/acessibilidade" },
     ] },
 ];
 

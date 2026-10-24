@@ -119,7 +119,7 @@ function Sidebar({ logo, logoMark, menuSections = [], fixo, setFixo }: SidebarPr
         <>
             <aside
                 ref={sidebar}
-                className={`${suppressHoverExpansion ? "" : "group"} fixed inset-y-0 left-0 z-50 hidden flex-col overflow-hidden rounded-r-3xl bg-surface shadow-sidebar sidebar-width-transition lg:flex large-text:hidden ${fixo ? "w-70" : suppressHoverExpansion ? "w-24" : "w-24 hover:w-70 focus-within:w-70"}`}
+                className={`${suppressHoverExpansion ? "" : "group"} fixed inset-y-0 left-0 z-50 hidden flex-col overflow-hidden rounded-r-3xl bg-surface shadow-sidebar sidebar-width-transition lg:flex large-text:hidden adjusted-contrast:border-r-2 adjusted-contrast:border-history-border ${fixo ? "w-70" : suppressHoverExpansion ? "w-24" : "w-24 hover:w-70 focus-within:w-70"}`}
                 onPointerLeave={handleSidebarPointerLeave}
                 onPointerEnter={handleSidebarPointerEnter}
             >

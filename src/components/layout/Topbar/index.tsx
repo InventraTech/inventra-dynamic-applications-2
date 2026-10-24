@@ -12,7 +12,7 @@ function Topbar({ title, description, userInitials = "IN", userName = "Usuário"
                 <p className="mt-1 font-k2d text-topbar-description leading-normal wrap-anywhere">{description}</p>
             </div>
             <img className="topbar-accent pointer-events-none absolute right-0 bottom-0 -z-10 h-11/10 w-192 max-lg:w-158 max-md:w-105 max-xl:hidden large-text:hidden" src={accent} alt="" />
-            <div className="relative flex min-w-0 flex-wrap items-center gap-3 rounded-2xl bg-brand px-3 py-2 xl:bg-transparent xl:p-0 large-text:bg-brand large-text:px-3 large-text:py-2">
+            <div className="relative flex min-w-0 flex-wrap items-center gap-3 rounded-2xl bg-brand px-3 py-2 xl:bg-transparent xl:p-0 large-text:bg-brand large-text:px-3 large-text:py-2 adjusted-contrast:bg-brand adjusted-contrast:px-3 adjusted-contrast:py-2">
                 <SearchField className="w-75 max-w-full flex-1" variant="brand" label="Buscar no Inventra" placeholder={searchPlaceholder} onChange={(event) => onSearch?.(event.target.value)} />
                 <Button className="relative min-h-11 min-w-11 shrink-0 rounded-full bg-white/12 text-on-brand hover:bg-white/20 focus-visible:outline-on-brand" variant="icon" type="button" onClick={onNotifications} aria-label={hasNotifications ? "Notificações. Há notificações." : "Notificações"}>
                     <img className="size-6" src={notificationIcon} alt="" />

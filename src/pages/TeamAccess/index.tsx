@@ -12,7 +12,7 @@ function TeamAccess() {
     const role = typeof profile === "string" ? profile : profile?.accessType?.replaceAll("_", " ") ?? "Supervisor";
 
     return (
-        <div className="flex min-h-screen min-w-0 flex-col bg-linear-to-b from-history-background-start to-history-background-end">
+        <div className="flex min-h-screen min-w-0 flex-col bg-linear-to-b from-history-background-start to-history-background-end adjusted-contrast:bg-none adjusted-contrast:bg-history-background-start">
             <Topbar
                 title="Equipe e acessos"
                 description="Quem usa a sua cozinha e quem pediu para entrar"
