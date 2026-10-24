@@ -103,16 +103,16 @@ function Sidebar({ logo, logoMark, menuSections = [], fixo, setFixo }: SidebarPr
                                         <NavLink title={option.page} aria-label={option.page} className={({ isActive }) => `relative flex w-full items-center rounded-2xl px-3.5 py-2.75 font-k2d text-sidebar-nav leading-normal transition-colors duration-200 ${spacing} ${isActive ? "bg-sidebar-active font-bold text-sidebar-purple" : "font-medium text-sidebar-text hover:bg-sidebar-active"}`} to={option.pagePath}>
                                             {({ isActive }) => <>
                                                 {isActive && <span className="absolute left-0 top-4 h-7 w-1 rounded-r-sidebar-indicator bg-sidebar-indicator" aria-hidden="true" />}
-                                                <img className="sidebar-navigation-icon size-10 shrink-0 object-contain" src={option.pageIcon} alt="" />
+                                                <img className="sidebar-navigation-icon size-8 shrink-0 object-contain" src={option.pageIcon} alt="" />
                                                 <span className={`min-w-0 overflow-hidden sidebar-label-transition dyslexia-font:max-w-none dyslexia-font:overflow-visible dyslexia-font:whitespace-normal dyslexia-font:wrap-anywhere ${label}`}>{option.page}</span>
                                             </>}
                                         </NavLink>
                                     ) : (
                                         <div aria-disabled="true" aria-label={`${option.page}, em breve`} title={`${option.page} — em breve`} className={`relative flex w-full items-center rounded-2xl px-3.5 py-2.75 font-k2d text-sidebar-nav font-medium leading-normal text-sidebar-text ${spacing}`}>
-                                            <img className="sidebar-navigation-icon size-10 shrink-0 object-contain" src={option.pageIcon} alt="" />
-                                            <span className={`min-w-0 overflow-hidden sidebar-label-transition dyslexia-font:max-w-none dyslexia-font:overflow-visible dyslexia-font:whitespace-normal dyslexia-font:wrap-anywhere ${label}`}>
-                                                <span className="block">{option.page}</span>
-                                                <span className="block text-xs font-medium leading-5 text-sidebar-label">Em breve</span>
+                                            <img className="sidebar-navigation-icon size-8 shrink-0 object-contain" src={option.pageIcon} alt="" />
+                                            <span className={`flex min-w-0 items-center overflow-hidden sidebar-label-transition dyslexia-font:max-w-none dyslexia-font:overflow-visible dyslexia-font:whitespace-normal dyslexia-font:wrap-anywhere ${label}`}>
+                                                <span className="min-w-0 truncate">{option.page}</span>
+                                                <span className="ml-auto shrink-0 pl-1 text-xs font-medium leading-5 text-sidebar-label">Em breve</span>
                                             </span>
                                         </div>
                                     )}
