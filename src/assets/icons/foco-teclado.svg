@@ -1,7 +1,7 @@
-<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="24.5556" height="24.5556" viewBox="0 0 24.5556 24.5556" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g id="teclado">
-<path id="Vector" d="M20.463 4.09259H4.09259C2.96245 4.09259 2.0463 5.00875 2.0463 6.13889V18.4167C2.0463 19.5468 2.96245 20.463 4.09259 20.463H20.463C21.5931 20.463 22.5093 19.5468 22.5093 18.4167V6.13889C22.5093 5.00875 21.5931 4.09259 20.463 4.09259Z" stroke="#5700BB" stroke-width="1.79051" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Vector_2" d="M6.13889 8.18518H6.14912M10.2315 8.18518H10.2417M14.3241 8.18518H14.3343M18.4167 8.18518H18.4269M8.18519 12.2778H8.19542M12.2778 12.2778H12.288M16.3704 12.2778H16.3806" stroke="#5700BB" stroke-width="1.79051" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Vector_3" d="M7.16204 16.3704H17.3935" stroke="#F5A623" stroke-width="1.79051" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector" d="M28.3333 5.66667H5.66667C4.10186 5.66667 2.83333 6.93519 2.83333 8.5V25.5C2.83333 27.0648 4.10186 28.3333 5.66667 28.3333H28.3333C29.8981 28.3333 31.1667 27.0648 31.1667 25.5V8.5C31.1667 6.93519 29.8981 5.66667 28.3333 5.66667Z" stroke="#5700BB" stroke-width="2.47917" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_2" d="M8.5 11.3333H8.51417M14.1667 11.3333H14.1808M19.8333 11.3333H19.8475M25.5 11.3333H25.5142M11.3333 17H11.3475M17 17H17.0142M22.6667 17H22.6808" stroke="#5700BB" stroke-width="2.47917" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_3" d="M9.91667 22.6667H24.0833" stroke="#F5A623" stroke-width="2.47917" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
 </svg>

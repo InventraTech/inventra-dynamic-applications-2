@@ -154,6 +154,11 @@ html[data-accessibility-contrast="dark"] {
   --color-feedback-info-bg: #35284b;
 }
 
+html[data-accessibility-contrast="dark"] .sidebar-navigation-icon,
+html[data-accessibility-contrast="yellow-black"] .sidebar-navigation-icon {
+  filter: brightness(0) invert(1);
+}
+
 html[data-accessibility-contrast="reinforced"],
 html[data-accessibility-contrast="yellow-black"] {
   --color-brand: #000000;

@@ -1,8 +1,9 @@
 export interface MenuOption {
-    id?: string;
+    id: string;
     page: string;
     pageIcon: string;
-    pagePath: string;
+    pagePath?: string;
+    availability: "available" | "coming-soon";
 }
 
 export interface MenuSection {
