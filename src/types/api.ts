@@ -9,10 +9,12 @@ export interface RequisitionDto {
     requester: {
         id: string;
         name: string;
+        photoUrl?: string | null;
     };
     approver?: {
         id: string;
         name: string;
+        photoUrl?: string | null;
     } | null;
     createdAt: string;
     approvedAt?: string | null;

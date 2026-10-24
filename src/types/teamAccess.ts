@@ -2,6 +2,7 @@ export interface TeamUser {
     id: string;
     name: string;
     email: string;
+    photoUrl?: string | null;
     kitchen: { id: number; name: string } | null;
     profile: { id: number; accessType: string };
     active: boolean;
@@ -21,7 +22,7 @@ export interface KitchenAccessRequest {
     id: string;
     status: AccessRequestStatus;
     kitchen: { id: number; name: string };
-    user: { id: string; name: string; email: string };
+    user: { id: string; name: string; email: string; photoUrl?: string | null };
     createdAt: string;
     expiresAt: string | null;
     decidedAt: string | null;

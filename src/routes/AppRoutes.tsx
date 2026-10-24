@@ -20,6 +20,7 @@ const ProductCatalog = lazy(() => import("../components/features/Products/Produc
 const ProductEditor = lazy(() => import("../components/features/Products/ProductEditor"));
 const ProductDetail = lazy(() => import("../components/features/Products/ProductDetail"));
 const ProductReferenceManagement = lazy(() => import("../components/features/Products/ProductReferenceManagement"));
+const Profile = lazy(() => import("../pages/Profile"));
 
 function ProductRouteLoading() {
     return <section className="flex min-w-0 flex-col gap-4 px-6 pb-8 pt-6 max-md:px-4 max-sm:px-3" aria-busy="true"><p className="sr-only" role="status" aria-live="polite">Carregando tela de produtos…</p><div className="h-12 w-full rounded-2xl bg-surface motion-safe:animate-pulse" aria-hidden="true" /><div className="min-h-72 rounded-3xl bg-surface shadow-history-card motion-safe:animate-pulse" aria-hidden="true" /></section>;
@@ -27,6 +28,14 @@ function ProductRouteLoading() {
 
 function withProductLoading(element: ReactNode) {
     return <Suspense fallback={<ProductRouteLoading />}>{element}</Suspense>;
+}
+
+function ProfileRouteLoading() {
+    return <main id="conteudo-principal" tabIndex={-1} className="flex min-w-0 flex-col gap-4 p-4 outline-none sm:p-6" aria-busy="true"><h1 className="sr-only">Perfil</h1><p className="sr-only" role="status" aria-live="polite">Carregando seu perfil…</p><div className="h-12 w-full rounded-2xl bg-surface motion-safe:animate-pulse" aria-hidden="true" /><div className="min-h-72 rounded-3xl bg-surface shadow-history-card motion-safe:animate-pulse" aria-hidden="true" /></main>;
+}
+
+function withProfileLoading(element: ReactNode) {
+    return <Suspense fallback={<ProfileRouteLoading />}>{element}</Suspense>;
 }
 
 function SupervisorOnlyRoute() {
@@ -60,6 +69,7 @@ export default function AppRoutes() {
                 {/* Páginas Privadas */}
                 <Route element={<PrivateRoute />}>
                     <Route path="/home" element={<Home />} />
+                    <Route path="/perfil" element={withProfileLoading(<Profile />)} />
                     <Route path="/historico" element={<Navigate to="/historico/retiradas" replace />} />
                     <Route path="/historico/retiradas" element={<Historico mode="withdrawal" />} />
                     <Route path="/historico/solicitacoes" element={<Historico mode="purchase" />} />

@@ -13,6 +13,7 @@ interface LoginNavigationState {
     from?: {
         pathname?: string;
     };
+    message?: string;
 }
 
 function LoginForm() {
@@ -23,6 +24,7 @@ function LoginForm() {
     const [showPassword, setShowPassword] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [navigationMessage] = useState(() => (location.state as LoginNavigationState | null)?.message ?? null);
     const [supportNote, setSupportNote] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -71,6 +73,8 @@ function LoginForm() {
                     </div>
                     <Mascote className="mt-0.5 shrink-0 large-text:hidden" size="compacto" />
                 </header>
+
+                {navigationMessage && <Feedback severity="success">{navigationMessage}</Feedback>}
 
                 <div className="flex min-w-0 flex-col gap-login-field-gap">
                     <label className="text-login-label font-bold leading-tight text-login-brand-start" htmlFor="login-email">E-mail</label>

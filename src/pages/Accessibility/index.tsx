@@ -133,7 +133,7 @@ function getTopbarIdentity() {
         ? profile
         : profile?.name ?? profile?.accessType?.replaceAll("_", " ") ?? "Usuário";
 
-    return { userName, userInitials, userRole };
+    return { userName, userInitials, userRole, userPhotoUrl: session?.user.photoUrl };
 }
 
 function Accessibility() {
@@ -180,6 +180,7 @@ function Accessibility() {
                 title="Acessibilidade"
                 description="Ajuste o Inventra ao seu jeito de ver, ouvir e navegar"
                 userInitials={identity.userInitials}
+                userPhotoUrl={identity.userPhotoUrl}
                 userName={identity.userName}
                 userRole={identity.userRole}
             /> : <header className="flex flex-wrap items-center justify-between gap-3 border-b border-history-border bg-surface px-6 py-4">
