@@ -18,3 +18,8 @@ export interface SidebarProps {
     fixo: boolean;
     setFixo: (valor: boolean) => void;
 }
+
+export interface SidebarPreferences {
+    _versao: 1;
+    fixa: boolean;
+}
