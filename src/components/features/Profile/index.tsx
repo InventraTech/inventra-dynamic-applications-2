@@ -30,7 +30,8 @@ function formatDate(value: string | null): string {
     return new Intl.DateTimeFormat("pt-BR", { dateStyle: "long" }).format(date);
 }
 
-function displayRole(accessType: string): string {
+function displayRole(accessType: string | null | undefined): string {
+    if (!accessType) return "Usuário";
     const labels: Record<string, string> = {
         SUPERVISOR: "Supervisor",
         ESTOQUISTA: "Estoquista",
@@ -67,6 +68,13 @@ function Profile({ onUserUpdated }: ProfileProps) {
 
     useEffect(() => {
         const controller = new AbortController();
+        const timeoutId = window.setTimeout(() => {
+            if (controller.signal.aborted) return;
+            setLoadError("O carregamento do perfil demorou mais que o esperado. Tente novamente.");
+            setLoading(false);
+            controller.abort();
+        }, 30_000);
+
         async function loadProfile() {
             setLoading(true);
             setLoadError(null);
@@ -80,12 +88,16 @@ function Profile({ onUserUpdated }: ProfileProps) {
             } catch (error: unknown) {
                 if (!controller.signal.aborted) setLoadError(getErrorMessage(error, "Não foi possível carregar seu perfil. Tente novamente."));
             } finally {
+                window.clearTimeout(timeoutId);
                 if (!controller.signal.aborted) setLoading(false);
             }
         }
 
         void loadProfile();
-        return () => controller.abort();
+        return () => {
+            window.clearTimeout(timeoutId);
+            controller.abort();
+        };
     }, [onUserUpdated, reloadKey]);
 
     useEffect(() => () => {
@@ -338,7 +350,7 @@ function Profile({ onUserUpdated }: ProfileProps) {
                         <section className="min-w-0 rounded-3xl bg-surface p-5 shadow-history-card sm:p-6" aria-labelledby="perfil-conta-titulo">
                             <h2 id="perfil-conta-titulo" className="font-k2d text-xl font-bold text-sidebar-text">Conta Inventra</h2>
                             <dl className="mt-4 grid min-w-0 gap-4 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2 large-text:grid-cols-1">
-                                <div className="min-w-0 rounded-2xl bg-history-card-header p-4"><dt className="font-k2d text-sm text-history-muted">Perfil de acesso</dt><dd className="mt-1 wrap-anywhere font-k2d text-base font-bold text-sidebar-text">{displayRole(user.profile.accessType)}</dd></div>
+                                <div className="min-w-0 rounded-2xl bg-history-card-header p-4"><dt className="font-k2d text-sm text-history-muted">Perfil de acesso</dt><dd className="mt-1 wrap-anywhere font-k2d text-base font-bold text-sidebar-text">{displayRole(user.profile?.accessType)}</dd></div>
                                 <div className="min-w-0 rounded-2xl bg-history-card-header p-4"><dt className="font-k2d text-sm text-history-muted">Cozinha</dt><dd className="mt-1 wrap-anywhere font-k2d text-base font-bold text-sidebar-text">{user.kitchen?.name ?? "Sem cozinha vinculada"}</dd></div>
                                 <div className="min-w-0 rounded-2xl bg-history-card-header p-4"><dt className="font-k2d text-sm text-history-muted">Situação</dt><dd className="mt-1 wrap-anywhere font-k2d text-base font-bold text-sidebar-text">{user.active ? "Ativa" : "Inativa"}</dd></div>
                                 <div className="min-w-0 rounded-2xl bg-history-card-header p-4"><dt className="font-k2d text-sm text-history-muted">Conta criada</dt><dd className="mt-1 wrap-anywhere font-k2d text-base font-bold text-sidebar-text">{accountCreated}</dd></div>

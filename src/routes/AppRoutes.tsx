@@ -13,6 +13,8 @@ import NotFound from "../pages/NotFound";
 import TeamAccess from "../pages/TeamAccess";
 import Products from "../pages/Products";
 import RouteAccessibility from "../components/layout/RouteAccessibility";
+import ProfileLoadingSkeleton from "../components/features/Profile/ProfileLoadingSkeleton";
+import ProfileErrorBoundary from "../components/features/Profile/ProfileErrorBoundary";
 import PublicLayout from "./PublicLayout";
 import { getSession } from "../services/authSession";
 
@@ -31,7 +33,7 @@ function withProductLoading(element: ReactNode) {
 }
 
 function ProfileRouteLoading() {
-    return <main id="conteudo-principal" tabIndex={-1} className="flex min-w-0 flex-col gap-4 p-4 outline-none sm:p-6" aria-busy="true"><h1 className="sr-only">Perfil</h1><p className="sr-only" role="status" aria-live="polite">Carregando seu perfil…</p><div className="h-12 w-full rounded-2xl bg-surface motion-safe:animate-pulse" aria-hidden="true" /><div className="min-h-72 rounded-3xl bg-surface shadow-history-card motion-safe:animate-pulse" aria-hidden="true" /></main>;
+    return <main id="conteudo-principal" tabIndex={-1} className="min-w-0 outline-none"><h1 className="sr-only">Perfil</h1><ProfileLoadingSkeleton /></main>;
 }
 
 function withProfileLoading(element: ReactNode) {
@@ -69,7 +71,7 @@ export default function AppRoutes() {
                 {/* Páginas Privadas */}
                 <Route element={<PrivateRoute />}>
                     <Route path="/home" element={<Home />} />
-                    <Route path="/perfil" element={withProfileLoading(<Profile />)} />
+                    <Route path="/perfil" element={<ProfileErrorBoundary>{withProfileLoading(<Profile />)}</ProfileErrorBoundary>} />
                     <Route path="/historico" element={<Navigate to="/historico/retiradas" replace />} />
                     <Route path="/historico/retiradas" element={<Historico mode="withdrawal" />} />
                     <Route path="/historico/solicitacoes" element={<Historico mode="purchase" />} />
