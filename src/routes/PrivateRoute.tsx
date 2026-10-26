@@ -25,7 +25,7 @@ const menuSections: MenuSection[] = [
         { id: "painel", page: "Painel", pageIcon: dashboardIcon, pagePath: "/home", availability: "available" },
     ] },
     { sectionTitle: "Operação", menuOptions: [
-        { id: "requisicoes", page: "Requisições", pageIcon: requisitionIcon, availability: "coming-soon" },
+        { id: "requisicoes", page: "Requisições", pageIcon: requisitionIcon, pagePath: "/requisicoes", availability: "available" },
         { id: "estoque", page: "Estoque", pageIcon: stockIcon, availability: "coming-soon" },
         { id: "inventarios", page: "Inventários", pageIcon: inventoryIcon, availability: "coming-soon" },
         { id: "produtos", page: "Produtos", pageIcon: productIcon, pagePath: "/produtos", availability: "available" },
