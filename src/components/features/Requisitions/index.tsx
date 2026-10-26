@@ -9,10 +9,12 @@ import { getKitchenRequisitions } from "../../../services/requisitions";
 import type { Requisition, RequisitionListFilters } from "../../../types/requisitions";
 import type { RequisitionPageMode } from "../../../pages/Requisitions";
 import RequisitionFilters from "./RequisitionFilters";
+import RequisitionCreateForm from "./RequisitionCreateForm";
 
 interface RequisitionFlowProps {
     mode: RequisitionPageMode;
     kitchenId: number | null;
+    kitchenName: string | null;
     userId: string | null;
     canReview: boolean;
 }
@@ -23,7 +25,7 @@ interface ListState {
     requisitions: Requisition[];
 }
 
-export default function RequisitionFlow({ mode, kitchenId, userId }: RequisitionFlowProps) {
+export default function RequisitionFlow({ mode, kitchenId, kitchenName, userId }: RequisitionFlowProps) {
     const [listState, setListState] = useState<ListState>({ loading: true, error: null, requisitions: [] });
     const [filters, setFilters] = useState<RequisitionListFilters>({ status: "ALL", type: "ALL", search: "" });
     const { requestId } = useParams();
@@ -60,6 +62,10 @@ export default function RequisitionFlow({ mode, kitchenId, userId }: Requisition
         return matchesStatus && matchesType && matchesSearch;
     });
 
+    if (mode === "create") {
+        return <div className="grid min-w-0 gap-5 px-4 py-5 md:px-6 lg:px-8"><RequisitionCreateForm kitchenId={kitchenId} kitchenName={kitchenName} /></div>;
+    }
+
     if (mode === "list") {
         return (
             <section className="grid min-w-0 gap-5 px-4 py-5 md:px-6 lg:px-8" aria-labelledby="requisitions-heading">
@@ -91,11 +97,11 @@ export default function RequisitionFlow({ mode, kitchenId, userId }: Requisition
     return (
         <section className="grid min-w-0 gap-5 px-4 py-5 md:px-6 lg:px-8">
             <div className="flex flex-wrap items-center justify-between gap-4">
-                <div><h2 className="font-k2d text-2xl font-bold text-ink">{mode === "create" ? "Nova requisição" : `Requisição #${requestId ?? ""}`}</h2><p className="text-sm text-history-muted">{mode === "create" ? "Selecione o tipo e informe os itens para montar o rascunho." : "Consulte os itens e acompanhe a situação da requisição."}</p></div>
+                <div><h2 className="font-k2d text-2xl font-bold text-ink">Requisição #{requestId ?? ""}</h2><p className="text-sm text-history-muted">Consulte os itens e acompanhe a situação da requisição.</p></div>
                 <Link className="rounded-xl border border-history-border bg-surface px-4 py-2 font-semibold text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to="/requisicoes">← Voltar à lista</Link>
             </div>
             <div className="grid min-h-60 place-content-center rounded-3xl bg-surface p-6 text-center shadow-history-card">
-                {mode === "create" ? <p className="text-history-muted">A montagem do rascunho está sendo preparada.</p> : <p className="text-history-muted">O detalhe da requisição está sendo carregado.</p>}
+                <p className="text-history-muted">O detalhe da requisição está sendo preparado.</p>
             </div>
         </section>
     );

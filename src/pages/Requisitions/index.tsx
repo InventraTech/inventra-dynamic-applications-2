@@ -33,7 +33,7 @@ export default function Requisitions({ mode }: RequisitionsProps) {
                 userRole={role}
             />
             <main id="conteudo-principal" tabIndex={-1} className="min-w-0 flex-1 outline-none">
-                <RequisitionFlow mode={mode} kitchenId={session?.user.kitchen?.id ?? null} userId={session?.user.id ?? null} canReview={role.toLocaleUpperCase("pt-BR") === "SUPERVISOR"} />
+                <RequisitionFlow mode={mode} kitchenId={session?.user.kitchen?.id ?? null} kitchenName={session?.user.kitchen?.name ?? null} userId={session?.user.id ?? null} canReview={role.toLocaleUpperCase("pt-BR") === "SUPERVISOR"} />
             </main>
         </div>
     );
