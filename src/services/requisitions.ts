@@ -1,4 +1,4 @@
-import type { Requisition, RequisitionItem } from "../types/requisitions";
+import type { CreateRequisitionInput, Requisition, RequisitionItem } from "../types/requisitions";
 import { apiRequest } from "./api";
 
 export function getKitchenRequisitions(kitchenId: number, signal?: AbortSignal): Promise<Requisition[]> {
@@ -12,4 +12,11 @@ export function getRequisition(id: number, signal?: AbortSignal): Promise<Requis
 
 export function getRequisitionItems(id: number, signal?: AbortSignal): Promise<RequisitionItem[]> {
     return apiRequest<RequisitionItem[]>(`/requisitions/${id}/items`, { signal });
+}
+
+export function createRequisition(input: CreateRequisitionInput): Promise<Requisition> {
+    return apiRequest<Requisition>("/requisitions", {
+        method: "POST",
+        body: JSON.stringify(input),
+    });
 }
