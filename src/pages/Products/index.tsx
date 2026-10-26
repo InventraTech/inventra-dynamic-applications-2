@@ -18,6 +18,7 @@ function Products() {
                 title="Produtos"
                 description="Catálogo, categorias e unidades de medida"
                 userInitials={userInitials}
+                userPhotoUrl={session?.user.photoUrl}
                 userName={userName}
                 userRole={userRole}
                 searchPlaceholder="Buscar produtos..."

@@ -2,6 +2,7 @@ import type { HistoryCardProps, HistoryItem } from "../../../types/history";
 import HistoryStatusBadge from "./HistoryStatusBadge";
 import expandIcon from "../../../assets/icons/seta-cima.svg";
 import collapseIcon from "../../../assets/icons/seta-baixo.svg";
+import UserAvatar from "../../ui/UserAvatar";
 
 function getInitials(name: string): string {
     const parts = name.trim().split(/\s+/).filter(Boolean);
@@ -59,9 +60,7 @@ function HistoryCard({ request, mode, expanded, onToggle }: HistoryCardProps) {
                 </div>
 
                 <div className="flex min-w-0 items-center gap-3">
-                    <span className="flex size-9.5 shrink-0 items-center justify-center rounded-full bg-sidebar-active font-k2d text-sm font-bold text-sidebar-indicator">
-                        {getInitials(request.requester.name)}
-                    </span>
+                    <UserAvatar className="size-9.5 text-sm" name={request.requester.name} photoUrl={request.requester.photoUrl} fallbackText={getInitials(request.requester.name)} />
                     <div className="min-w-0">
                         <p className="wrap-anywhere font-k2d text-base font-bold text-sidebar-text">{request.requester.name}</p>
                         <p className="wrap-anywhere font-k2d text-sm text-login-footer-copy">

@@ -2,6 +2,7 @@ import type { KitchenAccessRequest } from "../../../types/teamAccess";
 import Button from "../../ui/Button";
 import approveIcon from "../../../assets/icons/aprovado.svg";
 import rejectIcon from "../../../assets/icons/erro.svg";
+import UserAvatar from "../../ui/UserAvatar";
 
 interface AccessRequestListProps {
     requests: KitchenAccessRequest[];
@@ -48,9 +49,7 @@ function AccessRequestList({ requests, busyRequestId, onApprove, onReject }: Acc
             {requests.map((request) => (
                 <article className="flex min-w-0 flex-col gap-4 rounded-3xl bg-surface p-5 shadow-history-card sm:p-6 xl:flex-row xl:items-center xl:justify-between" key={request.id}>
                     <div className="flex min-w-0 items-start gap-3">
-                        <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-sidebar-active font-k2d text-sm font-bold text-sidebar-indicator" aria-hidden="true">
-                            {initials(request.user.name) || "?"}
-                        </span>
+                        <UserAvatar className="size-11 rounded-2xl text-sm" name={request.user.name} photoUrl={request.user.photoUrl} fallbackText={initials(request.user.name) || "?"} />
                         <div className="min-w-0">
                             <h2 className="wrap-anywhere font-k2d text-base font-bold text-sidebar-text">{request.user.name}</h2>
                             <p className="mt-0.5 wrap-anywhere font-k2d text-sm text-history-muted">{request.user.email}</p>

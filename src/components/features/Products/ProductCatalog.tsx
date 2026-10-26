@@ -78,9 +78,7 @@ function ProductCatalog() {
                 const currentUser = await getCurrentUser(controller.signal);
                 if (controller.signal.aborted) return;
                 if (currentUser.kitchen) updateSessionKitchen(currentUser.kitchen);
-                const accessType = typeof currentUser.profile === "string"
-                    ? currentUser.profile
-                    : currentUser.profile?.accessType ?? currentUser.profile?.name ?? "";
+                const accessType = currentUser.profile.accessType;
                 const normalizedAccessType = accessType.toLocaleUpperCase("pt-BR");
                 scope = currentUser.kitchen
                     ? { id: currentUser.kitchen.id, canReadStock: normalizedAccessType === "SUPERVISOR" || normalizedAccessType === "ESTOQUISTA" }

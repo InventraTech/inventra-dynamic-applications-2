@@ -11,6 +11,7 @@ import supervisorRoleIcon from "../../../assets/icons/papel-supervisor.svg";
 import stockkeeperRoleIcon from "../../../assets/icons/papel-estoquista.svg";
 import buyerRoleIcon from "../../../assets/icons/papel-comprador.svg";
 import genericRoleIcon from "../../../assets/icons/conta.svg";
+import UserAvatar from "../../ui/UserAvatar";
 
 interface TeamUserTableProps {
     users: TeamUser[];
@@ -107,13 +108,12 @@ function TeamUserTable({ users, allUsers, profiles, currentUserId, busyUserId, o
                                     <tr className={`border-b border-history-border last:border-0 ${user.active ? "" : "text-history-muted"}`} key={user.id}>
                                         <th className="px-3 py-3 text-left font-normal" scope="row">
                                             <div className="flex min-w-0 items-center gap-3">
-                                                <span className="relative flex h-10 w-8 shrink-0 items-center justify-center font-k2d text-xs font-bold text-sidebar-purple" aria-hidden="true">
-                                                    <img className="absolute inset-0 size-full" src={profileAvatar(profile, user.active)} alt="" />
-                                                    <span className="relative">{initials(user.name) || "?"}</span>
-                                                </span>
+                                                <UserAvatar className="size-10 text-xs" name={user.name} photoUrl={user.photoUrl} fallbackImageUrl={profileAvatar(profile, user.active)} fallbackText={initials(user.name) || "?"} />
                                                 <span className="min-w-0">
-                                                    <span className="block max-w-60 wrap-anywhere font-k2d text-sm font-bold text-sidebar-text">{user.name}</span>
-                                                    {isSelf && <span className="mt-1 inline-flex rounded-full bg-sidebar-active px-2 py-0.5 font-k2d text-xs font-bold text-sidebar-purple">Você</span>}
+                                                    <span className="flex max-w-60 min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+                                                        <span className="min-w-0 wrap-anywhere font-k2d text-sm font-bold text-sidebar-text">{user.name}</span>
+                                                        {isSelf && <span className="inline-flex shrink-0 items-center rounded-full bg-sidebar-active px-2 py-0.5 font-k2d text-xs font-bold leading-4 text-sidebar-purple">Você</span>}
+                                                    </span>
                                                     <span className="block max-w-60 wrap-anywhere font-k2d text-xs text-history-muted">{user.email}</span>
                                                 </span>
                                             </div>

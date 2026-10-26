@@ -28,6 +28,7 @@ function Historico({ mode }: HistoryProps) {
                 title="Histórico"
                 description="Retiradas de estoque e solicitações de compra"
                 userInitials={userInitials}
+                userPhotoUrl={session?.user.photoUrl}
                 userName={userName}
                 userRole={userRole}
             />

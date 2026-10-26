@@ -17,6 +17,7 @@ function TeamAccess() {
                 title="Equipe e acessos"
                 description="Quem usa a sua cozinha e quem pediu para entrar"
                 userInitials={userInitials}
+                userPhotoUrl={session?.user.photoUrl}
                 userName={userName}
                 userRole={role}
             />

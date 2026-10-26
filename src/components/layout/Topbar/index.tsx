@@ -1,10 +1,12 @@
 import accent from "../../../assets/images/onda-topbar.svg";
 import notificationIcon from "../../../assets/icons/sino.svg";
 import type { TopbarProps } from "../../../types/topbar";
+import { Link } from "react-router-dom";
 import Button from "../../ui/Button";
 import SearchField from "../../ui/SearchField";
+import UserAvatar from "../../ui/UserAvatar";
 
-function Topbar({ title, description, userInitials = "IN", userName = "Usuário", userRole = "", searchPlaceholder = "Buscar produtos, lotes, cozinhas…", hasNotifications = false, onSearch, onNotifications }: TopbarProps) {
+function Topbar({ title, description, userInitials = "IN", userPhotoUrl, userName = "Usuário", userRole = "", searchPlaceholder = "Buscar produtos, lotes, cozinhas…", hasNotifications = false, onSearch, onNotifications }: TopbarProps) {
     return (
         <header className="sticky top-0 z-40 isolate grid min-h-20 min-w-0 grid-cols-1 items-center gap-4 overflow-hidden bg-topbar-surface px-10 py-4 xl:grid-cols-[minmax(0,1fr)_auto] max-lg:px-6 max-md:px-4 large-text:grid-cols-1">
             <div className="relative z-10 min-w-0 text-ink">
@@ -18,11 +20,13 @@ function Topbar({ title, description, userInitials = "IN", userName = "Usuário"
                     <img className="size-6" src={notificationIcon} alt="" />
                     {hasNotifications && <span className="absolute right-1.5 top-1.5 size-3 rounded-full border-2 border-brand-strong bg-login-gold" aria-hidden="true" />}
                 </Button>
-                <div className="flex size-11 shrink-0 items-center justify-center rounded-full border-2 border-white/50 bg-brand text-sm font-bold text-on-brand" aria-hidden="true">{userInitials}</div>
-                <div className="min-w-0 font-k2d text-on-brand max-sm:w-full">
-                    <p className="text-topbar-user font-bold leading-normal wrap-anywhere">{userName}</p>
-                    <p className="text-topbar-role leading-normal wrap-anywhere">{userRole}</p>
-                </div>
+                <Link className="flex min-h-11 min-w-0 items-center gap-3 rounded-full text-left text-on-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-on-brand" to="/perfil" aria-label={`Abrir perfil de ${userName}`}>
+                    <UserAvatar className="size-11 border-2 border-white/50 bg-brand text-sm text-on-brand" name={userName} photoUrl={userPhotoUrl} fallbackText={userInitials} />
+                    <span className="min-w-0 font-k2d max-sm:w-full">
+                        <span className="block text-topbar-user font-bold leading-normal wrap-anywhere">{userName}</span>
+                        <span className="block text-topbar-role leading-normal wrap-anywhere">{userRole}</span>
+                    </span>
+                </Link>
             </div>
         </header>
     );

@@ -13,8 +13,22 @@ export interface AuthUser {
     id: string;
     name: string;
     email: string;
+    photoUrl?: string | null;
     kitchen: ApiKitchen | null;
     profile?: ApiProfile | string | null;
+    active?: boolean;
+    hasPassword?: boolean;
+    lastLogin?: string | null;
+    createdAt?: string;
+}
+
+export interface UserAccount extends AuthUser {
+    photoUrl: string | null;
+    profile: { id: number; accessType: string };
+    active: boolean;
+    hasPassword: boolean;
+    lastLogin: string | null;
+    createdAt: string;
 }
 
 export interface LoginResponse {
