@@ -4,6 +4,7 @@ import StatusBadge from "../../../ui/StatusBadge";
 import Feedback from "../../../ui/Feedback";
 import RequisitionItemForm from "../RequisitionItemForm";
 import RequisitionItemsPanel from "../RequisitionItemsPanel";
+import RequisitionActionPanel from "../RequisitionActionPanel";
 
 interface RequisitionDetailViewProps {
     requisition: Requisition;
@@ -35,6 +36,7 @@ export default function RequisitionDetailView({ requisition, items, kitchenId, u
             </section>
             <RequisitionItemsPanel requisition={requisition} items={items} canEdit={canEdit} onChanged={onChanged} />
             {canEdit && <section className="rounded-3xl bg-surface p-4 shadow-history-card sm:p-6"><RequisitionItemForm requisition={requisition} kitchenId={kitchenId} onAdded={onChanged} /></section>}
+            <RequisitionActionPanel requisition={requisition} userId={userId} canReview={canReview} itemCount={items.length} onChanged={onChanged} />
         </section>
     );
 }
