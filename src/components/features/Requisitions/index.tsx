@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import Button from "../../ui/Button";
 import Feedback from "../../ui/Feedback";
 import Loading from "../../ui/Loading";
@@ -10,6 +10,9 @@ import type { Requisition, RequisitionListFilters } from "../../../types/requisi
 import type { RequisitionPageMode } from "../../../pages/Requisitions";
 import RequisitionFilters from "./RequisitionFilters";
 import RequisitionCreateForm from "./RequisitionCreateForm";
+import useRequisitionDetail from "./hooks/useRequisitionDetail";
+import RequisitionDetailSkeleton from "./RequisitionDetailSkeleton";
+import RequisitionDetailView from "./RequisitionDetailView";
 
 interface RequisitionFlowProps {
     mode: RequisitionPageMode;
@@ -25,11 +28,13 @@ interface ListState {
     requisitions: Requisition[];
 }
 
-export default function RequisitionFlow({ mode, kitchenId, kitchenName, userId }: RequisitionFlowProps) {
+export default function RequisitionFlow({ mode, kitchenId, kitchenName, userId, canReview }: RequisitionFlowProps) {
     const [listState, setListState] = useState<ListState>({ loading: true, error: null, requisitions: [] });
     const [filters, setFilters] = useState<RequisitionListFilters>({ status: "ALL", type: "ALL", search: "" });
     const { requestId } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
+    const detail = useRequisitionDetail(requestId, mode === "detail" && kitchenId !== null);
 
     useEffect(() => {
         if (mode !== "list" || kitchenId === null) {
@@ -66,6 +71,20 @@ export default function RequisitionFlow({ mode, kitchenId, kitchenName, userId }
         return <div className="grid min-w-0 gap-5 px-4 py-5 md:px-6 lg:px-8"><RequisitionCreateForm kitchenId={kitchenId} kitchenName={kitchenName} /></div>;
     }
 
+    if (mode === "detail") {
+        const locationState = location.state;
+        const created = typeof locationState === "object" && locationState !== null && "created" in locationState && locationState.created === true;
+        return (
+            <section className="grid min-w-0 gap-5 px-4 py-5 md:px-6 lg:px-8">
+                <div className="flex min-w-0 flex-wrap items-start justify-between gap-4"><div><h2 className="font-k2d text-2xl font-bold text-ink">Requisição #{detail.requestId ?? ""}</h2><p className="text-sm text-history-muted">Detalhes, itens e andamento da requisição.</p></div><Link className="rounded-xl border border-history-border bg-surface px-4 py-2 font-semibold text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to="/requisicoes">← Voltar à lista</Link></div>
+                {detail.state.loading && <RequisitionDetailSkeleton />}
+                {detail.state.error && <div className="grid min-w-0 gap-3"><Feedback severity="error">{detail.state.error}</Feedback><Button variant="link" type="button" onClick={() => void detail.refresh()}>Tentar carregar novamente</Button></div>}
+                {!detail.state.loading && !detail.state.error && detail.state.requisition && kitchenId !== null && <RequisitionDetailView requisition={detail.state.requisition} items={detail.state.items} kitchenId={kitchenId} userId={userId} canReview={canReview} created={created} onChanged={detail.refresh} />}
+                {detail.state.refreshing && <p role="status" aria-live="polite" className="text-sm text-history-muted">Atualizando os dados da requisição…</p>}
+            </section>
+        );
+    }
+
     if (mode === "list") {
         return (
             <section className="grid min-w-0 gap-5 px-4 py-5 md:px-6 lg:px-8" aria-labelledby="requisitions-heading">
@@ -94,15 +113,5 @@ export default function RequisitionFlow({ mode, kitchenId, kitchenName, userId }
         );
     }
 
-    return (
-        <section className="grid min-w-0 gap-5 px-4 py-5 md:px-6 lg:px-8">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-                <div><h2 className="font-k2d text-2xl font-bold text-ink">Requisição #{requestId ?? ""}</h2><p className="text-sm text-history-muted">Consulte os itens e acompanhe a situação da requisição.</p></div>
-                <Link className="rounded-xl border border-history-border bg-surface px-4 py-2 font-semibold text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to="/requisicoes">← Voltar à lista</Link>
-            </div>
-            <div className="grid min-h-60 place-content-center rounded-3xl bg-surface p-6 text-center shadow-history-card">
-                <p className="text-history-muted">O detalhe da requisição está sendo preparado.</p>
-            </div>
-        </section>
-    );
+    return null;
 }

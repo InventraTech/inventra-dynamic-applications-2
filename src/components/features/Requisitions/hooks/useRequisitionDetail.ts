@@ -24,11 +24,15 @@ async function loadRequisition(id: number, signal?: AbortSignal): Promise<{ requ
     return { requisition, items };
 }
 
-export default function useRequisitionDetail(requestId: string | undefined) {
+export default function useRequisitionDetail(requestId: string | undefined, enabled = true) {
     const id = parseRequestId(requestId);
     const [state, setState] = useState<RequisitionDetailState>({ loading: true, refreshing: false, error: null, requisition: null, items: [] });
 
     useEffect(() => {
+        if (!enabled) {
+            setState({ loading: false, refreshing: false, error: "Sua conta ainda não está vinculada a uma cozinha.", requisition: null, items: [] });
+            return;
+        }
         if (id === null) {
             setState({ loading: false, refreshing: false, error: "O número da requisição informado é inválido.", requisition: null, items: [] });
             return;
@@ -43,10 +47,10 @@ export default function useRequisitionDetail(requestId: string | undefined) {
                 setState({ loading: false, refreshing: false, error: error instanceof Error ? error.message : "Não foi possível carregar esta requisição.", requisition: null, items: [] });
             });
         return () => controller.abort();
-    }, [id]);
+    }, [enabled, id]);
 
     const refresh = useCallback(async () => {
-        if (id === null) return;
+        if (id === null || !enabled) return;
         setState((current) => ({ ...current, refreshing: true, error: null }));
         try {
             const result = await loadRequisition(id);
@@ -54,7 +58,7 @@ export default function useRequisitionDetail(requestId: string | undefined) {
         } catch (error: unknown) {
             setState((current) => ({ ...current, loading: false, refreshing: false, error: error instanceof Error ? error.message : "A ação foi concluída, mas não foi possível atualizar o detalhe." }));
         }
-    }, [id]);
+    }, [enabled, id]);
 
     return { state, refresh, requestId: id };
 }
