@@ -8,11 +8,14 @@ export interface BreadcrumbItem {
 
 interface BreadcrumbProps {
     items: BreadcrumbItem[];
+    backHref?: string;
+    backLabel?: string;
 }
 
-export default function Breadcrumb({ items }: BreadcrumbProps) {
+export default function Breadcrumb({ items, backHref, backLabel = "Voltar" }: BreadcrumbProps) {
     return (
-        <nav aria-label="Navegação estrutural" className="min-w-0">
+        <nav aria-label="Navegação estrutural" className="flex min-w-0 items-center gap-3">
+            {backHref && <Link className="grid size-11 shrink-0 place-items-center rounded-full border border-history-border bg-surface text-xl text-brand transition-colors hover:border-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to={backHref} aria-label={backLabel}><span aria-hidden="true">←</span></Link>}
             <ol className="flex min-w-0 list-none flex-wrap items-center gap-2 p-0 text-sm text-history-muted">
                 {items.map((item, index) => {
                     const current = index === items.length - 1;

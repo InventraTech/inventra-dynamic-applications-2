@@ -1,10 +1,10 @@
 import { useState, type FormEvent } from "react";
-import { approveRequisition, cancelRequisition, rejectRequisition, submitRequisition } from "../../../../services/requisitions";
-import type { Requisition } from "../../../../types/requisitions";
-import { validateDecisionReason } from "../../../../utils/requisitionValidation";
-import Button from "../../../ui/Button";
-import Dialog from "../../../ui/Dialog";
-import Feedback from "../../../ui/Feedback";
+import { approveRequisition, cancelRequisition, rejectRequisition, submitRequisition } from "../../../services/requisitions";
+import type { Requisition } from "../../../types/requisitions";
+import { validateDecisionReason } from "../../../utils/requisitionValidation";
+import Button from "../../ui/Button";
+import Dialog from "../../ui/Dialog";
+import Feedback from "../../ui/Feedback";
 
 type DialogAction = "submit" | "cancel" | "approve" | "reject" | null;
 
@@ -16,9 +16,12 @@ interface RequisitionActionPanelProps {
     onChanged: () => Promise<void> | void;
     onSaveDraft?: () => void;
     onActionCompleted?: () => void;
+    embedded?: boolean;
+    showCancel?: boolean;
+    showHeading?: boolean;
 }
 
-export default function RequisitionActionPanel({ requisition, userId, canReview, itemCount, onChanged, onSaveDraft, onActionCompleted }: RequisitionActionPanelProps) {
+export default function RequisitionActionPanel({ requisition, userId, canReview, itemCount, onChanged, onSaveDraft, onActionCompleted, embedded = false, showCancel = true, showHeading = true }: RequisitionActionPanelProps) {
     const [dialogAction, setDialogAction] = useState<DialogAction>(null);
     const [reason, setReason] = useState("");
     const [reasonError, setReasonError] = useState<string | null>(null);
@@ -27,7 +30,7 @@ export default function RequisitionActionPanel({ requisition, userId, canReview,
     const isOwner = requisition.requester.id === userId;
     const canManage = isOwner || canReview;
     const canSubmit = requisition.status === "DRAFT" && canManage;
-    const canCancel = canManage && (["DRAFT", "UNDER_REVIEW"].includes(requisition.status) || (requisition.status === "APPROVED" && canReview));
+    const canCancel = showCancel && canManage && (["DRAFT", "UNDER_REVIEW"].includes(requisition.status) || (requisition.status === "APPROVED" && canReview));
     const canApproveOrReject = canReview && requisition.status === "UNDER_REVIEW";
     const approvedCancellation = requisition.status === "APPROVED";
 
@@ -70,11 +73,11 @@ export default function RequisitionActionPanel({ requisition, userId, canReview,
 
     return (
         <>
-            <section className="grid min-w-0 gap-3 rounded-3xl bg-surface p-4 shadow-history-card sm:p-6" aria-labelledby="requisition-actions-heading">
-                <h3 id="requisition-actions-heading" className="font-k2d text-lg font-bold text-ink">Próximas ações</h3>
+            <section className={`grid min-w-0 gap-3 ${embedded ? "border-t border-history-border pt-4" : "rounded-3xl bg-surface p-4 shadow-history-card sm:p-6"}`} aria-labelledby={showHeading ? "requisition-actions-heading" : undefined} aria-label={showHeading ? undefined : "Ações da requisição"}>
+                {showHeading && <h3 id="requisition-actions-heading" className="font-k2d text-lg font-bold text-ink">Próximas ações</h3>}
                 {canSubmit && <div className="grid gap-3">{onSaveDraft && <Button variant="primary" type="button" onClick={onSaveDraft} className="min-h-11 rounded-xl border border-brand bg-surface px-5 text-brand hover:bg-sidebar-active">Salvar rascunho</Button>}<Button variant="primary" type="button" disabled={itemCount === 0} onClick={() => setDialogAction("submit")} className="min-h-11 rounded-xl px-5">Enviar para análise</Button>{itemCount === 0 && <p className="text-sm text-history-muted">Adicione ao menos um item antes de enviar.</p>}{onSaveDraft && <p className="text-xs leading-relaxed text-history-muted">Você pode sair e continuar o rascunho depois.</p>}</div>}
                 {canApproveOrReject && <div className="grid gap-3 sm:grid-cols-2"><Button variant="primary" type="button" disabled={itemCount === 0} onClick={() => setDialogAction("approve")} className="min-h-11 rounded-xl bg-feedback-success px-5">Aprovar requisição</Button><Button variant="link" type="button" onClick={() => setDialogAction("reject")} className="min-h-11 justify-center rounded-xl bg-feedback-error-bg px-5 text-feedback-error">Rejeitar requisição</Button></div>}
-                {canCancel && <Button variant="link" type="button" onClick={() => setDialogAction("cancel")} className="justify-self-start text-feedback-error">Cancelar requisição</Button>}
+                {canCancel && <Button variant="link" type="button" onClick={() => setDialogAction("cancel")} className="min-h-11 w-full justify-center rounded-xl bg-feedback-error-bg px-5 text-feedback-error">Cancelar requisição</Button>}
                 {feedback && <Feedback severity={feedback.severity}>{feedback.message}</Feedback>}
             </section>
 

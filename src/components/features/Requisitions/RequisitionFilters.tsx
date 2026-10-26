@@ -1,5 +1,5 @@
-import SearchField from "../../../ui/SearchField";
-import type { RequisitionListFilters } from "../../../../types/requisitions";
+import SearchField from "../../ui/SearchField";
+import type { RequisitionListFilters } from "../../../types/requisitions";
 
 interface RequisitionFiltersProps {
     value: RequisitionListFilters;
@@ -9,15 +9,15 @@ interface RequisitionFiltersProps {
 
 export default function RequisitionFilters({ value, onChange, resultCount }: RequisitionFiltersProps) {
     return (
-        <form className="grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-5" role="search" onSubmit={(event) => event.preventDefault()}>
+        <form className="grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-12" role="search" onSubmit={(event) => event.preventDefault()}>
             <SearchField
                 label="Buscar por número, solicitante ou produto resumido"
                 placeholder="Buscar por número, solicitante ou produto"
                 value={value.search}
                 onChange={(event) => onChange({ ...value, search: event.target.value })}
-                className="sm:col-span-2 lg:col-span-2"
+                className="sm:col-span-2 lg:col-span-6"
             />
-            <label className="grid min-w-0 gap-1 text-sm font-semibold text-ink">
+            <label className="grid min-w-0 gap-1 text-sm font-semibold text-ink sm:col-span-1 lg:col-span-2">
                 <span>Status</span>
                 <select
                     className="min-h-11 min-w-0 rounded-xl border border-history-border bg-surface px-3 text-sm font-normal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
@@ -32,7 +32,7 @@ export default function RequisitionFilters({ value, onChange, resultCount }: Req
                     <option value="CANCELLED">Cancelada</option>
                 </select>
             </label>
-            <label className="grid min-w-0 gap-1 text-sm font-semibold text-ink">
+            <label className="grid min-w-0 gap-1 text-sm font-semibold text-ink sm:col-span-1 lg:col-span-2">
                 <span>Tipo</span>
                 <select
                     className="min-h-11 min-w-0 rounded-xl border border-history-border bg-surface px-3 text-sm font-normal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
@@ -45,7 +45,7 @@ export default function RequisitionFilters({ value, onChange, resultCount }: Req
                     <option value="TRANSFER">Transferência</option>
                 </select>
             </label>
-            <p className="self-center text-right text-xs text-history-muted sm:col-span-2 lg:col-span-1">{resultCount} {resultCount === 1 ? "requisição" : "requisições"}</p>
+            <p className="self-center text-right text-xs text-history-muted sm:col-span-2 lg:col-span-2">{resultCount} {resultCount === 1 ? "requisição" : "requisições"}</p>
         </form>
     );
 }

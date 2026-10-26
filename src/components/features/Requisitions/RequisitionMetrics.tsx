@@ -1,7 +1,7 @@
-import type { Requisition } from "../../../../types/requisitions";
-import draftIcon from "../../../../assets/icons/requisicao.svg";
-import reviewIcon from "../../../../assets/icons/solicitacao.svg";
-import approvedIcon from "../../../../assets/icons/aprovado.svg";
+import type { Requisition } from "../../../types/requisitions";
+import draftIcon from "../../../assets/icons/requisicao.svg";
+import reviewIcon from "../../../assets/icons/historico.svg";
+import approvedIcon from "../../../assets/icons/aprovado.svg";
 
 interface RequisitionMetricsProps {
     requisitions: Requisition[];

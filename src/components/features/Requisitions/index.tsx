@@ -15,12 +15,16 @@ import RequisitionDetailSkeleton from "./RequisitionDetailSkeleton";
 import RequisitionDetailView from "./RequisitionDetailView";
 import Mascot from "../../ui/Mascot";
 import RequisitionComposer from "./RequisitionComposer";
+import RequisitionTypeGuidance from "./RequisitionTypeGuidance";
+import decorativeHexagon from "../../../assets/images/requisition-hex-pattern.svg";
 
 interface RequisitionFlowProps {
     mode: RequisitionPageMode;
     kitchenId: number | null;
     kitchenName: string | null;
     userId: string | null;
+    userName: string;
+    userPhotoUrl: string | null;
     canReview: boolean;
 }
 
@@ -30,7 +34,7 @@ interface ListState {
     requisitions: Requisition[];
 }
 
-export default function RequisitionFlow({ mode, kitchenId, kitchenName, userId, canReview }: RequisitionFlowProps) {
+export default function RequisitionFlow({ mode, kitchenId, kitchenName, userId, userName, userPhotoUrl, canReview }: RequisitionFlowProps) {
     const [listState, setListState] = useState<ListState>({ loading: true, error: null, requisitions: [] });
     const [filters, setFilters] = useState<RequisitionListFilters>({ status: "ALL", type: "ALL", search: "" });
     const [page, setPage] = useState(1);
@@ -85,7 +89,7 @@ export default function RequisitionFlow({ mode, kitchenId, kitchenName, userId, 
             <section className="grid min-w-0 gap-5 px-4 py-5 md:px-6 lg:px-8">
                 {detail.state.loading && <RequisitionDetailSkeleton />}
                 {detail.state.error && <div className="grid min-w-0 gap-3"><Feedback severity="error">{detail.state.error}</Feedback><Button variant="link" type="button" onClick={() => void detail.refresh()}>Tentar carregar novamente</Button></div>}
-                {!detail.state.loading && !detail.state.error && detail.state.requisition && kitchenId !== null && <RequisitionDetailView requisition={detail.state.requisition} items={detail.state.items} userId={userId} canReview={canReview} created={created} onChanged={detail.refresh} />}
+                {!detail.state.loading && !detail.state.error && detail.state.requisition && kitchenId !== null && <RequisitionDetailView requisition={detail.state.requisition} items={detail.state.items} userId={userId} reviewerName={userName} reviewerPhotoUrl={userPhotoUrl} canReview={canReview} created={created} onChanged={detail.refresh} />}
                 {detail.state.refreshing && <p role="status" aria-live="polite" className="text-sm text-history-muted">Atualizando os dados da requisição…</p>}
             </section>
         );
@@ -107,12 +111,13 @@ export default function RequisitionFlow({ mode, kitchenId, kitchenName, userId, 
     if (mode === "list") {
         return (
             <section className="grid min-w-0 gap-5 px-4 py-5 md:px-6 lg:px-8" aria-labelledby="requisitions-heading">
-                <div className="flex min-w-0 flex-wrap items-center justify-between gap-4 rounded-3xl bg-linear-to-r from-brand-strong to-brand p-6 text-on-brand shadow-history-card">
-                    <div className="min-w-0">
+                <div className="relative flex min-h-48 min-w-0 flex-wrap items-center justify-between gap-4 overflow-hidden rounded-4xl bg-linear-to-r from-brand-strong to-brand p-6 text-on-brand shadow-history-card sm:p-8">
+                    <img src={decorativeHexagon} alt="" aria-hidden="true" className="pointer-events-none absolute inset-0 size-full object-cover opacity-70" />
+                    <div className="relative z-10 min-w-0">
                         <h2 id="requisitions-heading" className="font-k2d text-2xl font-bold">Requisições da cozinha</h2>
                         <p className="mt-1 text-sm leading-relaxed">Acompanhe compras, consumo e transferências até a decisão.</p>
                     </div>
-                    <div className="flex min-w-0 flex-wrap items-center gap-4"><Mascot size="amplo" className="hidden max-h-20 shrink-0 object-contain sm:block" /><Button variant="primary" type="button" onClick={() => navigate("/requisicoes/nova")} className="min-h-11 rounded-xl bg-login-gold px-5 text-ink hover:brightness-95">Nova requisição</Button></div>
+                    <div className="relative z-10 flex min-w-0 flex-wrap items-center gap-4"><Button variant="primary" type="button" onClick={() => navigate("/requisicoes/nova")} className="min-h-12 rounded-xl bg-login-gold px-5 text-ink hover:brightness-95"><span aria-hidden="true">⊕</span><span>Nova requisição</span></Button><Mascot size="amplo" className="hidden max-h-28 shrink-0 object-contain sm:block" /></div>
                 </div>
 
                 {!listState.loading && !listState.error && kitchenId !== null && <RequisitionMetrics requisitions={listState.requisitions} />}
@@ -128,6 +133,7 @@ export default function RequisitionFlow({ mode, kitchenId, kitchenName, userId, 
                 )}
                 {!listState.loading && !listState.error && visibleRequisitions.length === 0 && listState.requisitions.length > 0 && <div className="grid justify-items-center gap-3 rounded-2xl bg-surface p-6 text-center"><p className="text-history-muted">Nenhuma requisição corresponde aos filtros selecionados.</p><Button variant="link" type="button" onClick={() => { setFilters({ status: "ALL", type: "ALL", search: "" }); setPage(1); }}>Limpar filtros</Button></div>}
                 {!listState.loading && !listState.error && visibleRequisitions.length > 0 && <RequisitionList requisitions={pageRequisitions} page={currentPage} pageSize={pageSize} totalCount={visibleRequisitions.length} onPageChange={setPage} onPageSizeChange={(size) => { setPageSize(size); setPage(1); }} />}
+                {!listState.loading && !listState.error && kitchenId !== null && <RequisitionTypeGuidance />}
             </section>
         );
     }

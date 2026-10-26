@@ -1,13 +1,13 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import Button from "../../../ui/Button";
-import Feedback from "../../../ui/Feedback";
-import Input from "../../../ui/Input";
-import RequisitionTypeSelector from "../RequisitionTypeSelector";
-import { createRequisition } from "../../../../services/requisitions";
-import type { CreateRequisitionInput, RequisitionType } from "../../../../types/requisitions";
-import { validateCreateRequisition } from "../../../../utils/requisitionValidation";
-import Breadcrumb from "../../../ui/Breadcrumb";
+import Button from "../../ui/Button";
+import Feedback from "../../ui/Feedback";
+import Input from "../../ui/Input";
+import RequisitionTypeSelector from "./RequisitionTypeSelector";
+import { createRequisition } from "../../../services/requisitions";
+import type { CreateRequisitionInput, RequisitionType } from "../../../types/requisitions";
+import { validateCreateRequisition } from "../../../utils/requisitionValidation";
+import Breadcrumb from "../../ui/Breadcrumb";
 
 interface RequisitionCreateFormProps {
     kitchenId: number | null;
@@ -54,10 +54,9 @@ export default function RequisitionCreateForm({ kitchenId, kitchenName }: Requis
 
     return (
         <section className="grid min-w-0 gap-5" aria-labelledby="create-requisition-heading">
-            <Breadcrumb items={[{ label: "Requisições", href: "/requisicoes" }, { label: "Nova requisição" }]} />
+            <Breadcrumb items={[{ label: "Requisições", href: "/requisicoes" }, { label: "Nova requisição" }]} backHref="/requisicoes" backLabel="Voltar para requisições" />
             <div className="flex min-w-0 flex-wrap items-center justify-between gap-4">
-                <div className="min-w-0"><h2 id="create-requisition-heading" className="font-k2d text-2xl font-bold text-ink">Nova requisição</h2><p className="text-sm text-history-muted">Informe o tipo e a origem ou destino para abrir o rascunho.</p></div>
-                <Button variant="link" type="button" onClick={() => navigate("/requisicoes")}>Voltar à lista</Button>
+                <div className="min-w-0"><h2 id="create-requisition-heading" className="font-k2d text-2xl font-bold text-ink">Nova requisição</h2><p className="text-sm text-history-muted">Informe o tipo e o destino ou contexto antes de adicionar itens.</p></div>
             </div>
             <form className="grid min-w-0 gap-5 rounded-3xl bg-surface p-4 shadow-history-card sm:p-6" noValidate onSubmit={handleSubmit}>
                 <h3 className="font-k2d text-lg font-bold text-ink">Dados da requisição</h3>
