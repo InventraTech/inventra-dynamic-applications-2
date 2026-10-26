@@ -6,8 +6,9 @@ import Loading from "../../ui/Loading";
 import RequisitionList from "./RequisitionList";
 import RequisitionMetrics from "./RequisitionMetrics";
 import { getKitchenRequisitions } from "../../../services/requisitions";
-import type { Requisition } from "../../../types/requisitions";
+import type { Requisition, RequisitionListFilters } from "../../../types/requisitions";
 import type { RequisitionPageMode } from "../../../pages/Requisitions";
+import RequisitionFilters from "./RequisitionFilters";
 
 interface RequisitionFlowProps {
     mode: RequisitionPageMode;
@@ -24,6 +25,7 @@ interface ListState {
 
 export default function RequisitionFlow({ mode, kitchenId, userId }: RequisitionFlowProps) {
     const [listState, setListState] = useState<ListState>({ loading: true, error: null, requisitions: [] });
+    const [filters, setFilters] = useState<RequisitionListFilters>({ status: "ALL", type: "ALL", search: "" });
     const { requestId } = useParams();
     const navigate = useNavigate();
 
@@ -49,6 +51,15 @@ export default function RequisitionFlow({ mode, kitchenId, userId }: Requisition
         return () => controller.abort();
     }, [kitchenId, mode]);
 
+    const normalizedSearch = filters.search.trim().toLocaleLowerCase("pt-BR");
+    const visibleRequisitions = listState.requisitions.filter((requisition) => {
+        const matchesStatus = filters.status === "ALL" || requisition.status === filters.status;
+        const matchesType = filters.type === "ALL" || requisition.type === filters.type;
+        const searchableValues = [String(requisition.id), requisition.requester.name, requisition.origin, ...requisition.itemNames];
+        const matchesSearch = !normalizedSearch || searchableValues.some((value) => value.toLocaleLowerCase("pt-BR").includes(normalizedSearch));
+        return matchesStatus && matchesType && matchesSearch;
+    });
+
     if (mode === "list") {
         return (
             <section className="grid min-w-0 gap-5 px-4 py-5 md:px-6 lg:px-8" aria-labelledby="requisitions-heading">
@@ -61,6 +72,7 @@ export default function RequisitionFlow({ mode, kitchenId, userId }: Requisition
                 </div>
 
                 {!listState.loading && !listState.error && kitchenId !== null && <RequisitionMetrics requisitions={listState.requisitions} />}
+                {!listState.loading && !listState.error && kitchenId !== null && listState.requisitions.length > 0 && <RequisitionFilters value={filters} onChange={setFilters} />}
                 {kitchenId === null && <Feedback severity="info">Sua conta ainda não está vinculada a uma cozinha. Vincule uma cozinha para consultar ou criar requisições.</Feedback>}
                 {listState.loading && kitchenId !== null && <div className="flex min-h-60 items-center justify-center rounded-3xl bg-surface"><Loading loadingText="Carregando requisições…" /></div>}
                 {listState.error && <Feedback severity="error">{listState.error}</Feedback>}
@@ -70,7 +82,8 @@ export default function RequisitionFlow({ mode, kitchenId, userId }: Requisition
                         <p className="max-w-prose text-history-muted">Crie um rascunho para solicitar uma compra, registrar um consumo ou transferir itens.</p>
                     </div>
                 )}
-                {!listState.loading && !listState.error && listState.requisitions.length > 0 && <RequisitionList requisitions={listState.requisitions} userId={userId} />}
+                {!listState.loading && !listState.error && visibleRequisitions.length === 0 && listState.requisitions.length > 0 && <div className="grid justify-items-center gap-3 rounded-2xl bg-surface p-6 text-center"><p className="text-history-muted">Nenhuma requisição corresponde aos filtros selecionados.</p><Button variant="link" type="button" onClick={() => setFilters({ status: "ALL", type: "ALL", search: "" })}>Limpar filtros</Button></div>}
+                {!listState.loading && !listState.error && visibleRequisitions.length > 0 && <RequisitionList requisitions={visibleRequisitions} userId={userId} />}
             </section>
         );
     }
