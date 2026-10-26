@@ -31,8 +31,8 @@ export default function RequisitionDetailView({ requisition, items, userId, revi
                 <div className="grid min-w-0 gap-1"><div className="flex min-w-0 flex-wrap items-center gap-3"><h2 id="requisition-detail-heading" className="font-k2d text-2xl font-bold text-ink">Requisição #{requisition.id}</h2><StatusBadge label={status.label} tone={status.tone} /></div><p className="text-sm text-history-muted">{getRequisitionTypeLabel(requisition.type)} · {requisition.kitchen.name}</p></div>
             </header>
             {created && <Feedback severity="success">Rascunho criado. Adicione os itens da cozinha e envie para análise quando estiver pronto.</Feedback>}
-            <div className="grid min-w-0 items-start gap-5 lg:grid-cols-3">
-                <div className="grid min-w-0 gap-5 lg:col-span-2">
+            <div className="grid min-w-0 items-start gap-5 xl:grid-cols-3">
+                <div className="grid min-w-0 gap-5 xl:col-span-2">
                     <section className="grid min-w-0 gap-4 rounded-3xl bg-surface p-4 shadow-history-card sm:grid-cols-2 sm:p-6" aria-labelledby="requisition-information-heading">
                         <h3 id="requisition-information-heading" className="font-k2d text-lg font-bold text-ink sm:col-span-2">Informações da requisição</h3>
                         <div className="flex min-w-0 items-center gap-3"><UserAvatar name={requisition.requester.name} photoUrl={requisition.requester.photoUrl} className="size-10 text-sm" /><div className="grid min-w-0 gap-1"><strong className="wrap-anywhere text-ink">{requisition.requester.name}</strong><span className="text-xs text-history-muted">Criada em {formatRequisitionDate(requisition.createdAt)}</span></div></div>
@@ -44,7 +44,7 @@ export default function RequisitionDetailView({ requisition, items, userId, revi
                     {requisition.status === "DRAFT" && <Feedback severity="info">Precisa corrigir um item? Remova e adicione novamente com os dados corretos. O rascunho pode ser retomado depois.</Feedback>}
                     {requisition.status === "UNDER_REVIEW" && <Feedback severity="info">{canReview ? "Pedido em análise. Esta requisição está aguardando sua decisão como supervisor." : "Pedido em análise. A decisão de aprovar ou rejeitar aparece somente para o supervisor."}</Feedback>}
                 </div>
-                <aside className="grid min-w-0 content-start gap-4 lg:col-start-3 lg:row-start-1">
+                <aside className="grid min-w-0 content-start gap-4 xl:col-start-3 xl:row-start-1">
                     <div className="grid min-w-0 gap-4 rounded-3xl bg-surface p-4 shadow-history-card sm:p-5">
                         <RequisitionSummary requisition={requisition} items={items} heading={requisition.status === "DRAFT" ? "Resumo do rascunho" : canReview && requisition.status === "UNDER_REVIEW" ? "Análise do supervisor" : "Resumo da requisição"} reviewerName={reviewerName} reviewerPhotoUrl={reviewerPhotoUrl} embedded />
                         <RequisitionActionPanel requisition={requisition} userId={userId} canReview={canReview} itemCount={items.length} onChanged={onChanged} embedded showHeading={false} />

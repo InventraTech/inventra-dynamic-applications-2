@@ -41,8 +41,8 @@ export default function RequisitionComposer({ requisition, items, kitchenId, kit
                 <div className="min-w-0"><h2 id="requisition-composer-heading" className="font-k2d text-2xl font-bold text-ink">Nova requisição</h2><p className="text-sm text-history-muted">Rascunho #{requisition.id} · selecione os produtos e confira os detalhes antes de enviar.</p></div>
             </header>
             {created && <Feedback severity="success">Rascunho criado. Os itens adicionados serão salvos automaticamente.</Feedback>}
-            <div className="grid min-w-0 items-start gap-5 lg:grid-cols-3">
-                <div className="grid min-w-0 gap-5 lg:col-span-2">
+            <div className="grid min-w-0 items-start gap-5 xl:grid-cols-3">
+                <div className="grid min-w-0 gap-5 xl:col-span-2">
                     <section className="grid min-w-0 gap-4 rounded-3xl bg-surface p-4 shadow-history-card sm:p-6" aria-labelledby="requisition-composer-data-heading">
                         <div className="flex items-center gap-3"><span className="grid size-10 shrink-0 place-items-center rounded-xl bg-sidebar-active"><img src={requisitionIcon} alt="" aria-hidden="true" className="size-5" /></span><h3 id="requisition-composer-data-heading" className="font-k2d text-lg font-bold text-ink">Dados da requisição</h3></div>
                         <RequisitionTypeSelector value={requisition.type} onChange={() => undefined} disabled />
