@@ -13,6 +13,7 @@ import RequisitionCreateForm from "./RequisitionCreateForm";
 import useRequisitionDetail from "./hooks/useRequisitionDetail";
 import RequisitionDetailSkeleton from "./RequisitionDetailSkeleton";
 import RequisitionDetailView from "./RequisitionDetailView";
+import Mascot from "../../ui/Mascot";
 
 interface RequisitionFlowProps {
     mode: RequisitionPageMode;
@@ -93,7 +94,7 @@ export default function RequisitionFlow({ mode, kitchenId, kitchenName, userId, 
                         <h2 id="requisitions-heading" className="font-k2d text-2xl font-bold">Requisições da cozinha</h2>
                         <p className="mt-1 text-sm leading-relaxed">Acompanhe compras, consumo e transferências até a decisão.</p>
                     </div>
-                    <Button variant="primary" type="button" onClick={() => navigate("/requisicoes/nova")} className="min-h-11 rounded-xl bg-login-gold px-5 text-ink hover:brightness-95">Nova requisição</Button>
+                    <div className="flex min-w-0 flex-wrap items-center gap-4"><Mascot size="amplo" className="hidden max-h-20 shrink-0 object-contain sm:block" /><Button variant="primary" type="button" onClick={() => navigate("/requisicoes/nova")} className="min-h-11 rounded-xl bg-login-gold px-5 text-ink hover:brightness-95">Nova requisição</Button></div>
                 </div>
 
                 {!listState.loading && !listState.error && kitchenId !== null && <RequisitionMetrics requisitions={listState.requisitions} />}
