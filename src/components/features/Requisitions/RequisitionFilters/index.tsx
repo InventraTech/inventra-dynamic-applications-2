@@ -10,11 +10,12 @@ export default function RequisitionFilters({ value, onChange }: RequisitionFilte
     return (
         <form className="grid min-w-0 gap-3 rounded-2xl border border-history-border bg-surface p-3 shadow-history-card sm:grid-cols-2 lg:grid-cols-[minmax(0,1fr)_auto_auto]" role="search" onSubmit={(event) => event.preventDefault()}>
             <SearchField
-                label="Buscar por número, solicitante ou produto"
+                label="Buscar por número, solicitante ou produtos do resumo"
                 placeholder="Buscar por número, solicitante ou produto"
                 value={value.search}
                 onChange={(event) => onChange({ ...value, search: event.target.value })}
             />
+            <p className="text-xs leading-relaxed text-history-muted sm:col-span-2 lg:col-span-3">A busca por produto usa os nomes resumidos retornados pela API; abra a requisição para consultar todos os itens.</p>
             <label className="grid min-w-0 gap-1 text-sm font-semibold text-ink">
                 <span>Status</span>
                 <select
