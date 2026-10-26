@@ -31,3 +31,25 @@ export function addRequisitionItem(id: number, input: AddRequisitionItemInput): 
 export function removeRequisitionItem(id: number, itemId: number): Promise<Requisition> {
     return apiRequest<Requisition>(`/requisitions/${id}/items/${itemId}`, { method: "DELETE" });
 }
+
+export function submitRequisition(id: number): Promise<Requisition> {
+    return apiRequest<Requisition>(`/requisitions/${id}/submit`, { method: "PATCH" });
+}
+
+export function approveRequisition(id: number): Promise<Requisition> {
+    return apiRequest<Requisition>(`/requisitions/${id}/approve`, { method: "PATCH" });
+}
+
+export function rejectRequisition(id: number, reason: string): Promise<Requisition> {
+    return apiRequest<Requisition>(`/requisitions/${id}/reject`, {
+        method: "PATCH",
+        body: JSON.stringify({ reason }),
+    });
+}
+
+export function cancelRequisition(id: number, reason: string): Promise<Requisition> {
+    return apiRequest<Requisition>(`/requisitions/${id}/cancel`, {
+        method: "PATCH",
+        body: JSON.stringify({ reason }),
+    });
+}
