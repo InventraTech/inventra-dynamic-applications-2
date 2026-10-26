@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Button from "../../ui/Button";
 import Feedback from "../../ui/Feedback";
 import Loading from "../../ui/Loading";
@@ -14,6 +14,7 @@ import useRequisitionDetail from "./hooks/useRequisitionDetail";
 import RequisitionDetailSkeleton from "./RequisitionDetailSkeleton";
 import RequisitionDetailView from "./RequisitionDetailView";
 import Mascot from "../../ui/Mascot";
+import RequisitionComposer from "./RequisitionComposer";
 
 interface RequisitionFlowProps {
     mode: RequisitionPageMode;
@@ -32,10 +33,12 @@ interface ListState {
 export default function RequisitionFlow({ mode, kitchenId, kitchenName, userId, canReview }: RequisitionFlowProps) {
     const [listState, setListState] = useState<ListState>({ loading: true, error: null, requisitions: [] });
     const [filters, setFilters] = useState<RequisitionListFilters>({ status: "ALL", type: "ALL", search: "" });
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(20);
     const { requestId } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
-    const detail = useRequisitionDetail(requestId, mode === "detail" && kitchenId !== null);
+    const detail = useRequisitionDetail(requestId, (mode === "detail" || mode === "edit") && kitchenId !== null);
 
     useEffect(() => {
         if (mode !== "list" || kitchenId === null) {
@@ -67,6 +70,9 @@ export default function RequisitionFlow({ mode, kitchenId, kitchenName, userId, 
         const matchesSearch = !normalizedSearch || searchableValues.some((value) => value.toLocaleLowerCase("pt-BR").includes(normalizedSearch));
         return matchesStatus && matchesType && matchesSearch;
     });
+    const totalPages = Math.max(1, Math.ceil(visibleRequisitions.length / pageSize));
+    const currentPage = Math.min(page, totalPages);
+    const pageRequisitions = visibleRequisitions.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
     if (mode === "create") {
         return <div className="grid min-w-0 gap-5 px-4 py-5 md:px-6 lg:px-8"><RequisitionCreateForm kitchenId={kitchenId} kitchenName={kitchenName} /></div>;
@@ -77,11 +83,23 @@ export default function RequisitionFlow({ mode, kitchenId, kitchenName, userId, 
         const created = typeof locationState === "object" && locationState !== null && "created" in locationState && locationState.created === true;
         return (
             <section className="grid min-w-0 gap-5 px-4 py-5 md:px-6 lg:px-8">
-                <div className="flex min-w-0 flex-wrap items-start justify-between gap-4"><div><h2 className="font-k2d text-2xl font-bold text-ink">Requisição #{detail.requestId ?? ""}</h2><p className="text-sm text-history-muted">Detalhes, itens e andamento da requisição.</p></div><Link className="rounded-xl border border-history-border bg-surface px-4 py-2 font-semibold text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to="/requisicoes">← Voltar à lista</Link></div>
                 {detail.state.loading && <RequisitionDetailSkeleton />}
                 {detail.state.error && <div className="grid min-w-0 gap-3"><Feedback severity="error">{detail.state.error}</Feedback><Button variant="link" type="button" onClick={() => void detail.refresh()}>Tentar carregar novamente</Button></div>}
-                {!detail.state.loading && !detail.state.error && detail.state.requisition && kitchenId !== null && <RequisitionDetailView requisition={detail.state.requisition} items={detail.state.items} kitchenId={kitchenId} userId={userId} canReview={canReview} created={created} onChanged={detail.refresh} />}
+                {!detail.state.loading && !detail.state.error && detail.state.requisition && kitchenId !== null && <RequisitionDetailView requisition={detail.state.requisition} items={detail.state.items} userId={userId} canReview={canReview} created={created} onChanged={detail.refresh} />}
                 {detail.state.refreshing && <p role="status" aria-live="polite" className="text-sm text-history-muted">Atualizando os dados da requisição…</p>}
+            </section>
+        );
+    }
+
+    if (mode === "edit") {
+        const locationState = location.state;
+        const created = typeof locationState === "object" && locationState !== null && "created" in locationState && locationState.created === true;
+        return (
+            <section className="grid min-w-0 gap-5 px-4 py-5 md:px-6 lg:px-8">
+                {detail.state.loading && <RequisitionDetailSkeleton />}
+                {detail.state.error && <div className="grid min-w-0 gap-3"><Feedback severity="error">{detail.state.error}</Feedback><Button variant="link" type="button" onClick={() => void detail.refresh()}>Tentar carregar novamente</Button></div>}
+                {!detail.state.loading && !detail.state.error && detail.state.requisition && kitchenId !== null && <RequisitionComposer requisition={detail.state.requisition} items={detail.state.items} kitchenId={kitchenId} kitchenName={kitchenName} userId={userId} canReview={canReview} created={created} onChanged={detail.refresh} />}
+                {detail.state.refreshing && <p role="status" aria-live="polite" className="text-sm text-history-muted">Atualizando os dados do rascunho…</p>}
             </section>
         );
     }
@@ -98,7 +116,7 @@ export default function RequisitionFlow({ mode, kitchenId, kitchenName, userId, 
                 </div>
 
                 {!listState.loading && !listState.error && kitchenId !== null && <RequisitionMetrics requisitions={listState.requisitions} />}
-                {!listState.loading && !listState.error && kitchenId !== null && listState.requisitions.length > 0 && <RequisitionFilters value={filters} onChange={setFilters} />}
+                {!listState.loading && !listState.error && kitchenId !== null && listState.requisitions.length > 0 && <RequisitionFilters value={filters} onChange={(nextFilters) => { setFilters(nextFilters); setPage(1); }} resultCount={visibleRequisitions.length} />}
                 {kitchenId === null && <Feedback severity="info">Sua conta ainda não está vinculada a uma cozinha. Vincule uma cozinha para consultar ou criar requisições.</Feedback>}
                 {listState.loading && kitchenId !== null && <div className="flex min-h-60 items-center justify-center rounded-3xl bg-surface"><Loading loadingText="Carregando requisições…" /></div>}
                 {listState.error && <Feedback severity="error">{listState.error}</Feedback>}
@@ -108,8 +126,8 @@ export default function RequisitionFlow({ mode, kitchenId, kitchenName, userId, 
                         <p className="max-w-prose text-history-muted">Crie um rascunho para solicitar uma compra, registrar um consumo ou transferir itens.</p>
                     </div>
                 )}
-                {!listState.loading && !listState.error && visibleRequisitions.length === 0 && listState.requisitions.length > 0 && <div className="grid justify-items-center gap-3 rounded-2xl bg-surface p-6 text-center"><p className="text-history-muted">Nenhuma requisição corresponde aos filtros selecionados.</p><Button variant="link" type="button" onClick={() => setFilters({ status: "ALL", type: "ALL", search: "" })}>Limpar filtros</Button></div>}
-                {!listState.loading && !listState.error && visibleRequisitions.length > 0 && <RequisitionList requisitions={visibleRequisitions} userId={userId} />}
+                {!listState.loading && !listState.error && visibleRequisitions.length === 0 && listState.requisitions.length > 0 && <div className="grid justify-items-center gap-3 rounded-2xl bg-surface p-6 text-center"><p className="text-history-muted">Nenhuma requisição corresponde aos filtros selecionados.</p><Button variant="link" type="button" onClick={() => { setFilters({ status: "ALL", type: "ALL", search: "" }); setPage(1); }}>Limpar filtros</Button></div>}
+                {!listState.loading && !listState.error && visibleRequisitions.length > 0 && <RequisitionList requisitions={pageRequisitions} page={currentPage} pageSize={pageSize} totalCount={visibleRequisitions.length} onPageChange={setPage} onPageSizeChange={(size) => { setPageSize(size); setPage(1); }} />}
             </section>
         );
     }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { searchProductsForKitchen } from "../../../../services/products";
 import type { ProductRecord } from "../../../../types/products";
 import Feedback from "../../../ui/Feedback";
@@ -16,6 +16,7 @@ interface ProductState {
 }
 
 export default function KitchenProductPicker({ kitchenId, onSelect }: KitchenProductPickerProps) {
+    const searchId = useId();
     const [state, setState] = useState<ProductState>({ loading: false, error: null, products: [] });
     const [search, setSearch] = useState("");
     const [retryToken, setRetryToken] = useState(0);
@@ -45,9 +46,9 @@ export default function KitchenProductPicker({ kitchenId, onSelect }: KitchenPro
     const visibleProducts = state.products.filter((product) => [product.name, product.brand ?? ""].some((value) => value.toLocaleLowerCase("pt-BR").includes(normalizedSearch)));
 
     return (
-        <section className="grid min-w-0 gap-3" aria-labelledby="kitchen-product-picker-heading">
-            <h3 id="kitchen-product-picker-heading" className="font-semibold text-ink">Adicionar produto</h3>
-            <SearchField label="Buscar produto vinculado à cozinha" placeholder="Buscar produto da cozinha" value={search} onChange={(event) => setSearch(event.target.value)} />
+        <div className="grid min-w-0 gap-3">
+            <label htmlFor={searchId} className="font-semibold text-ink">Produto da cozinha <span aria-hidden="true">*</span></label>
+            <SearchField id={searchId} label="Buscar produto vinculado à cozinha" placeholder="Buscar produto da cozinha" value={search} onChange={(event) => setSearch(event.target.value)} />
             {search.trim().length < 2 && <p className="text-sm text-history-muted">Digite pelo menos duas letras para buscar produtos ativos vinculados a esta cozinha.</p>}
             {state.loading && <p role="status" aria-live="polite" className="text-sm text-history-muted">Carregando produtos vinculados à cozinha…</p>}
             {state.error && <div className="grid gap-2"><Feedback severity="error">{state.error}</Feedback><button type="button" className="justify-self-start font-semibold text-brand underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" onClick={() => setRetryToken((current) => current + 1)}>Tentar buscar novamente</button></div>}
@@ -64,6 +65,6 @@ export default function KitchenProductPicker({ kitchenId, onSelect }: KitchenPro
                     ))}
                 </ul>
             )}
-        </section>
+        </div>
     );
 }

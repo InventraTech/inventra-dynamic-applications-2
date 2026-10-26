@@ -2,7 +2,7 @@ import Topbar from "../../components/layout/Topbar";
 import RequisitionFlow from "../../components/features/Requisitions";
 import { getSession } from "../../services/authSession";
 
-export type RequisitionPageMode = "list" | "create" | "detail";
+export type RequisitionPageMode = "list" | "create" | "edit" | "detail";
 
 interface RequisitionsProps {
     mode: RequisitionPageMode;

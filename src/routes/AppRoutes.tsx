@@ -107,6 +107,7 @@ export default function AppRoutes() {
                     <Route element={<RequisitionAccessRoute />}>
                         <Route path="/requisicoes" element={withRequisitionLoading(<Requisitions mode="list" />)} />
                         <Route path="/requisicoes/nova" element={withRequisitionLoading(<Requisitions mode="create" />)} />
+                        <Route path="/requisicoes/:requestId/editar" element={withRequisitionLoading(<Requisitions mode="edit" />)} />
                         <Route path="/requisicoes/:requestId" element={withRequisitionLoading(<Requisitions mode="detail" />)} />
                     </Route>
                     <Route element={<SupervisorOnlyRoute />}>

@@ -7,6 +7,7 @@ import RequisitionTypeSelector from "../RequisitionTypeSelector";
 import { createRequisition } from "../../../../services/requisitions";
 import type { CreateRequisitionInput, RequisitionType } from "../../../../types/requisitions";
 import { validateCreateRequisition } from "../../../../utils/requisitionValidation";
+import Breadcrumb from "../../../ui/Breadcrumb";
 
 interface RequisitionCreateFormProps {
     kitchenId: number | null;
@@ -38,7 +39,7 @@ export default function RequisitionCreateForm({ kitchenId, kitchenName }: Requis
         setSubmitting(true);
         try {
             const requisition = await createRequisition(validation.value);
-            navigate(`/requisicoes/${requisition.id}`, { state: { created: true } });
+            navigate(`/requisicoes/${requisition.id}/editar`, { state: { created: true } });
         } catch (error: unknown) {
             setFeedback(error instanceof Error ? error.message : "Não foi possível criar o rascunho. Tente novamente.");
         } finally {
@@ -53,11 +54,13 @@ export default function RequisitionCreateForm({ kitchenId, kitchenName }: Requis
 
     return (
         <section className="grid min-w-0 gap-5" aria-labelledby="create-requisition-heading">
+            <Breadcrumb items={[{ label: "Requisições", href: "/requisicoes" }, { label: "Nova requisição" }]} />
             <div className="flex min-w-0 flex-wrap items-center justify-between gap-4">
-                <div className="min-w-0"><h2 id="create-requisition-heading" className="font-k2d text-2xl font-bold text-ink">Nova requisição</h2><p className="text-sm text-history-muted">Escolha o tipo e informe o contexto para criar um rascunho.</p></div>
-                <Button variant="link" type="button" onClick={() => navigate("/requisicoes")}>← Voltar à lista</Button>
+                <div className="min-w-0"><h2 id="create-requisition-heading" className="font-k2d text-2xl font-bold text-ink">Nova requisição</h2><p className="text-sm text-history-muted">Informe o tipo e a origem ou destino para abrir o rascunho.</p></div>
+                <Button variant="link" type="button" onClick={() => navigate("/requisicoes")}>Voltar à lista</Button>
             </div>
             <form className="grid min-w-0 gap-5 rounded-3xl bg-surface p-4 shadow-history-card sm:p-6" noValidate onSubmit={handleSubmit}>
+                <h3 className="font-k2d text-lg font-bold text-ink">Dados da requisição</h3>
                 <RequisitionTypeSelector value={form.type} onChange={changeType} />
                 <div className="grid min-w-0 gap-3 rounded-2xl bg-history-card-header p-4 sm:grid-cols-[auto_minmax(0,1fr)] sm:items-center">
                     <span className="text-xs font-bold uppercase tracking-wide text-brand">Cozinha atual</span>

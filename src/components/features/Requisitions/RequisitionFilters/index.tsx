@@ -4,18 +4,19 @@ import type { RequisitionListFilters } from "../../../../types/requisitions";
 interface RequisitionFiltersProps {
     value: RequisitionListFilters;
     onChange: (value: RequisitionListFilters) => void;
+    resultCount: number;
 }
 
-export default function RequisitionFilters({ value, onChange }: RequisitionFiltersProps) {
+export default function RequisitionFilters({ value, onChange, resultCount }: RequisitionFiltersProps) {
     return (
-        <form className="grid min-w-0 gap-3 rounded-2xl border border-history-border bg-surface p-3 shadow-history-card sm:grid-cols-2 lg:grid-cols-[minmax(0,1fr)_auto_auto]" role="search" onSubmit={(event) => event.preventDefault()}>
+        <form className="grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-5" role="search" onSubmit={(event) => event.preventDefault()}>
             <SearchField
-                label="Buscar por número, solicitante ou produtos do resumo"
+                label="Buscar por número, solicitante ou produto resumido"
                 placeholder="Buscar por número, solicitante ou produto"
                 value={value.search}
                 onChange={(event) => onChange({ ...value, search: event.target.value })}
+                className="sm:col-span-2 lg:col-span-2"
             />
-            <p className="text-xs leading-relaxed text-history-muted sm:col-span-2 lg:col-span-3">A busca por produto usa os nomes resumidos retornados pela API; abra a requisição para consultar todos os itens.</p>
             <label className="grid min-w-0 gap-1 text-sm font-semibold text-ink">
                 <span>Status</span>
                 <select
@@ -44,6 +45,7 @@ export default function RequisitionFilters({ value, onChange }: RequisitionFilte
                     <option value="TRANSFER">Transferência</option>
                 </select>
             </label>
+            <p className="self-center text-right text-xs text-history-muted sm:col-span-2 lg:col-span-1">{resultCount} {resultCount === 1 ? "requisição" : "requisições"}</p>
         </form>
     );
 }
