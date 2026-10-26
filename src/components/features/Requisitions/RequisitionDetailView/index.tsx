@@ -5,6 +5,7 @@ import Feedback from "../../../ui/Feedback";
 import RequisitionItemForm from "../RequisitionItemForm";
 import RequisitionItemsPanel from "../RequisitionItemsPanel";
 import RequisitionActionPanel from "../RequisitionActionPanel";
+import RequisitionSummary from "../RequisitionSummary";
 
 interface RequisitionDetailViewProps {
     requisition: Requisition;
@@ -28,6 +29,8 @@ export default function RequisitionDetailView({ requisition, items, kitchenId, u
                 <div className="grid gap-1 text-sm text-history-muted sm:text-right"><span>Criada em {formatRequisitionDate(requisition.createdAt)}</span><span>Origem ou destino: {requisition.origin}</span></div>
             </header>
             {created && <Feedback severity="success">Rascunho criado. Adicione os itens da cozinha e envie para análise quando estiver pronto.</Feedback>}
+            <div className="grid min-w-0 items-start gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(17rem,0.65fr)]">
+            <div className="grid min-w-0 gap-5">
             <section className="grid min-w-0 gap-3 rounded-3xl bg-surface p-4 shadow-history-card sm:grid-cols-2 sm:p-6" aria-labelledby="requisition-information-heading">
                 <h3 id="requisition-information-heading" className="sm:col-span-2 font-k2d text-lg font-bold text-ink">Informações da requisição</h3>
                 <div className="grid min-w-0 gap-1"><span className="text-sm text-history-muted">Solicitante</span><strong className="wrap-anywhere text-ink">{requisition.requester.name}</strong></div>
@@ -36,7 +39,12 @@ export default function RequisitionDetailView({ requisition, items, kitchenId, u
             </section>
             <RequisitionItemsPanel requisition={requisition} items={items} canEdit={canEdit} onChanged={onChanged} />
             {canEdit && <section className="rounded-3xl bg-surface p-4 shadow-history-card sm:p-6"><RequisitionItemForm requisition={requisition} kitchenId={kitchenId} onAdded={onChanged} /></section>}
-            <RequisitionActionPanel requisition={requisition} userId={userId} canReview={canReview} itemCount={items.length} onChanged={onChanged} />
+            </div>
+            <aside className="grid min-w-0 gap-4 lg:sticky lg:top-24">
+                <RequisitionSummary requisition={requisition} items={items} />
+                <RequisitionActionPanel requisition={requisition} userId={userId} canReview={canReview} itemCount={items.length} onChanged={onChanged} />
+            </aside>
+            </div>
         </section>
     );
 }

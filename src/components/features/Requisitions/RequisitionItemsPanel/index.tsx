@@ -30,8 +30,6 @@ export default function RequisitionItemsPanel({ requisition, items, canEdit, onC
         }
     }
 
-    const hasUnpricedItems = items.some((item) => item.estimatedPrice === null);
-
     return (
         <section className="grid min-w-0 gap-4 rounded-3xl bg-surface p-4 shadow-history-card sm:p-6" aria-labelledby="requisition-items-heading">
             <div className="flex min-w-0 flex-wrap items-center justify-between gap-3"><h3 id="requisition-items-heading" className="font-k2d text-lg font-bold text-ink">Itens da requisição</h3><span className="rounded-full bg-sidebar-active px-3 py-1 text-sm font-semibold text-heading">{items.length} {items.length === 1 ? "item" : "itens"}</span></div>
@@ -45,7 +43,6 @@ export default function RequisitionItemsPanel({ requisition, items, canEdit, onC
                     ))}
                 </ul>
             )}
-            <div className="flex min-w-0 flex-wrap items-baseline justify-between gap-2 border-t border-history-border pt-3"><span className="text-sm text-history-muted">{hasUnpricedItems ? "Estimativa parcial da requisição" : "Estimativa da requisição"}</span><strong className="text-xl text-brand">{formatRequisitionCurrency(requisition.estimatedTotal)}</strong></div>
             {feedback && <Feedback severity={feedback.severity}>{feedback.message}</Feedback>}
         </section>
     );
