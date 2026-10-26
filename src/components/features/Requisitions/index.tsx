@@ -4,6 +4,7 @@ import Button from "../../ui/Button";
 import Feedback from "../../ui/Feedback";
 import Loading from "../../ui/Loading";
 import RequisitionList from "./RequisitionList";
+import RequisitionMetrics from "./RequisitionMetrics";
 import { getKitchenRequisitions } from "../../../services/requisitions";
 import type { Requisition } from "../../../types/requisitions";
 import type { RequisitionPageMode } from "../../../pages/Requisitions";
@@ -59,6 +60,7 @@ export default function RequisitionFlow({ mode, kitchenId, userId }: Requisition
                     <Button variant="primary" type="button" onClick={() => navigate("/requisicoes/nova")} className="min-h-11 rounded-xl bg-login-gold px-5 text-ink hover:brightness-95">Nova requisição</Button>
                 </div>
 
+                {!listState.loading && !listState.error && kitchenId !== null && <RequisitionMetrics requisitions={listState.requisitions} />}
                 {kitchenId === null && <Feedback severity="info">Sua conta ainda não está vinculada a uma cozinha. Vincule uma cozinha para consultar ou criar requisições.</Feedback>}
                 {listState.loading && kitchenId !== null && <div className="flex min-h-60 items-center justify-center rounded-3xl bg-surface"><Loading loadingText="Carregando requisições…" /></div>}
                 {listState.error && <Feedback severity="error">{listState.error}</Feedback>}
