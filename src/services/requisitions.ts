@@ -1,4 +1,4 @@
-import type { CreateRequisitionInput, Requisition, RequisitionItem } from "../types/requisitions";
+import type { AddRequisitionItemInput, CreateRequisitionInput, Requisition, RequisitionItem } from "../types/requisitions";
 import { apiRequest } from "./api";
 
 export function getKitchenRequisitions(kitchenId: number, signal?: AbortSignal): Promise<Requisition[]> {
@@ -19,4 +19,15 @@ export function createRequisition(input: CreateRequisitionInput): Promise<Requis
         method: "POST",
         body: JSON.stringify(input),
     });
+}
+
+export function addRequisitionItem(id: number, input: AddRequisitionItemInput): Promise<Requisition> {
+    return apiRequest<Requisition>(`/requisitions/${id}/items`, {
+        method: "POST",
+        body: JSON.stringify(input),
+    });
+}
+
+export function removeRequisitionItem(id: number, itemId: number): Promise<Requisition> {
+    return apiRequest<Requisition>(`/requisitions/${id}/items/${itemId}`, { method: "DELETE" });
 }
