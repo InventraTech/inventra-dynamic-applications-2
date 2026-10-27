@@ -37,7 +37,7 @@ const menuSections: MenuSection[] = [
         { id: "equipe-acessos", page: "Equipe e acessos", pageIcon: teamIcon, pagePath: "/equipe-acessos", availability: "available" },
     ] },
     { sectionTitle: "Preferências", menuOptions: [
-        { id: "configuracoes-conta", page: "Configurações da conta", pageIcon: settingsIcon, pagePath: "/perfil", availability: "available" },
+        { id: "configuracoes-conta", page: "Configurações", pageIcon: settingsIcon, pagePath: "/perfil", availability: "available" },
         { id: "acessibilidade", page: "Acessibilidade", pageIcon: accessibilityIcon, pagePath: "/acessibilidade", availability: "available" },
     ] },
 ];
