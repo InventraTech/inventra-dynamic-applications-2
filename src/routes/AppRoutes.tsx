@@ -23,6 +23,7 @@ const ProductEditor = lazy(() => import("../components/features/Products/Product
 const ProductDetail = lazy(() => import("../components/features/Products/ProductDetail"));
 const ProductReferenceManagement = lazy(() => import("../components/features/Products/ProductReferenceManagement"));
 const Profile = lazy(() => import("../pages/Profile"));
+const Requisitions = lazy(() => import("../pages/Requisitions"));
 
 function ProductRouteLoading() {
     return <section className="flex min-w-0 flex-col gap-4 px-6 pb-8 pt-6 max-md:px-4 max-sm:px-3" aria-busy="true"><p className="sr-only" role="status" aria-live="polite">Carregando tela de produtos…</p><div className="h-12 w-full rounded-2xl bg-surface motion-safe:animate-pulse" aria-hidden="true" /><div className="min-h-72 rounded-3xl bg-surface shadow-history-card motion-safe:animate-pulse" aria-hidden="true" /></section>;
@@ -40,6 +41,26 @@ function withProfileLoading(element: ReactNode) {
     return <Suspense fallback={<ProfileRouteLoading />}>{element}</Suspense>;
 }
 
+function RequisitionRouteLoading() {
+    return (
+        <main id="conteudo-principal" tabIndex={-1} className="min-w-0 p-4 outline-none md:p-6" aria-busy="true">
+            <h1 className="sr-only">Requisições</h1>
+            <p role="status" aria-live="polite" className="sr-only">Carregando requisições…</p>
+            <div className="min-h-28 rounded-3xl bg-surface shadow-history-card motion-safe:animate-pulse" aria-hidden="true" />
+            <div className="mt-5 grid gap-4 sm:grid-cols-3" aria-hidden="true">
+                <div className="h-24 rounded-2xl bg-surface motion-safe:animate-pulse" />
+                <div className="h-24 rounded-2xl bg-surface motion-safe:animate-pulse" />
+                <div className="h-24 rounded-2xl bg-surface motion-safe:animate-pulse" />
+            </div>
+            <div className="mt-5 min-h-80 rounded-3xl bg-surface shadow-history-card motion-safe:animate-pulse" aria-hidden="true" />
+        </main>
+    );
+}
+
+function withRequisitionLoading(element: ReactNode) {
+    return <Suspense fallback={<RequisitionRouteLoading />}>{element}</Suspense>;
+}
+
 function SupervisorOnlyRoute() {
     const profile = getSession()?.user.profile;
     const accessType = typeof profile === "string" ? profile : profile?.accessType;
@@ -47,6 +68,14 @@ function SupervisorOnlyRoute() {
     return accessType?.toLocaleUpperCase("pt-BR") === "SUPERVISOR"
         ? <Outlet />
         : <Navigate to="/home" replace />;
+}
+
+function RequisitionAccessRoute() {
+    const profile = getSession()?.user.profile;
+    const accessType = typeof profile === "string" ? profile : profile?.accessType;
+    const allowed = ["SUPERVISOR", "COMPRADOR"].includes(accessType?.toLocaleUpperCase("pt-BR") ?? "");
+
+    return allowed ? <Outlet /> : <Navigate to="/home" replace />;
 }
 
 export default function AppRoutes() {
@@ -75,6 +104,12 @@ export default function AppRoutes() {
                     <Route path="/historico" element={<Navigate to="/historico/retiradas" replace />} />
                     <Route path="/historico/retiradas" element={<Historico mode="withdrawal" />} />
                     <Route path="/historico/solicitacoes" element={<Historico mode="purchase" />} />
+                    <Route element={<RequisitionAccessRoute />}>
+                        <Route path="/requisicoes" element={withRequisitionLoading(<Requisitions mode="list" />)} />
+                        <Route path="/requisicoes/nova" element={withRequisitionLoading(<Requisitions mode="create" />)} />
+                        <Route path="/requisicoes/:requestId/editar" element={withRequisitionLoading(<Requisitions mode="edit" />)} />
+                        <Route path="/requisicoes/:requestId" element={withRequisitionLoading(<Requisitions mode="detail" />)} />
+                    </Route>
                     <Route element={<SupervisorOnlyRoute />}>
                         <Route path="/equipe-acessos" element={<TeamAccess />} />
                         <Route path="/produtos" element={<Products />}>

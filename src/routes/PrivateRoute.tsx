@@ -26,7 +26,7 @@ const menuSections: MenuSection[] = [
         { id: "painel", page: "Painel", pageIcon: dashboardIcon, pagePath: "/home", availability: "available" },
     ] },
     { sectionTitle: "Operação", menuOptions: [
-        { id: "requisicoes", page: "Requisições", pageIcon: requisitionIcon, availability: "coming-soon" },
+        { id: "requisicoes", page: "Requisições", pageIcon: requisitionIcon, pagePath: "/requisicoes", availability: "available" },
         { id: "estoque", page: "Estoque", pageIcon: stockIcon, availability: "coming-soon" },
         { id: "inventarios", page: "Inventários", pageIcon: inventoryIcon, availability: "coming-soon" },
         { id: "produtos", page: "Produtos", pageIcon: productIcon, pagePath: "/produtos", availability: "available" },
@@ -38,7 +38,7 @@ const menuSections: MenuSection[] = [
         { id: "equipe-acessos", page: "Equipe e acessos", pageIcon: teamIcon, pagePath: "/equipe-acessos", availability: "available" },
     ] },
     { sectionTitle: "Preferências", menuOptions: [
-        { id: "configuracoes-conta", page: "Configurações da conta", pageIcon: settingsIcon, pagePath: "/perfil", availability: "available" },
+        { id: "configuracoes-conta", page: "Configurações", pageIcon: settingsIcon, pagePath: "/perfil", availability: "available" },
         { id: "acessibilidade", page: "Acessibilidade", pageIcon: accessibilityIcon, pagePath: "/acessibilidade", availability: "available" },
     ] },
 ];
