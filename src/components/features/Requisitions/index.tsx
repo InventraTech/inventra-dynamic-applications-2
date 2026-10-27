@@ -10,7 +10,7 @@ import type { Requisition, RequisitionListFilters } from "../../../types/requisi
 import type { RequisitionPageMode } from "../../../pages/Requisitions";
 import RequisitionFilters from "./RequisitionFilters";
 import RequisitionCreateForm from "./RequisitionCreateForm";
-import useRequisitionDetail from "./hooks/useRequisitionDetail";
+import useRequisitionDetail from "../../../hooks/useRequisitionDetail";
 import RequisitionDetailSkeleton from "./RequisitionDetailSkeleton";
 import RequisitionDetailView from "./RequisitionDetailView";
 import RequisitionComposer from "./RequisitionComposer";
@@ -77,16 +77,16 @@ export default function RequisitionFlow({ mode, kitchenId, kitchenName, userId, 
     const pageRequisitions = visibleRequisitions.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
     if (mode === "create") {
-        return <div className="grid min-w-0 gap-4 px-4 py-5 md:px-6 xl:px-10 xl:py-6"><RequisitionCreateForm kitchenId={kitchenId} kitchenName={kitchenName} /></div>;
+        return <div className="flex min-w-0 flex-col gap-5 px-6 pb-8 pt-6 max-md:px-4 max-sm:px-3"><RequisitionCreateForm kitchenId={kitchenId} kitchenName={kitchenName} /></div>;
     }
 
     if (mode === "detail") {
         const locationState = location.state;
         const created = typeof locationState === "object" && locationState !== null && "created" in locationState && locationState.created === true;
         return (
-            <section className="grid min-w-0 gap-4 px-4 py-5 md:px-6 xl:px-10 xl:py-6">
+            <section className="flex min-w-0 flex-col gap-5 px-6 pb-8 pt-6 max-md:px-4 max-sm:px-3">
                 {detail.state.loading && <RequisitionDetailSkeleton />}
-                {detail.state.error && <div className="grid min-w-0 gap-3"><Feedback severity="error">{detail.state.error}</Feedback><Button variant="link" type="button" onClick={() => void detail.refresh()}>Tentar carregar novamente</Button></div>}
+                {detail.state.error && <div className="grid min-w-0 gap-3"><Feedback severity="error">{detail.state.error}</Feedback><Button variant="outline" type="button" onClick={() => void detail.refresh()}>Tentar carregar novamente</Button></div>}
                 {!detail.state.loading && !detail.state.error && detail.state.requisition && kitchenId !== null && <RequisitionDetailView requisition={detail.state.requisition} items={detail.state.items} userId={userId} reviewerName={userName} reviewerPhotoUrl={userPhotoUrl} canReview={canReview} created={created} onChanged={detail.refresh} />}
                 {detail.state.refreshing && <p role="status" aria-live="polite" className="text-sm text-history-muted">Atualizando os dados da requisição…</p>}
             </section>
@@ -97,9 +97,9 @@ export default function RequisitionFlow({ mode, kitchenId, kitchenName, userId, 
         const locationState = location.state;
         const created = typeof locationState === "object" && locationState !== null && "created" in locationState && locationState.created === true;
         return (
-            <section className="grid min-w-0 gap-4 px-4 py-5 md:px-6 xl:px-10 xl:py-6">
+            <section className="flex min-w-0 flex-col gap-5 px-6 pb-8 pt-6 max-md:px-4 max-sm:px-3">
                 {detail.state.loading && <RequisitionDetailSkeleton />}
-                {detail.state.error && <div className="grid min-w-0 gap-3"><Feedback severity="error">{detail.state.error}</Feedback><Button variant="link" type="button" onClick={() => void detail.refresh()}>Tentar carregar novamente</Button></div>}
+                {detail.state.error && <div className="grid min-w-0 gap-3"><Feedback severity="error">{detail.state.error}</Feedback><Button variant="outline" type="button" onClick={() => void detail.refresh()}>Tentar carregar novamente</Button></div>}
                 {!detail.state.loading && !detail.state.error && detail.state.requisition && kitchenId !== null && <RequisitionComposer requisition={detail.state.requisition} items={detail.state.items} kitchenId={kitchenId} kitchenName={kitchenName} userId={userId} canReview={canReview} created={created} onChanged={detail.refresh} />}
                 {detail.state.refreshing && <p role="status" aria-live="polite" className="text-sm text-history-muted">Atualizando os dados do rascunho…</p>}
             </section>
@@ -108,7 +108,7 @@ export default function RequisitionFlow({ mode, kitchenId, kitchenName, userId, 
 
     if (mode === "list") {
         return (
-            <section className="grid min-w-0 gap-4 px-4 py-5 md:px-6 xl:px-10 xl:py-6" aria-labelledby="requisitions-heading">
+            <section className="flex min-w-0 flex-col gap-5 px-6 pb-8 pt-6 max-md:px-4 max-sm:px-3" aria-labelledby="requisitions-heading">
                 <RequisitionListHeader />
 
                 {!listState.loading && !listState.error && kitchenId !== null && <RequisitionMetrics requisitions={listState.requisitions} />}
@@ -120,10 +120,10 @@ export default function RequisitionFlow({ mode, kitchenId, kitchenName, userId, 
                     <div className="grid min-h-60 place-content-center justify-items-center gap-3 rounded-3xl bg-surface p-6 text-center shadow-history-card">
                         <h3 className="font-k2d text-xl font-bold text-heading">Nenhuma requisição por enquanto</h3>
                         <p className="max-w-prose text-history-muted">Crie um rascunho para solicitar uma compra, registrar um consumo ou transferir itens.</p>
-                        <Link className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-brand px-5 font-semibold text-on-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to="/requisicoes/nova">Nova requisição <span aria-hidden="true">→</span></Link>
+                        <Link className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-brand px-4 py-2.5 font-k2d text-sm font-bold text-on-brand transition-colors hover:bg-brand-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to="/requisicoes/nova">Nova requisição <span aria-hidden="true">→</span></Link>
                     </div>
                 )}
-                {!listState.loading && !listState.error && visibleRequisitions.length === 0 && listState.requisitions.length > 0 && <div className="grid justify-items-center gap-3 rounded-2xl bg-surface p-6 text-center"><p className="text-history-muted">Nenhuma requisição corresponde aos filtros selecionados.</p><Button variant="link" type="button" onClick={() => { setFilters({ status: "ALL", type: "ALL", search: "" }); setPage(1); }}>Limpar filtros</Button></div>}
+                {!listState.loading && !listState.error && visibleRequisitions.length === 0 && listState.requisitions.length > 0 && <div className="grid justify-items-center gap-3 rounded-2xl bg-surface p-6 text-center"><p className="text-history-muted">Nenhuma requisição corresponde aos filtros selecionados.</p><Button variant="outline" type="button" onClick={() => { setFilters({ status: "ALL", type: "ALL", search: "" }); setPage(1); }}>Limpar filtros</Button></div>}
                 {!listState.loading && !listState.error && visibleRequisitions.length > 0 && <RequisitionList requisitions={pageRequisitions} page={currentPage} pageSize={pageSize} totalCount={visibleRequisitions.length} onPageChange={setPage} onPageSizeChange={(size) => { setPageSize(size); setPage(1); }} />}
                 {!listState.loading && !listState.error && kitchenId !== null && <RequisitionTypeGuidance />}
             </section>

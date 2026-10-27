@@ -70,7 +70,7 @@ export default function RequisitionCreateForm({ kitchenId, kitchenName }: Requis
             </header>
 
             <div className="grid min-w-0 items-start gap-4 xl:grid-cols-[minmax(0,1fr)_20rem]">
-                <form className="grid min-w-0 gap-5 rounded-3xl border border-history-border bg-surface p-4 shadow-history-card sm:p-6 xl:p-7" noValidate onSubmit={handleSubmit}>
+                <form className="grid min-w-0 gap-5 rounded-3xl bg-surface p-5 shadow-history-card sm:p-6" noValidate onSubmit={handleSubmit}>
                     <div className="flex items-center gap-3">
                         <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-sidebar-active text-brand" aria-hidden="true">1</span>
                         <div className="grid min-w-0 gap-0.5"><h3 className="m-0 font-k2d text-lg font-bold text-ink">Dados da requisição</h3><p className="m-0 text-sm text-history-muted">Defina como os produtos serão movimentados.</p></div>
@@ -104,13 +104,13 @@ export default function RequisitionCreateForm({ kitchenId, kitchenName }: Requis
                     {feedback && <Feedback severity="error">{feedback}</Feedback>}
                     {kitchenId === null && <Feedback severity="info">É necessário vincular uma cozinha antes de iniciar uma requisição.</Feedback>}
                     <div className="flex min-w-0 flex-wrap justify-end gap-3 border-t border-history-border pt-4">
-                        <Button variant="link" type="button" onClick={() => navigate("/requisicoes")}>Cancelar</Button>
-                        <Button variant="primary" type="submit" disabled={submitting || kitchenId === null} aria-busy={submitting} className="min-h-11 w-full rounded-xl px-5 sm:w-auto">{submitting ? "Criando rascunho…" : "Criar rascunho e continuar"}</Button>
+                        <Button variant="outline" type="button" onClick={() => navigate("/requisicoes")}>Cancelar</Button>
+                        <Button variant="standard" type="submit" disabled={submitting || kitchenId === null} aria-busy={submitting} className="w-full sm:w-auto">{submitting ? "Criando rascunho…" : "Criar rascunho e continuar"}</Button>
                     </div>
                 </form>
 
                 <aside className="grid min-w-0 gap-4 xl:sticky xl:top-24">
-                    <section className="grid min-w-0 gap-3 rounded-3xl border border-history-border bg-surface p-5 shadow-history-card" aria-labelledby="requisition-next-step-heading">
+                    <section className="grid min-w-0 gap-3 rounded-3xl bg-surface p-5 shadow-history-card" aria-labelledby="requisition-next-step-heading">
                         <h3 id="requisition-next-step-heading" className="m-0 font-k2d text-lg font-bold text-ink">Próxima etapa</h3>
                         <span className="w-fit rounded-full bg-sidebar-active px-3 py-1 text-xs font-semibold text-brand">Rascunho</span>
                         <p className="m-0 text-sm leading-relaxed text-history-muted">{getNextStep(form.type)}</p>

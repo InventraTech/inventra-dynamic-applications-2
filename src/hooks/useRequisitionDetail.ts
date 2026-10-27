@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { getRequisition, getRequisitionItems } from "../../../../services/requisitions";
-import type { Requisition, RequisitionItem } from "../../../../types/requisitions";
+import { getRequisition, getRequisitionItems } from "../services/requisitions";
+import type { Requisition, RequisitionItem } from "../types/requisitions";
 
 export interface RequisitionDetailState {
     loading: boolean;

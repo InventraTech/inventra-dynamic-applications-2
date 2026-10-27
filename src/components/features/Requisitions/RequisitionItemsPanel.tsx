@@ -6,7 +6,7 @@ import { formatRequisitionCurrency } from "../../../utils/requisitionPresentatio
 import Button from "../../ui/Button";
 import Feedback from "../../ui/Feedback";
 import ProductImage from "../../ui/ProductImage";
-import useRequisitionProductDetails from "./hooks/useRequisitionProductDetails";
+import useRequisitionProductDetails from "../../../hooks/useRequisitionProductDetails";
 
 interface RequisitionItemsPanelProps {
     requisition: Requisition;
@@ -46,7 +46,7 @@ export default function RequisitionItemsPanel({ requisition, items, canEdit, onC
     }
 
     function removeButton(item: RequisitionItem) {
-        return <Button variant="link" type="button" className="shrink-0 text-xs text-feedback-error" disabled={removingItemId !== null} onClick={() => void handleRemove(item)} aria-label={"Remover " + item.product.name + " do rascunho"}>{removingItemId === item.id ? "Removendo…" : "Remover item"}</Button>;
+        return <Button variant="ghost" type="button" className="min-h-9 min-w-0 shrink-0 rounded-lg px-2 py-1 text-xs text-feedback-error hover:bg-feedback-error-bg" disabled={removingItemId !== null} onClick={() => void handleRemove(item)} aria-label={"Remover " + item.product.name + " do rascunho"}>{removingItemId === item.id ? "Removendo…" : "Remover item"}</Button>;
     }
 
     function productInfo(item: RequisitionItem, compactImage = false) {
@@ -71,7 +71,7 @@ export default function RequisitionItemsPanel({ requisition, items, canEdit, onC
                         <div className="flex min-w-0 items-start gap-3">
                             <ProductImage name={item.product.name} photoUrl={product?.photoUrl} size="compact" />
                             <div className="grid min-w-0 flex-1 gap-1"><strong className="wrap-anywhere text-ink">{item.product.name}</strong><span className="wrap-anywhere text-xs text-history-muted">{item.suggestedSupplier?.legalName ?? "Sem fornecedor sugerido"}</span></div>
-                            {canEdit && <Button variant="link" type="button" className="shrink-0 text-xs text-feedback-error" disabled={removingItemId !== null} onClick={() => void handleRemove(item)} aria-label={"Remover " + item.product.name + " do rascunho"}>{removingItemId === item.id ? "Removendo…" : "Remover"}</Button>}
+                            {canEdit && <Button variant="ghost" type="button" className="min-h-9 min-w-0 shrink-0 rounded-lg px-2 py-1 text-xs text-feedback-error hover:bg-feedback-error-bg" disabled={removingItemId !== null} onClick={() => void handleRemove(item)} aria-label={"Remover " + item.product.name + " do rascunho"}>{removingItemId === item.id ? "Removendo…" : "Remover"}</Button>}
                         </div>
                         <div className="flex min-w-0 flex-wrap items-baseline justify-between gap-2 text-sm"><span className="text-history-muted">{item.quantity}{product?.unit.symbol ? " " + product.unit.symbol : ""}</span><ItemSubtotal item={item} /></div>
                     </li>
@@ -87,7 +87,7 @@ export default function RequisitionItemsPanel({ requisition, items, canEdit, onC
                     <h3 id="requisition-items-heading" className="m-0 font-k2d text-lg font-bold text-ink">{heading}</h3>
                     <div className="flex min-w-0 flex-wrap items-center gap-3">
                         <span className="rounded-full bg-sidebar-active px-3 py-1 text-sm font-semibold text-heading">{items.length} {items.length === 1 ? "item" : "itens"}</span>
-                        {addItemTo && <Link className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-brand bg-surface px-4 py-2 font-semibold text-brand transition-colors hover:bg-sidebar-active focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to={addItemTo}><span aria-hidden="true">⊕</span>Adicionar item</Link>}
+                        {addItemTo && <Link className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-history-border bg-surface px-4 py-2 font-k2d text-sm font-bold text-sidebar-purple transition-colors hover:bg-history-card-header focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to={addItemTo}><span aria-hidden="true">⊕</span>Adicionar item</Link>}
                     </div>
                 </header>
             )}

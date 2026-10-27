@@ -43,7 +43,7 @@ export default function RequisitionComposer({ requisition, items, kitchenId, kit
             {created && <Feedback severity="success">Rascunho criado. Os itens adicionados serão salvos automaticamente.</Feedback>}
             <div className="grid min-w-0 items-start gap-5 xl:grid-cols-3">
                 <div className="grid min-w-0 gap-5 xl:col-span-2">
-                    <section className="grid min-w-0 gap-4 rounded-3xl bg-surface p-4 shadow-history-card sm:p-6" aria-labelledby="requisition-composer-data-heading">
+                    <section className="grid min-w-0 gap-4 rounded-3xl bg-surface p-5 shadow-history-card sm:p-7" aria-labelledby="requisition-composer-data-heading">
                         <div className="flex items-center gap-3"><span className="grid size-10 shrink-0 place-items-center rounded-xl bg-sidebar-active"><img src={requisitionIcon} alt="" aria-hidden="true" className="size-5" /></span><h3 id="requisition-composer-data-heading" className="font-k2d text-lg font-bold text-ink">Dados da requisição</h3></div>
                         <RequisitionTypeSelector value={requisition.type} onChange={() => undefined} disabled />
                         <p className="text-sm leading-relaxed text-history-muted">O tipo é definido ao criar o rascunho e não pode ser alterado depois.</p>
@@ -53,7 +53,7 @@ export default function RequisitionComposer({ requisition, items, kitchenId, kit
                     </section>
                 </div>
                 <aside className="grid min-w-0 content-start gap-4">
-                    <div className="grid min-w-0 gap-4 rounded-3xl bg-surface p-4 shadow-history-card sm:p-5">
+                    <div className="grid min-w-0 gap-4 rounded-3xl bg-surface p-5 shadow-history-card sm:p-6">
                         <RequisitionItemsPanel requisition={requisition} items={items} canEdit onChanged={onChanged} compact embedded />
                         <RequisitionActionPanel requisition={requisition} userId={userId} canReview={canReview} itemCount={items.length} onChanged={onChanged} onSaveDraft={() => navigate("/requisicoes")} onActionCompleted={() => navigate(`/requisicoes/${requisition.id}`, { replace: true })} embedded showCancel={false} showHeading={false} />
                     </div>

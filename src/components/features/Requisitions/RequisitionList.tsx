@@ -27,22 +27,22 @@ function RequisitionPagination({ page, pageSize, totalCount, onPageChange, onPag
     const visiblePages = getVisiblePages(page, totalPages);
 
     return (
-        <footer className="flex min-w-0 flex-wrap items-center justify-between gap-3 border-t border-history-border px-4 py-3 text-xs text-history-muted sm:px-5">
+        <footer className="flex min-w-0 flex-wrap items-center justify-between gap-3 rounded-3xl bg-surface px-4 py-3 text-xs text-history-muted shadow-history-card xl:rounded-none xl:border-t xl:border-history-border xl:bg-transparent xl:px-5 xl:shadow-none">
             <p className="m-0">Mostrando {firstVisible}–{lastVisible} de {totalCount} {totalCount === 1 ? "requisição" : "requisições"}</p>
             <div className="flex min-w-0 flex-wrap items-center gap-2">
                 <nav className="flex flex-wrap items-center gap-1" aria-label="Paginação das requisições">
-                    {totalPages > 1 && <Button variant="icon" type="button" className="size-9 rounded-lg bg-sidebar-active px-0 text-brand" disabled={page <= 1} onClick={() => onPageChange(page - 1)} aria-label="Página anterior">←</Button>}
+                    {totalPages > 1 && <Button variant="ghost" type="button" className="size-9 bg-sidebar-active px-0 text-brand hover:bg-history-card-header" disabled={page <= 1} onClick={() => onPageChange(page - 1)} aria-label="Página anterior">←</Button>}
                     {visiblePages.map((pageNumber, index) => (
                         <span key={pageNumber} className="flex items-center gap-1">
                             {index > 0 && pageNumber - visiblePages[index - 1] > 1 && <span aria-hidden="true" className="px-1">…</span>}
-                            <Button variant="icon" type="button" className={"size-9 rounded-lg px-0 " + (pageNumber === page ? "bg-brand text-on-brand" : "text-ink hover:bg-sidebar-active")} aria-current={pageNumber === page ? "page" : undefined} aria-label={"Página " + pageNumber} onClick={() => onPageChange(pageNumber)}>{pageNumber}</Button>
+                            <Button variant="ghost" type="button" className={"size-9 px-0 " + (pageNumber === page ? "bg-brand text-on-brand hover:bg-brand-strong" : "text-sidebar-purple hover:bg-sidebar-active")} aria-current={pageNumber === page ? "page" : undefined} aria-label={"Página " + pageNumber} onClick={() => onPageChange(pageNumber)}>{pageNumber}</Button>
                         </span>
                     ))}
-                    {totalPages > 1 && <Button variant="icon" type="button" className="size-9 rounded-lg bg-sidebar-active px-0 text-brand" disabled={page >= totalPages} onClick={() => onPageChange(page + 1)} aria-label="Próxima página">→</Button>}
+                    {totalPages > 1 && <Button variant="ghost" type="button" className="size-9 bg-sidebar-active px-0 text-brand hover:bg-history-card-header" disabled={page >= totalPages} onClick={() => onPageChange(page + 1)} aria-label="Próxima página">→</Button>}
                 </nav>
                 <label className="flex items-center gap-2" htmlFor="requisition-page-size">
                     <span>por página</span>
-                    <select id="requisition-page-size" className="min-h-9 rounded-lg border border-history-border bg-surface px-2 text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" value={pageSize} onChange={(event) => onPageSizeChange(Number(event.target.value))}>
+                    <select id="requisition-page-size" className="min-h-9 rounded-full border border-history-border bg-surface px-3 font-k2d text-sm text-sidebar-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" value={pageSize} onChange={(event) => onPageSizeChange(Number(event.target.value))}>
                         <option value={10}>10</option>
                         <option value={20}>20</option>
                         <option value={50}>50</option>
@@ -55,12 +55,12 @@ function RequisitionPagination({ page, pageSize, totalCount, onPageChange, onPag
 
 function RequisitionCards({ requisitions }: Pick<RequisitionListProps, "requisitions">) {
     return (
-        <ul className="grid list-none gap-3 p-4 sm:p-5 xl:hidden">
+        <ul className="grid list-none gap-4 p-0 xl:hidden">
             {requisitions.map((requisition) => {
                 const status = getRequisitionStatusPresentation(requisition.status);
                 const itemSummary = requisition.itemNames.length ? requisition.itemNames.join(", ") : "Nenhum item adicionado";
                 return (
-                    <li key={requisition.id} className="grid min-w-0 gap-3 rounded-2xl border border-history-border bg-surface p-4 shadow-history-card">
+                    <li key={requisition.id} className="grid min-w-0 gap-3 rounded-3xl bg-surface p-5 shadow-history-card">
                         <div className="flex min-w-0 flex-wrap items-start justify-between gap-2">
                             <div className="grid min-w-0 gap-1">
                                 <Link className="w-fit rounded-sm font-semibold text-ink underline-offset-2 hover:text-brand hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to={"/requisicoes/" + requisition.id}>
@@ -83,7 +83,7 @@ function RequisitionCards({ requisitions }: Pick<RequisitionListProps, "requisit
                         </div>
                         <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
                             <span className="font-k2d text-lg font-bold text-brand">{formatRequisitionCurrency(requisition.estimatedTotal)}</span>
-                            <Link className="inline-flex min-h-10 items-center justify-center rounded-xl bg-sidebar-active px-4 text-sm font-bold text-brand transition-colors hover:bg-history-card-header focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to={"/requisicoes/" + requisition.id} aria-label={"Ver detalhes da requisição " + requisition.id}>Ver requisição <span className="ml-2" aria-hidden="true">→</span></Link>
+                            <Link className="inline-flex min-h-10 items-center justify-center rounded-xl bg-sidebar-active px-4 py-2 font-k2d text-sm font-bold text-brand transition-colors hover:bg-history-card-header focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to={"/requisicoes/" + requisition.id} aria-label={"Ver detalhes da requisição " + requisition.id}>Ver requisição <span className="ml-2" aria-hidden="true">→</span></Link>
                         </div>
                     </li>
                 );
@@ -142,7 +142,7 @@ function RequisitionTable({ requisitions }: Pick<RequisitionListProps, "requisit
 
 export default function RequisitionList(props: RequisitionListProps) {
     return (
-        <section className="min-w-0 overflow-hidden rounded-3xl border border-history-border bg-surface shadow-history-card" aria-label="Lista de requisições">
+        <section className="grid min-w-0 gap-4 xl:gap-0 xl:overflow-hidden xl:rounded-3xl xl:bg-surface xl:shadow-history-card" aria-label="Lista de requisições">
             <RequisitionCards requisitions={props.requisitions} />
             <RequisitionTable requisitions={props.requisitions} />
             <RequisitionPagination {...props} />

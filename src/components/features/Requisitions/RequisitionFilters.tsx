@@ -7,19 +7,19 @@ interface RequisitionFiltersProps {
     resultCount: number;
 }
 
-const selectClassName = "min-h-12 min-w-0 w-full rounded-xl border border-history-border bg-surface px-4 text-sm font-medium text-ink shadow-history-card focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus";
+const selectClassName = "min-h-10 min-w-0 w-full rounded-full border border-history-border bg-surface px-3 font-k2d text-sm text-sidebar-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus";
 
 export default function RequisitionFilters({ value, onChange, resultCount }: RequisitionFiltersProps) {
     return (
-        <form className="grid min-w-0 grid-cols-2 gap-3 xl:grid-cols-[minmax(20rem,1fr)_15rem_14rem_auto]" role="search" aria-label="Filtrar requisições" onSubmit={(event) => event.preventDefault()}>
+        <form className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-12" role="search" aria-label="Filtrar requisições" onSubmit={(event) => event.preventDefault()}>
             <SearchField
                 label="Buscar por número, solicitante ou produto"
                 placeholder="Buscar por número, solicitante ou produto"
                 value={value.search}
                 onChange={(event) => onChange({ ...value, search: event.target.value })}
-                className="col-span-2 min-h-12 rounded-xl border border-history-border bg-surface shadow-history-card focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-focus xl:col-span-1"
+                className="w-full shadow-history-card sm:col-span-2 xl:col-span-6"
             />
-            <label className="min-w-0">
+            <label className="min-w-0 xl:col-span-2">
                 <span className="sr-only">Filtrar por status</span>
                 <select
                     aria-label="Filtrar por status"
@@ -35,7 +35,7 @@ export default function RequisitionFilters({ value, onChange, resultCount }: Req
                     <option value="CANCELLED">Cancelada</option>
                 </select>
             </label>
-            <label className="min-w-0">
+            <label className="min-w-0 xl:col-span-2">
                 <span className="sr-only">Filtrar por tipo</span>
                 <select
                     aria-label="Filtrar por tipo"
@@ -49,7 +49,7 @@ export default function RequisitionFilters({ value, onChange, resultCount }: Req
                     <option value="TRANSFER">Transferência</option>
                 </select>
             </label>
-            <p className="col-span-2 self-center text-right text-xs text-history-muted xl:col-span-1">{resultCount} {resultCount === 1 ? "requisição" : "requisições"}</p>
+            <p className="m-0 self-center text-right font-k2d text-sm text-history-muted sm:col-span-2 xl:col-span-2">{resultCount} {resultCount === 1 ? "requisição" : "requisições"}</p>
         </form>
     );
 }

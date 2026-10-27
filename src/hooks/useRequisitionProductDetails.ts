@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { getProduct } from "../../../../services/products";
-import type { ProductRecord } from "../../../../types/products";
-import type { RequisitionItem } from "../../../../types/requisitions";
+import { getProduct } from "../services/products";
+import type { ProductRecord } from "../types/products";
+import type { RequisitionItem } from "../types/requisitions";
 
 interface RequisitionProductDetailsState {
     loading: boolean;

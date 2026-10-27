@@ -15,11 +15,11 @@ const metrics = [
 
 export default function RequisitionMetrics({ requisitions }: RequisitionMetricsProps) {
     return (
-        <ul className="grid list-none grid-cols-3 gap-2 p-0 sm:gap-3" aria-label="Resumo das requisições">
+        <ul className="grid list-none gap-3 p-0 sm:grid-cols-3" aria-label="Resumo das requisições">
             {metrics.map((metric) => {
                 const count = requisitions.filter(({ status }) => status === metric.status).length;
                 return (
-                    <li key={metric.status} className="flex min-w-0 items-center gap-2 rounded-2xl border border-history-border bg-surface p-2 shadow-history-card sm:gap-3 sm:px-4 sm:py-4">
+                    <li key={metric.status} className="flex min-h-16 min-w-0 items-center gap-3 rounded-3xl bg-surface p-4 shadow-history-card sm:p-5">
                         <span className={"grid size-8 shrink-0 place-items-center rounded-xl sm:size-10 " + metric.tone} aria-hidden="true"><img className="size-4 sm:size-5" src={metric.icon} alt="" /></span>
                         <span className="grid min-w-0">
                             <span className="flex min-w-0 flex-wrap items-baseline gap-x-2"><strong className="font-k2d text-lg leading-none sm:text-2xl">{count}</strong><span className="text-xs font-semibold leading-tight sm:text-sm">{metric.label}</span></span>
