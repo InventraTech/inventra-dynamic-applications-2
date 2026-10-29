@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
 import type { KitchenStockItem, StockBatch } from "../../../types/stock";
-import { getKitchenStockBatches } from "../../../services/stock";
 import { formatStockDate, formatStockQuantity, getBatchStatusPresentation } from "../../../utils/stockPresentation";
 import Button from "../../ui/Button";
 import Dialog from "../../ui/Dialog";
@@ -10,46 +8,18 @@ import StatusBadge from "../../ui/StatusBadge";
 
 interface StockBatchDialogProps {
     open: boolean;
-    kitchenId: number;
     product: KitchenStockItem | null;
-    refreshKey: number;
-    onOpenChange: (open: boolean) => void;
-    onRegisterWriteOff: (batch: StockBatch) => void;
-}
-
-interface BatchListState {
+    batches: StockBatch[];
     loading: boolean;
     error: string | null;
-    batches: StockBatch[];
+    onOpenChange: (open: boolean) => void;
+    onRegisterWriteOff: (batch: StockBatch) => void;
+    onRetry: () => void;
 }
-
-function getLoadError(error: unknown): string {
-    return error instanceof Error ? error.message : "Não foi possível carregar os lotes deste produto.";
-}
-
-export default function StockBatchDialog({ open, kitchenId, product, refreshKey, onOpenChange, onRegisterWriteOff }: StockBatchDialogProps) {
-    const [state, setState] = useState<BatchListState>({ loading: false, error: null, batches: [] });
-    const [retry, setRetry] = useState(0);
-
-    useEffect(() => {
-        if (!open || !product) {
-            setState({ loading: false, error: null, batches: [] });
-            return;
-        }
-        const controller = new AbortController();
-        setState({ loading: true, error: null, batches: [] });
-        getKitchenStockBatches(kitchenId, product.product.id, controller.signal)
-            .then((batches) => {
-                if (!controller.signal.aborted) setState({ loading: false, error: null, batches });
-            })
-            .catch((error: unknown) => {
-                if (!controller.signal.aborted) setState({ loading: false, error: getLoadError(error), batches: [] });
-            });
-        return () => controller.abort();
-    }, [kitchenId, open, product, refreshKey, retry]);
+export default function StockBatchDialog({ open, product, batches, loading, error, onOpenChange, onRegisterWriteOff, onRetry }: StockBatchDialogProps) {
 
     return (
-        <Dialog open={open} onOpenChange={onOpenChange} aria-labelledby="estoque-lotes-heading" aria-busy={state.loading} className="max-w-3xl">
+        <Dialog open={open} onOpenChange={onOpenChange} aria-labelledby="estoque-lotes-heading" aria-busy={loading} className="max-w-3xl">
             <div className="grid min-w-0 gap-4 p-5 sm:p-7">
                 <header className="flex min-w-0 flex-wrap items-start justify-between gap-3">
                     <div className="grid min-w-0 gap-1">
@@ -58,15 +28,15 @@ export default function StockBatchDialog({ open, kitchenId, product, refreshKey,
                     </div>
                     <Button variant="icon" type="button" autoFocus className="min-h-10 min-w-0 rounded-xl border border-history-border px-3 font-k2d text-sm font-bold text-sidebar-purple hover:bg-history-card-header" onClick={() => onOpenChange(false)}>Fechar</Button>
                 </header>
-                {state.loading ? (
+                {loading ? (
                     <div className="flex min-h-36 items-center justify-center"><Loading loadingText="Carregando lotes…" /></div>
-                ) : state.error ? (
-                    <div className="grid justify-items-start gap-3"><Feedback severity="error">{state.error}</Feedback><Button variant="outline" type="button" onClick={() => setRetry((value) => value + 1)}>Tentar carregar novamente</Button></div>
-                ) : !product || state.batches.length === 0 ? (
+                ) : error ? (
+                    <div className="grid justify-items-start gap-3"><Feedback severity="error">{error}</Feedback><Button variant="outline" type="button" onClick={onRetry}>Tentar carregar novamente</Button></div>
+                ) : !product || batches.length === 0 ? (
                     <p className="m-0 rounded-2xl bg-history-card-header p-4 text-sm leading-relaxed text-history-muted">Nenhum lote foi registrado para este produto nesta cozinha.</p>
                 ) : (
                     <ul className="m-0 grid list-none gap-3 p-0" aria-label={`Lotes de ${product.product.name}`}>
-                        {state.batches.map((batch) => {
+                        {batches.map((batch) => {
                             const status = getBatchStatusPresentation(batch);
                             return (
                                 <li key={batch.id} className="grid min-w-0 gap-3 rounded-2xl border border-history-border p-4 sm:p-5">
