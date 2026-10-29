@@ -63,7 +63,7 @@ export default function StockMovementTable({ movements, products, loading, error
             <header className="flex min-w-0 flex-wrap items-start justify-between gap-4 px-5 py-5 sm:px-7 sm:py-6">
                 <div className="grid min-w-0 gap-1">
                     <h2 id="estoque-movimentacoes-heading" className="m-0 font-k2d text-xl font-bold text-ink sm:text-2xl">Movimentações recentes</h2>
-                    <p className="m-0 max-w-prose text-sm leading-relaxed text-history-muted">Da mais nova para a mais antiga, só desta cozinha. A lista mostra um limite de registros, não o histórico completo.</p>
+                    <p className="m-0 max-w-prose text-sm leading-relaxed text-history-muted">Da mais nova para a mais antiga, só desta cozinha. A lista mostra um limite de registros, não o histórico completo.<span className="hidden xl:inline"> Na tabela, role para o lado para ver todas as colunas.</span></p>
                 </div>
                 <div className="flex min-w-0 flex-wrap gap-2">
                     <label className="flex min-h-10 min-w-0 items-center gap-2 rounded-xl border border-history-border bg-surface px-3 text-xs text-history-muted" htmlFor="estoque-movimentacao-tipo">
@@ -116,18 +116,18 @@ export default function StockMovementTable({ movements, products, loading, error
 
                     <div className="hidden min-w-0 xl:block">
                         <div className="min-w-0 overflow-x-auto" role="region" aria-label="Tabela de movimentações. Use as setas horizontais para ver todas as colunas." tabIndex={0}>
-                            <table className="w-full min-w-270 border-separate border-spacing-0 text-left text-sm text-ink">
+                            <table className="w-full min-w-350 border-separate border-spacing-0 text-left text-sm text-ink">
                                 <caption className="sr-only">Movimentações recentes com data, motivo, produto, lote, quantidade, saldo, usuário e requisição</caption>
                                 <thead className="bg-history-card-header text-xs text-history-muted">
                                     <tr>
-                                        <th className="px-5 py-3 font-semibold" scope="col">Quando</th>
-                                        <th className="px-4 py-3 font-semibold" scope="col">Tipo e motivo</th>
-                                        <th className="px-4 py-3 font-semibold" scope="col">Produto</th>
-                                        <th className="px-4 py-3 font-semibold" scope="col">Lote</th>
-                                        <th className="px-4 py-3 font-semibold" scope="col">Quantidade</th>
-                                        <th className="px-4 py-3 font-semibold" scope="col">Saldo após</th>
-                                        <th className="px-4 py-3 font-semibold" scope="col">Usuário</th>
-                                        <th className="px-4 py-3 font-semibold" scope="col">Requisição</th>
+                                        <th className="min-w-36 px-5 py-3 font-semibold text-nowrap" scope="col">Quando</th>
+                                        <th className="min-w-44 px-4 py-3 font-semibold text-nowrap" scope="col">Tipo e motivo</th>
+                                        <th className="min-w-64 px-4 py-3 font-semibold text-nowrap" scope="col">Produto</th>
+                                        <th className="min-w-32 px-4 py-3 font-semibold text-nowrap" scope="col">Lote</th>
+                                        <th className="min-w-32 px-4 py-3 font-semibold text-nowrap" scope="col">Quantidade</th>
+                                        <th className="min-w-32 px-4 py-3 font-semibold text-nowrap" scope="col">Saldo após</th>
+                                        <th className="min-w-48 px-4 py-3 font-semibold text-nowrap" scope="col">Usuário</th>
+                                        <th className="min-w-32 px-4 py-3 font-semibold text-nowrap" scope="col">Requisição</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-history-border">
@@ -135,14 +135,14 @@ export default function StockMovementTable({ movements, products, loading, error
                                         const unit = getUnit(products, movement.product.id);
                                         return (
                                             <tr key={movement.id} className="transition-colors hover:bg-history-card-header">
-                                                <td className="whitespace-nowrap px-5 py-3">{formatStockDateTime(movement.createdAt)}</td>
+                                                <td className="text-nowrap px-5 py-3">{formatStockDateTime(movement.createdAt)}</td>
                                                 <td className="px-4 py-3"><MovementKind movement={movement} /></td>
                                                 <td className="min-w-56 px-4 py-3"><MovementProduct movement={movement} unit={unit} /></td>
                                                 <td className="max-w-40 px-4 py-3 wrap-anywhere">{movement.batch.batchNumber}</td>
-                                                <td className="whitespace-nowrap px-4 py-3 font-k2d font-bold">{formatMovementQuantity(movement, unit)}</td>
-                                                <td className="whitespace-nowrap px-4 py-3">{formatStockQuantity(movement.balanceAfter, unit)}</td>
+                                                <td className="text-nowrap px-4 py-3 font-k2d font-bold">{formatMovementQuantity(movement, unit)}</td>
+                                                <td className="text-nowrap px-4 py-3">{formatStockQuantity(movement.balanceAfter, unit)}</td>
                                                 <td className="min-w-44 px-4 py-3"><MovementActor movement={movement} /></td>
-                                                <td className="px-4 py-3 font-semibold text-sidebar-purple">{movement.requisitionId === null ? "—" : `#${movement.requisitionId}`}</td>
+                                                <td className="min-w-32 px-4 py-3 font-semibold text-sidebar-purple text-nowrap">{movement.requisitionId === null ? "—" : `#${movement.requisitionId}`}</td>
                                             </tr>
                                         );
                                     })}
