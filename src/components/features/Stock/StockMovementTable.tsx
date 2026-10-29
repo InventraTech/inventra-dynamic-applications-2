@@ -32,7 +32,7 @@ function formatMovementQuantity(movement: StockMovement, unit: string): string {
 }
 
 function MovementKind({ movement }: { movement: StockMovement }) {
-    return <StatusBadge label={getStockMovementLabel(movement.type, movement.reason)} tone={getMovementTone(movement)} />;
+    return <StatusBadge className="w-max max-w-none shrink-0 whitespace-nowrap" label={getStockMovementLabel(movement.type, movement.reason)} tone={getMovementTone(movement)} />;
 }
 
 function MovementProduct({ movement, unit }: { movement: StockMovement; unit: string }) {

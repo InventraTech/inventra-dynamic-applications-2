@@ -25,7 +25,7 @@ export default function StockHero({ kitchenName, onConsume }: StockHeroProps) {
                         <img className="size-4" src={requisitionIcon} alt="" aria-hidden="true" />
                         Nova requisição
                     </Link>
-                    <Button variant="outline" type="button" className="min-h-11 rounded-full border-white/35 bg-white/12 text-on-brand hover:bg-white/20 focus-visible:outline-on-brand" onClick={onConsume}>
+                    <Button variant="outline" type="button" className="!text-on-brand min-h-11 rounded-full border-white/35 bg-white/12 hover:bg-white/20 focus-visible:outline-on-brand" onClick={onConsume}>
                         <img className="size-4 brightness-0 invert" src={withdrawalIcon} alt="" aria-hidden="true" />
                         Registrar consumo
                     </Button>
