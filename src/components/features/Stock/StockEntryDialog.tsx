@@ -17,7 +17,7 @@ interface StockEntryDialogProps {
     submitting: boolean;
     error: string | null;
     onOpenChange: (open: boolean) => void;
-    onSubmit: (request: StockEntryRequest) => Promise<void>;
+    onSubmit: (request: StockEntryRequest) => Promise<boolean>;
     onRetrySuppliers: () => void;
 }
 
@@ -52,13 +52,11 @@ function localToday(): string {
 export default function StockEntryDialog({ open, kitchenId, products, suppliers, suppliersLoading, suppliersError, submitting, error, onOpenChange, onSubmit, onRetrySuppliers }: StockEntryDialogProps) {
     const [form, setForm] = useState<StockEntryFormValues>(emptyForm);
     const [fieldErrors, setFieldErrors] = useState<StockEntryErrors>({});
-    const [success, setSuccess] = useState<string | null>(null);
 
     useEffect(() => {
         if (!open) return;
         setForm({ ...emptyForm, productId: products[0] ? String(products[0].product.id) : "", entryDate: localToday() });
         setFieldErrors({});
-        setSuccess(null);
     }, [open, products]);
 
     function update<K extends keyof StockEntryFormValues>(field: K, value: StockEntryFormValues[K]) {
@@ -69,12 +67,11 @@ export default function StockEntryDialog({ open, kitchenId, products, suppliers,
 
     async function submit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        setSuccess(null);
         const validation = validateStockEntry(form, kitchenId);
         setFieldErrors(validation.errors);
         if (!validation.value) return;
-        await onSubmit(validation.value);
-        if (!error) setSuccess("Entrada registrada. Os saldos, alertas e movimentações serão atualizados.");
+        const saved = await onSubmit(validation.value);
+        if (saved) onOpenChange(false);
     }
 
     function renderFieldError(field: keyof StockEntryFormValues) {
@@ -154,7 +151,6 @@ export default function StockEntryDialog({ open, kitchenId, products, suppliers,
                 )}
 
                 {error && <Feedback severity="error">{error}</Feedback>}
-                {success && <Feedback severity="success">{success}</Feedback>}
                 <div className="flex min-w-0 flex-wrap justify-end gap-3 border-t border-history-border pt-4">
                     <Button variant="outline" type="button" onClick={() => onOpenChange(false)}>Cancelar</Button>
                     <Button variant="standard" type="submit" disabled={submitting || suppliersLoading || products.length === 0} aria-busy={submitting}>
