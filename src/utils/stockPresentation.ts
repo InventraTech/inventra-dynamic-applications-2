@@ -55,15 +55,15 @@ export function getBatchStatusPresentation(batch: StockBatch): { label: string; 
 export function getStockMovementLabel(type: StockMovementType, reason: StockMovementReason | null): string {
     if (type === "ENTRY") return "Entrada";
     if (type === "ADJUSTMENT") return "Ajuste";
-    if (reason === "LOSS") return "Baixa · Perda";
-    if (reason === "EXPIRED") return "Baixa · Vencimento";
-    if (reason === "REQUISITION") return "Baixa · Requisição";
-    return "Baixa · Consumo";
+    if (reason === "LOSS") return "Perda";
+    if (reason === "EXPIRED") return "Vencimento";
+    if (reason === "REQUISITION") return "Requisição";
+    return "Consumo";
 }
 
-export function getMovementTone(movement: StockMovement): "success" | "warning" | "danger" | "neutral" {
+export function getMovementTone(movement: StockMovement): "success" | "warning" | "danger" | "neutral" | "brand" {
     if (movement.type === "ENTRY") return "success";
     if (movement.type === "ADJUSTMENT") return "neutral";
     if (movement.reason === "EXPIRED" || movement.reason === "LOSS") return "danger";
-    return "warning";
+    return "brand";
 }

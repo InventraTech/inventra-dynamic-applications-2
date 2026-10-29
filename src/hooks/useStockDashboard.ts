@@ -52,46 +52,70 @@ export default function useStockDashboard(kitchenId: number | null) {
     const [limit, setLimit] = useState(50);
     const [movementType, setMovementType] = useState<StockMovementFilter>("ALL");
     const [reloadVersion, setReloadVersion] = useState(0);
+    const [productsRetry, setProductsRetry] = useState(0);
+    const [expiringRetry, setExpiringRetry] = useState(0);
+    const [movementsRetry, setMovementsRetry] = useState(0);
+    const [suppliersRetry, setSuppliersRetry] = useState(0);
     const [mutation, setMutation] = useState<MutationState>({ kind: null, submitting: false, error: null, success: null });
 
     useEffect(() => {
         if (kitchenId === null) {
             setProducts(emptyResource([]));
-            setExpiring(emptyResource([]));
-            setMovements(emptyResource([]));
-            setSuppliers(emptyResource([]));
             return;
         }
 
         const controller = new AbortController();
         setProducts((current) => ({ ...current, loading: true, error: null }));
-        setExpiring((current) => ({ ...current, loading: true, error: null }));
-        setMovements((current) => ({ ...current, loading: true, error: null }));
-        setSuppliers((current) => ({ ...current, loading: true, error: null }));
-
-        const requestedType = movementType === "ALL" ? undefined : movementType;
-        const resources = [
-            getKitchenStock(kitchenId, {}, controller.signal)
-                .then((data) => { if (!controller.signal.aborted) setProducts({ data, loading: false, error: null }); })
-                .catch((error: unknown) => { if (!controller.signal.aborted) setProducts({ data: [], loading: false, error: getError(error, "Não foi possível carregar o estoque da cozinha.") }); }),
-            getExpiringStockBatches(kitchenId, days, controller.signal)
-                .then((data) => { if (!controller.signal.aborted) setExpiring({ data, loading: false, error: null }); })
-                .catch((error: unknown) => { if (!controller.signal.aborted) setExpiring({ data: [], loading: false, error: getError(error, "Não foi possível carregar os lotes próximos do vencimento.") }); }),
-            getStockMovements(kitchenId, limit, requestedType, undefined, controller.signal)
-                .then((data) => { if (!controller.signal.aborted) setMovements({ data, loading: false, error: null }); })
-                .catch((error: unknown) => { if (!controller.signal.aborted) setMovements({ data: [], loading: false, error: getError(error, "Não foi possível carregar as movimentações.") }); }),
-            getKitchenStockSuppliers(kitchenId, controller.signal)
-                .then((data) => { if (!controller.signal.aborted) setSuppliers({ data, loading: false, error: null }); })
-                .catch((error: unknown) => { if (!controller.signal.aborted) setSuppliers({ data: [], loading: false, error: getError(error, "Não foi possível carregar os fornecedores da cozinha.") }); }),
-        ];
-
-        void Promise.allSettled(resources);
+        getKitchenStock(kitchenId, {}, controller.signal)
+            .then((data) => { if (!controller.signal.aborted) setProducts({ data, loading: false, error: null }); })
+            .catch((error: unknown) => { if (!controller.signal.aborted) setProducts((current) => ({ data: current.data, loading: false, error: getError(error, "Não foi possível carregar o estoque da cozinha.") })); });
         return () => controller.abort();
-    }, [days, kitchenId, limit, movementType, reloadVersion]);
+    }, [kitchenId, productsRetry, reloadVersion]);
 
-    function retry() {
-        setReloadVersion((version) => version + 1);
-    }
+    useEffect(() => {
+        if (kitchenId === null) {
+            setExpiring(emptyResource([]));
+            return;
+        }
+        const controller = new AbortController();
+        setExpiring((current) => ({ ...current, loading: true, error: null }));
+        getExpiringStockBatches(kitchenId, days, controller.signal)
+            .then((data) => { if (!controller.signal.aborted) setExpiring({ data, loading: false, error: null }); })
+            .catch((error: unknown) => { if (!controller.signal.aborted) setExpiring((current) => ({ data: current.data, loading: false, error: getError(error, "Não foi possível carregar os lotes próximos do vencimento.") })); });
+        return () => controller.abort();
+    }, [days, expiringRetry, kitchenId, reloadVersion]);
+
+    useEffect(() => {
+        if (kitchenId === null) {
+            setMovements(emptyResource([]));
+            return;
+        }
+        const controller = new AbortController();
+        setMovements((current) => ({ ...current, loading: true, error: null }));
+        const requestedType = movementType === "ALL" ? undefined : movementType;
+        getStockMovements(kitchenId, limit, requestedType, undefined, controller.signal)
+            .then((data) => { if (!controller.signal.aborted) setMovements({ data, loading: false, error: null }); })
+            .catch((error: unknown) => { if (!controller.signal.aborted) setMovements((current) => ({ data: current.data, loading: false, error: getError(error, "Não foi possível carregar as movimentações.") })); });
+        return () => controller.abort();
+    }, [kitchenId, limit, movementsRetry, movementType, reloadVersion]);
+
+    useEffect(() => {
+        if (kitchenId === null) {
+            setSuppliers(emptyResource([]));
+            return;
+        }
+        const controller = new AbortController();
+        setSuppliers((current) => ({ ...current, loading: true, error: null }));
+        getKitchenStockSuppliers(kitchenId, controller.signal)
+            .then((data) => { if (!controller.signal.aborted) setSuppliers({ data, loading: false, error: null }); })
+            .catch((error: unknown) => { if (!controller.signal.aborted) setSuppliers((current) => ({ data: current.data, loading: false, error: getError(error, "Não foi possível carregar os fornecedores da cozinha.") })); });
+        return () => controller.abort();
+    }, [kitchenId, reloadVersion, suppliersRetry]);
+
+    function retryProducts() { setProductsRetry((version) => version + 1); }
+    function retryExpiring() { setExpiringRetry((version) => version + 1); }
+    function retryMovements() { setMovementsRetry((version) => version + 1); }
+    function retrySuppliers() { setSuppliersRetry((version) => version + 1); }
 
     async function runMutation(kind: StockMutationKind, request: () => Promise<unknown>, success: string): Promise<boolean> {
         setMutation({ kind, submitting: true, error: null, success: null });
@@ -135,7 +159,10 @@ export default function useStockDashboard(kitchenId: number | null) {
         setDays,
         setLimit,
         setMovementType,
-        retry,
+        retryProducts,
+        retryExpiring,
+        retryMovements,
+        retrySuppliers,
         createEntry,
         createConsumption,
         createWriteOff,

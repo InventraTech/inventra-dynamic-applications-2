@@ -76,21 +76,22 @@ export default function StockFlow({ kitchenId, kitchenName }: StockFlowProps) {
                 <>
                     <StockHero kitchenName={kitchenName} onConsume={openConsumption} />
                     {stock.mutation.success && <Feedback severity="success">{stock.mutation.success}</Feedback>}
-                    {stock.products.loading && <div className="flex min-h-32 items-center justify-center rounded-3xl bg-surface shadow-history-card"><Loading loadingText="Carregando estoque da cozinha…" /></div>}
-                    {stock.products.error && <div className="grid min-w-0 justify-items-start gap-3 rounded-3xl bg-surface p-5 shadow-history-card"><Feedback severity="error">{stock.products.error}</Feedback><Button variant="outline" type="button" onClick={stock.retry}>Tentar carregar novamente</Button></div>}
-                    {!stock.products.loading && !stock.products.error && (
+                    {stock.products.loading && stock.products.data.length === 0 && <div className="flex min-h-32 items-center justify-center rounded-3xl bg-surface shadow-history-card"><Loading loadingText="Carregando estoque da cozinha…" /></div>}
+                    {stock.products.error && stock.products.data.length === 0 && <div className="grid min-w-0 justify-items-start gap-3 rounded-3xl bg-surface p-5 shadow-history-card"><Feedback severity="error">{stock.products.error}</Feedback><Button variant="outline" type="button" onClick={stock.retryProducts}>Tentar carregar novamente</Button></div>}
+                    {stock.products.error && stock.products.data.length > 0 && <Feedback severity="error">Os dados podem estar desatualizados. {stock.products.error}</Feedback>}
+                    {(stock.products.data.length > 0 || (!stock.products.loading && !stock.products.error)) && (
                         <>
-                            <StockMetrics products={stock.products.data} expiringBatches={stock.expiring.data} expiringDays={stock.days} />
+                            <StockMetrics products={stock.products.data} expiringBatches={stock.expiring.data} expiringDays={stock.days} expiringLoading={stock.expiring.loading} expiringError={stock.expiring.error} />
                             <div className="grid min-w-0 items-stretch gap-4 xl:grid-cols-[minmax(0,0.85fr)_minmax(0,1.25fr)]">
                                 <StockLowStockAlert products={stock.products.data} kitchenName={kitchenName} />
-                                <StockExpiryAlert kitchenName={kitchenName} products={stock.products.data} batches={stock.expiring.data} days={stock.days} loading={stock.expiring.loading} error={stock.expiring.error} onDaysChange={stock.setDays} onRetry={stock.retry} />
+                                <StockExpiryAlert kitchenName={kitchenName} products={stock.products.data} batches={stock.expiring.data} days={stock.days} loading={stock.expiring.loading} error={stock.expiring.error} onDaysChange={stock.setDays} onRetry={stock.retryExpiring} />
                             </div>
                             <StockProductCatalog products={stock.products.data} query={query} categoryId={categoryId} status={status} onQueryChange={setQuery} onCategoryChange={setCategoryId} onStatusChange={setStatus} onClearFilters={clearFilters} onViewBatches={openProductBatches} onRegisterEntry={openEntry} />
-                            <StockMovementTable movements={stock.movements.data} products={stock.products.data} loading={stock.movements.loading} error={stock.movements.error} type={stock.movementType} limit={stock.limit} onTypeChange={stock.setMovementType} onLimitChange={stock.setLimit} onRetry={stock.retry} />
+                            <StockMovementTable movements={stock.movements.data} products={stock.products.data} loading={stock.movements.loading} error={stock.movements.error} type={stock.movementType} limit={stock.limit} onTypeChange={stock.setMovementType} onLimitChange={stock.setLimit} onRetry={stock.retryMovements} />
                         </>
                     )}
 
-                    <StockEntryDialog open={entryOpen} kitchenId={kitchenId} products={stock.products.data} suppliers={stock.suppliers.data} suppliersLoading={stock.suppliers.loading} suppliersError={stock.suppliers.error} submitting={stock.mutation.submitting && stock.mutation.kind === "entry"} error={stock.mutation.kind === "entry" ? stock.mutation.error : null} onOpenChange={setEntryOpen} onSubmit={stock.createEntry} onRetrySuppliers={stock.retry} />
+                    <StockEntryDialog open={entryOpen} kitchenId={kitchenId} products={stock.products.data} suppliers={stock.suppliers.data} suppliersLoading={stock.suppliers.loading} suppliersError={stock.suppliers.error} submitting={stock.mutation.submitting && stock.mutation.kind === "entry"} error={stock.mutation.kind === "entry" ? stock.mutation.error : null} onOpenChange={setEntryOpen} onSubmit={stock.createEntry} onRetrySuppliers={stock.retrySuppliers} />
                     <StockConsumptionDialog open={consumptionOpen} kitchenId={kitchenId} products={stock.products.data} submitting={stock.mutation.submitting && stock.mutation.kind === "consumption"} error={stock.mutation.kind === "consumption" ? stock.mutation.error : null} onOpenChange={setConsumptionOpen} onSubmit={stock.createConsumption} />
                     <StockBatchDialog open={batchesOpen} product={selectedProduct} batches={batches.batches} loading={batches.loading} error={batches.error} onOpenChange={setBatchesOpen} onRegisterWriteOff={(batch) => void registerWriteOff(batch)} onRetry={batches.retry} />
                     <StockWriteOffDialog open={writeOffOpen} batch={selectedBatch} product={selectedProduct} submitting={stock.mutation.submitting && stock.mutation.kind === "write-off"} error={stock.mutation.kind === "write-off" ? stock.mutation.error : null} onOpenChange={setWriteOffOpen} onSubmit={stock.createWriteOff} />
