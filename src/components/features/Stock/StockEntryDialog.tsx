@@ -32,17 +32,6 @@ const emptyForm: StockEntryFormValues = {
     unitPrice: "",
 };
 
-const fieldLabels: Record<keyof StockEntryFormValues, string> = {
-    productId: "Produto",
-    supplierId: "Fornecedor",
-    batchNumber: "Número do lote",
-    invoiceNumber: "Nota fiscal",
-    initialQuantity: "Quantidade recebida",
-    entryDate: "Data de entrada",
-    expirationDate: "Data de validade",
-    unitPrice: "Preço unitário",
-};
-
 function localToday(): string {
     const now = new Date();
     const offset = now.getTimezoneOffset() * 60_000;
@@ -62,7 +51,6 @@ export default function StockEntryDialog({ open, kitchenId, products, suppliers,
     function update<K extends keyof StockEntryFormValues>(field: K, value: StockEntryFormValues[K]) {
         setForm((current) => ({ ...current, [field]: value }));
         setFieldErrors((current) => ({ ...current, [field]: undefined }));
-        setSuccess(null);
     }
 
     async function submit(event: FormEvent<HTMLFormElement>) {
