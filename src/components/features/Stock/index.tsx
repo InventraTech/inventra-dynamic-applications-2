@@ -17,13 +17,15 @@ import StockMovementTable from "./StockMovementTable";
 import StockProductCatalog from "./StockProductCatalog";
 import StockWriteOffDialog from "./StockWriteOffDialog";
 import type { StockProductStatusFilter } from "./StockProductFilters";
+import Mascot from "../../ui/Mascot";
 
 interface StockFlowProps {
     kitchenId: number | null;
     kitchenName: string | null;
+    canCreateKitchen: boolean;
 }
 
-export default function StockFlow({ kitchenId, kitchenName }: StockFlowProps) {
+export default function StockFlow({ kitchenId, kitchenName, canCreateKitchen }: StockFlowProps) {
     const stock = useStockDashboard(kitchenId);
     const [query, setQuery] = useState("");
     const [categoryId, setCategoryId] = useState<number | null>(null);
@@ -67,10 +69,14 @@ export default function StockFlow({ kitchenId, kitchenName }: StockFlowProps) {
     return (
         <section className="flex min-w-0 flex-col gap-4 px-4 pb-8 pt-5 sm:gap-5 sm:px-6 sm:pt-6 max-sm:px-3">
             {kitchenId === null || kitchenName === null ? (
-                <div className="grid min-h-64 place-content-center justify-items-center gap-3 rounded-3xl bg-surface p-6 text-center shadow-history-card">
-                    <h2 className="m-0 font-k2d text-xl font-bold text-ink">Cozinha não vinculada</h2>
-                    <p className="m-0 max-w-prose text-sm leading-relaxed text-history-muted">O estoque é sempre limitado à cozinha associada à sua conta. Vincule uma cozinha para consultar saldos, lotes e movimentações.</p>
-                    <Link className="inline-flex min-h-10 items-center justify-center rounded-xl border border-history-border bg-surface px-4 py-2 font-k2d text-sm font-bold text-sidebar-purple focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to="/home">Voltar ao painel</Link>
+                <div className="grid min-h-72 place-content-center justify-items-center gap-3 rounded-3xl bg-surface p-6 text-center shadow-history-card sm:p-8">
+                    <Mascot size="compacto" className="w-20" />
+                    <h2 className="m-0 font-k2d text-xl font-bold text-ink">Você ainda não tem uma cozinha</h2>
+                    <p className="m-0 max-w-prose text-sm leading-relaxed text-history-muted">O estoque mostra somente os dados da cozinha vinculada à sua conta. {canCreateKitchen ? "Crie uma cozinha para começar a acompanhar produtos, lotes e movimentações." : "Peça ao supervisor da sua equipe para vincular sua conta a uma cozinha."}</p>
+                    <div className="flex min-w-0 flex-wrap justify-center gap-3 pt-1">
+                        {canCreateKitchen && <Link className="inline-flex min-h-11 items-center justify-center rounded-xl bg-brand px-5 py-2.5 font-k2d text-sm font-bold text-on-brand transition-colors hover:bg-brand-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to="/cadastro/cozinha">Criar cozinha</Link>}
+                        <Link className="inline-flex min-h-11 items-center justify-center rounded-xl border border-history-border bg-surface px-5 py-2.5 font-k2d text-sm font-bold text-sidebar-purple transition-colors hover:bg-history-card-header focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to="/home">Voltar ao painel</Link>
+                    </div>
                 </div>
             ) : (
                 <>

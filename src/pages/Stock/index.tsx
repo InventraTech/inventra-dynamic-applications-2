@@ -15,6 +15,9 @@ export default function Stock() {
     const role = typeof session?.user.profile === "string"
         ? session.user.profile
         : session?.user.profile?.accessType?.replaceAll("_", " ") ?? "Usuário";
+    const accessType = typeof session?.user.profile === "string"
+        ? session.user.profile
+        : session?.user.profile?.accessType;
 
     return (
         <div className="flex min-h-screen min-w-0 flex-col bg-linear-to-b from-history-background-start to-history-background-end adjusted-contrast:bg-none adjusted-contrast:bg-history-background-start">
@@ -27,7 +30,7 @@ export default function Stock() {
                 userRole={role}
             />
             <main id="conteudo-principal" tabIndex={-1} className="min-w-0 flex-1 outline-none">
-                <StockFlow kitchenId={session?.user.kitchen?.id ?? null} kitchenName={session?.user.kitchen?.name ?? null} />
+                <StockFlow kitchenId={session?.user.kitchen?.id ?? null} kitchenName={session?.user.kitchen?.name ?? null} canCreateKitchen={accessType?.toLocaleUpperCase("pt-BR") === "SUPERVISOR"} />
             </main>
         </div>
     );
