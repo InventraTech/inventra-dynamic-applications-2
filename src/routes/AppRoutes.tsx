@@ -96,14 +96,6 @@ function RequisitionAccessRoute() {
     return allowed ? <Outlet /> : <Navigate to="/home" replace />;
 }
 
-function StockAccessRoute() {
-    const profile = getSession()?.user.profile;
-    const accessType = typeof profile === "string" ? profile : profile?.accessType;
-    const allowed = ["SUPERVISOR", "ESTOQUISTA"].includes(accessType?.toLocaleUpperCase("pt-BR") ?? "");
-
-    return allowed ? <Outlet /> : <Navigate to="/home" replace />;
-}
-
 export default function AppRoutes() {
     return (
         <BrowserRouter>
@@ -136,9 +128,7 @@ export default function AppRoutes() {
                         <Route path="/requisicoes/:requestId/editar" element={withRequisitionLoading(<Requisitions mode="edit" />)} />
                         <Route path="/requisicoes/:requestId" element={withRequisitionLoading(<Requisitions mode="detail" />)} />
                     </Route>
-                    <Route element={<StockAccessRoute />}>
-                        <Route path="/estoque" element={withStockLoading(<Stock />)} />
-                    </Route>
+                    <Route path="/estoque" element={withStockLoading(<Stock />)} />
                     <Route element={<SupervisorOnlyRoute />}>
                         <Route path="/equipe-acessos" element={<TeamAccess />} />
                         <Route path="/produtos" element={<Products />}>
