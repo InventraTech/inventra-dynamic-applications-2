@@ -63,7 +63,7 @@ export default function StockMovementTable({ movements, products, loading, error
             <header className="flex min-w-0 flex-wrap items-start justify-between gap-4 px-5 py-5 sm:px-7 sm:py-6">
                 <div className="grid min-w-0 gap-1">
                     <h2 id="estoque-movimentacoes-heading" className="m-0 font-k2d text-xl font-bold text-ink sm:text-2xl">Movimentações recentes</h2>
-                    <p className="m-0 max-w-prose text-sm leading-relaxed text-history-muted">Da mais nova para a mais antiga, só desta cozinha. A lista mostra um limite de registros, não o histórico completo.<span className="hidden xl:inline"> Na tabela, role para o lado para ver todas as colunas.</span></p>
+                    <p className="m-0 max-w-prose text-sm leading-relaxed text-history-muted">Da mais nova para a mais antiga, só desta cozinha. A quantidade mostra o impacto da movimentação; o saldo do lote mostra quanto restou depois dela. A lista mostra um limite de registros, não o histórico completo.<span className="hidden xl:inline"> Na tabela, role para o lado para ver todas as colunas.</span></p>
                 </div>
                 <div className="flex min-w-0 flex-wrap gap-2">
                     <label className="flex min-h-10 min-w-0 items-center gap-2 rounded-xl border border-history-border bg-surface px-3 text-xs text-history-muted" htmlFor="estoque-movimentacao-tipo">
@@ -104,8 +104,8 @@ export default function StockMovementTable({ movements, products, loading, error
                                     <MovementProduct movement={movement} unit={unit} />
                                     <dl className="grid min-w-0 grid-cols-2 gap-x-3 gap-y-2 border-y border-history-border py-3 text-sm">
                                         <div className="grid min-w-0 gap-0.5"><dt className="text-xs text-history-muted">Lote</dt><dd className="m-0 wrap-anywhere text-ink">{movement.batch.batchNumber}</dd></div>
-                                        <div className="grid min-w-0 gap-0.5"><dt className="text-xs text-history-muted">Quantidade</dt><dd className="m-0 font-bold text-ink">{formatMovementQuantity(movement, unit)}</dd></div>
-                                        <div className="grid min-w-0 gap-0.5"><dt className="text-xs text-history-muted">Saldo após</dt><dd className="m-0 text-ink">{formatStockQuantity(movement.balanceAfter, unit)}</dd></div>
+                                        <div className="grid min-w-0 gap-0.5"><dt className="text-xs text-history-muted">Quantidade movimentada</dt><dd className="m-0 font-bold text-ink">{formatMovementQuantity(movement, unit)}</dd></div>
+                                        <div className="grid min-w-0 gap-0.5"><dt className="text-xs text-history-muted">Saldo do lote após</dt><dd className="m-0 text-ink">{formatStockQuantity(movement.balanceAfter, unit)}</dd></div>
                                         <div className="grid min-w-0 gap-0.5"><dt className="text-xs text-history-muted">Requisição</dt><dd className="m-0 font-semibold text-sidebar-purple">{movement.requisitionId === null ? "—" : `#${movement.requisitionId}`}</dd></div>
                                     </dl>
                                     <MovementActor movement={movement} />
@@ -124,8 +124,8 @@ export default function StockMovementTable({ movements, products, loading, error
                                         <th className="min-w-44 px-4 py-3 font-semibold text-nowrap" scope="col">Tipo e motivo</th>
                                         <th className="min-w-64 px-4 py-3 font-semibold text-nowrap" scope="col">Produto</th>
                                         <th className="min-w-32 px-4 py-3 font-semibold text-nowrap" scope="col">Lote</th>
-                                        <th className="min-w-32 px-4 py-3 font-semibold text-nowrap" scope="col">Quantidade</th>
-                                        <th className="min-w-32 px-4 py-3 font-semibold text-nowrap" scope="col">Saldo após</th>
+                                        <th className="min-w-40 px-4 py-3 font-semibold text-nowrap" scope="col">Quantidade movimentada</th>
+                                        <th className="min-w-40 px-4 py-3 font-semibold text-nowrap" scope="col">Saldo do lote após</th>
                                         <th className="min-w-48 px-4 py-3 font-semibold text-nowrap" scope="col">Usuário</th>
                                         <th className="min-w-32 px-4 py-3 font-semibold text-nowrap" scope="col">Requisição</th>
                                     </tr>
