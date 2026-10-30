@@ -24,6 +24,7 @@ const ProductDetail = lazy(() => import("../components/features/Products/Product
 const ProductReferenceManagement = lazy(() => import("../components/features/Products/ProductReferenceManagement"));
 const Profile = lazy(() => import("../pages/Profile"));
 const Requisitions = lazy(() => import("../pages/Requisitions"));
+const Stock = lazy(() => import("../pages/Stock"));
 
 function ProductRouteLoading() {
     return <section className="flex min-w-0 flex-col gap-4 px-6 pb-8 pt-6 max-md:px-4 max-sm:px-3" aria-busy="true"><p className="sr-only" role="status" aria-live="polite">Carregando tela de produtos…</p><div className="h-12 w-full rounded-2xl bg-surface motion-safe:animate-pulse" aria-hidden="true" /><div className="min-h-72 rounded-3xl bg-surface shadow-history-card motion-safe:animate-pulse" aria-hidden="true" /></section>;
@@ -59,6 +60,23 @@ function RequisitionRouteLoading() {
 
 function withRequisitionLoading(element: ReactNode) {
     return <Suspense fallback={<RequisitionRouteLoading />}>{element}</Suspense>;
+}
+
+function StockRouteLoading() {
+    return (
+        <main id="conteudo-principal" tabIndex={-1} className="flex min-w-0 flex-col gap-4 px-4 pb-8 pt-5 outline-none sm:gap-5 sm:px-6 sm:pt-6" aria-busy="true">
+            <h1 className="sr-only">Estoque</h1>
+            <p role="status" aria-live="polite" className="sr-only">Carregando estoque da cozinha…</p>
+            <div className="min-h-40 rounded-3xl bg-brand motion-safe:animate-pulse" aria-hidden="true" />
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-hidden="true">{[1, 2, 3, 4].map((item) => <div key={item} className="h-20 rounded-3xl bg-surface motion-safe:animate-pulse" />)}</div>
+            <div className="grid gap-4 xl:grid-cols-2" aria-hidden="true"><div className="min-h-64 rounded-3xl bg-surface motion-safe:animate-pulse" /><div className="min-h-64 rounded-3xl bg-surface motion-safe:animate-pulse" /></div>
+            <div className="min-h-96 rounded-3xl bg-surface motion-safe:animate-pulse" aria-hidden="true" />
+        </main>
+    );
+}
+
+function withStockLoading(element: ReactNode) {
+    return <Suspense fallback={<StockRouteLoading />}>{element}</Suspense>;
 }
 
 function SupervisorOnlyRoute() {
@@ -110,6 +128,7 @@ export default function AppRoutes() {
                         <Route path="/requisicoes/:requestId/editar" element={withRequisitionLoading(<Requisitions mode="edit" />)} />
                         <Route path="/requisicoes/:requestId" element={withRequisitionLoading(<Requisitions mode="detail" />)} />
                     </Route>
+                    <Route path="/estoque" element={withStockLoading(<Stock />)} />
                     <Route element={<SupervisorOnlyRoute />}>
                         <Route path="/equipe-acessos" element={<TeamAccess />} />
                         <Route path="/produtos" element={<Products />}>

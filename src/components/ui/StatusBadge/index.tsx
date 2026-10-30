@@ -1,6 +1,6 @@
 import type { ComponentPropsWithoutRef } from "react";
 
-export type StatusTone = "success" | "warning" | "danger" | "info" | "neutral";
+export type StatusTone = "success" | "warning" | "danger" | "info" | "neutral" | "brand";
 
 interface StatusBadgeProps extends Omit<ComponentPropsWithoutRef<"span">, "children"> {
     label: string;
@@ -13,6 +13,7 @@ const toneClasses: Record<StatusTone, string> = {
     danger: "border-feedback-error bg-feedback-error-bg text-feedback-error",
     info: "border-feedback-info bg-feedback-info-bg text-feedback-info",
     neutral: "border-history-border bg-history-card-header text-history-muted",
+    brand: "border-sidebar-divider bg-sidebar-active text-sidebar-purple",
 };
 
 export default function StatusBadge({ label, tone, className = "", ...props }: StatusBadgeProps) {
