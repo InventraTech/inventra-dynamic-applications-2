@@ -26,3 +26,12 @@ export interface UpdateKitchenRequest {
     longitude?: number;
     acceptingRequests?: boolean;
 }
+
+export interface KitchenFormValues {
+    name: string;
+    address: string;
+    city: string;
+    state: string;
+}
+
+export type KitchenFormErrors = Partial<Record<keyof KitchenFormValues, string>>;
