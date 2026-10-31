@@ -15,10 +15,11 @@ import Products from "../pages/Products";
 import RouteAccessibility from "../components/layout/RouteAccessibility";
 import ProfileLoadingSkeleton from "../components/features/Profile/ProfileLoadingSkeleton";
 import ProfileErrorBoundary from "../components/features/Profile/ProfileErrorBoundary";
-import Topbar from "../components/layout/Topbar";
 import KitchenSettingsSkeleton from "../components/features/Kitchen/KitchenSettingsSkeleton";
+import { displayProfileRole, getProfileDisplayName, getProfileInitials } from "../components/features/Profile/profileHelpers";
 import PublicLayout from "./PublicLayout";
 import { getSession } from "../services/authSession";
+import Topbar from "../components/layout/Topbar";
 
 const ProductCatalog = lazy(() => import("../components/features/Products/ProductCatalog"));
 const ProductEditor = lazy(() => import("../components/features/Products/ProductEditor"));
@@ -38,7 +39,25 @@ function withProductLoading(element: ReactNode) {
 }
 
 function ProfileRouteLoading() {
-    return <main id="conteudo-principal" tabIndex={-1} className="min-w-0 outline-none"><h1 className="sr-only">Perfil</h1><ProfileLoadingSkeleton /></main>;
+    const user = getSession()?.user;
+    const profile = user?.profile;
+    const userName = getProfileDisplayName(user?.name ?? "Usuário");
+
+    return (
+        <>
+            <Topbar
+                title="Perfil"
+                description="Seus dados e a segurança da sua conta"
+                userInitials={getProfileInitials(userName)}
+                userPhotoUrl={user?.photoUrl}
+                userName={userName}
+                userRole={displayProfileRole(typeof profile === "string" ? profile : profile?.accessType)}
+            />
+            <main id="conteudo-principal" tabIndex={-1} className="min-w-0 outline-none">
+                <ProfileLoadingSkeleton />
+            </main>
+        </>
+    );
 }
 
 function withProfileLoading(element: ReactNode) {
