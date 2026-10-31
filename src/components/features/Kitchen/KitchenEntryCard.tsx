@@ -15,10 +15,12 @@ interface KitchenEntryCardProps {
     kitchen: KitchenResponse;
     canEdit: boolean;
     savingDiscovery: boolean;
+    discoveryError: string | null;
+    discoverySuccess: string | null;
     onDiscoveryChange: (enabled: boolean) => Promise<boolean>;
 }
 
-function KitchenEntryCard({ kitchen, canEdit, savingDiscovery, onDiscoveryChange }: KitchenEntryCardProps) {
+function KitchenEntryCard({ kitchen, canEdit, savingDiscovery, discoveryError, discoverySuccess, onDiscoveryChange }: KitchenEntryCardProps) {
     const [copyMessage, setCopyMessage] = useState<string | null>(null);
     const [copyError, setCopyError] = useState<string | null>(null);
 
@@ -96,6 +98,8 @@ function KitchenEntryCard({ kitchen, canEdit, savingDiscovery, onDiscoveryChange
                         </div>
                     </div>
                     {!kitchen.active && <Feedback severity="info">A descoberta só pode ser alterada enquanto a cozinha estiver ativa.</Feedback>}
+                    {discoveryError && <Feedback severity="error">{discoveryError}</Feedback>}
+                    {discoverySuccess && <Feedback severity="success">{discoverySuccess}</Feedback>}
                     {savingDiscovery && <p role="status" aria-live="polite" className="sr-only">Salvando preferência de descoberta…</p>}
                 </div>
             </div>
