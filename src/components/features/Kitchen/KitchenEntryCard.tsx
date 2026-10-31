@@ -37,42 +37,42 @@ function KitchenEntryCard({ kitchen, canEdit, savingDiscovery, discoveryError, d
     }
 
     return (
-        <section className="min-w-0 rounded-4xl bg-surface p-5 shadow-history-card sm:p-8">
-            <div className="grid min-w-0 gap-6">
+        <section className="min-w-0 rounded-3xl bg-surface p-4 shadow-history-card sm:p-5">
+            <div className="grid min-w-0 gap-4">
                 <KitchenSectionHeading icon={peopleIcon} title="Entrada de pessoas" description="O código e a descoberta decidem como o time encontra a cozinha." />
 
-                <div className="grid min-w-0 gap-4 rounded-3xl bg-history-card-header p-4 sm:p-6">
-                    <div className="flex min-w-0 flex-wrap items-center justify-between gap-4">
-                        <div className="flex min-w-0 flex-wrap items-center gap-3">
-                            <h3 className="m-0 font-k2d text-lg font-bold text-ink sm:text-xl">Código de convite</h3>
-                            <span className="inline-flex items-center gap-2 rounded-full bg-sidebar-active px-3 py-1.5 font-k2d text-sm font-bold text-sidebar-purple">
+                <div className="grid min-w-0 gap-3 rounded-2xl bg-history-card-header p-3 sm:p-4">
+                    <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
+                        <div className="flex min-w-0 flex-wrap items-center gap-2">
+                            <h3 className="m-0 font-k2d text-base font-bold text-ink sm:text-lg">Código de convite</h3>
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-sidebar-active px-2.5 py-1 font-k2d text-xs font-bold text-sidebar-purple sm:text-sm">
                                 <img src={lockIcon} alt="" aria-hidden="true" className="size-4" /> Somente leitura
                             </span>
                         </div>
                         <Button variant="outline" type="button" onClick={() => void copyInviteCode()} aria-label="Copiar código de convite">
-                            <img src={copyIcon} alt="" aria-hidden="true" className="size-5" />
+                            <img src={copyIcon} alt="" aria-hidden="true" className="size-4" />
                             Copiar código
                         </Button>
                     </div>
 
-                    <ol className="m-0 flex min-w-0 flex-wrap gap-2 p-0 sm:gap-3" aria-label="Código de convite">
+                    <ol className="m-0 flex min-w-0 flex-wrap gap-1.5 p-0 sm:gap-2" aria-label="Código de convite">
                         {[...kitchen.code].map((character, index) => (
-                            <li key={`${character}-${index}`} className="relative grid h-16 w-14 shrink-0 place-items-center sm:h-18 sm:w-16">
+                            <li key={`${character}-${index}`} className="relative grid h-12 w-10 shrink-0 place-items-center sm:h-14 sm:w-11">
                                 <img src={kitchenHexagon} alt="" aria-hidden="true" className="absolute inset-0 size-full" />
-                                <span className="relative z-10 font-k2d text-2xl font-bold text-sidebar-purple sm:text-3xl">{character}</span>
+                                <span className="relative z-10 font-k2d text-xl font-bold text-sidebar-purple sm:text-2xl">{character}</span>
                             </li>
                         ))}
                     </ol>
-                    <p className="m-0 text-sm leading-relaxed text-history-muted">Seis caracteres gerados pelo Inventra. O código não pode ser alterado nem renovado.</p>
+                    <p className="m-0 text-sm leading-snug text-history-muted">Seis caracteres gerados pelo Inventra. O código não pode ser alterado nem renovado.</p>
                     {copyMessage && <Feedback severity="success"><img src={successIcon} alt="" aria-hidden="true" />{copyMessage}</Feedback>}
                     {copyError && <Feedback severity="error">{copyError}</Feedback>}
                 </div>
 
-                <div className="grid min-w-0 gap-4">
-                    <div className="flex min-w-0 flex-wrap items-center justify-between gap-4">
+                <div className="grid min-w-0 gap-3">
+                    <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
                         <div className="grid min-w-0 gap-1">
-                            <h3 className="m-0 font-k2d text-lg font-bold text-ink sm:text-xl">Aparecer na descoberta</h3>
-                            <p className="m-0 text-sm leading-relaxed text-history-muted">{canEdit ? "A alteração é salva imediatamente. Só supervisores podem mudar esta opção." : "Somente supervisores podem alterar a descoberta da cozinha."}</p>
+                            <h3 className="m-0 font-k2d text-base font-bold text-ink sm:text-lg">Aparecer na descoberta</h3>
+                            <p className="m-0 text-sm leading-snug text-history-muted">{canEdit ? "A alteração é salva imediatamente. Só supervisores podem mudar esta opção." : "Somente supervisores podem alterar a descoberta da cozinha."}</p>
                         </div>
                         <Toggle
                             enabled={kitchen.acceptingRequests}
@@ -82,17 +82,17 @@ function KitchenEntryCard({ kitchen, canEdit, savingDiscovery, discoveryError, d
                         />
                     </div>
 
-                    <div className="grid min-w-0 gap-3 md:grid-cols-2">
-                        <div className={`flex min-w-0 items-start gap-3 rounded-2xl border p-4 ${kitchen.acceptingRequests ? "border-feedback-success/30 bg-feedback-success-bg" : "border-history-border bg-history-card-header"}`}>
-                            <img src={successIcon} alt="" aria-hidden="true" className="mt-0.5 size-5 shrink-0" />
-                            <p className="m-0 min-w-0 text-sm leading-relaxed text-ink">
+                    <div className="grid min-w-0 gap-2 md:grid-cols-2">
+                        <div className={`flex min-w-0 items-start gap-2.5 rounded-xl border p-3 ${kitchen.acceptingRequests ? "border-feedback-success/30 bg-feedback-success-bg" : "border-history-border bg-history-card-header"}`}>
+                            <img src={successIcon} alt="" aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
+                            <p className="m-0 min-w-0 text-sm leading-snug text-ink">
                                 <strong className="block font-k2d text-feedback-success">Ligado</strong>
                                 A cozinha aparece na busca e aceita pedidos de entrada.
                             </p>
                         </div>
-                        <div className={`flex min-w-0 items-start gap-3 rounded-2xl border p-4 ${!kitchen.acceptingRequests ? "border-feedback-info/30 bg-feedback-info-bg" : "border-history-border bg-history-card-header"}`}>
-                            <img src={infoIcon} alt="" aria-hidden="true" className="mt-0.5 size-5 shrink-0" />
-                            <p className="m-0 min-w-0 text-sm leading-relaxed text-ink">
+                        <div className={`flex min-w-0 items-start gap-2.5 rounded-xl border p-3 ${!kitchen.acceptingRequests ? "border-feedback-info/30 bg-feedback-info-bg" : "border-history-border bg-history-card-header"}`}>
+                            <img src={infoIcon} alt="" aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
+                            <p className="m-0 min-w-0 text-sm leading-snug text-ink">
                                 <strong className="block font-k2d text-sidebar-purple">Desligado</strong>
                                 Some da busca; o código de convite continua aceitando pedidos.
                             </p>

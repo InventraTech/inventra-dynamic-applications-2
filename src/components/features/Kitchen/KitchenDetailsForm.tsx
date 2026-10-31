@@ -33,10 +33,10 @@ function KitchenFormField({ id, label, help, error, children }: KitchenFormField
     const errorId = `${id}-error`;
 
     return (
-        <div className="grid min-w-0 content-start gap-2">
-            <label className="font-k2d text-sm font-bold text-ink sm:text-base" htmlFor={id}>{label}</label>
+        <div className="grid min-w-0 content-start gap-1.5">
+            <label className="font-k2d text-sm font-bold text-ink" htmlFor={id}>{label}</label>
             {children}
-            <span id={helpId} className="text-sm leading-relaxed text-history-muted">{help}</span>
+            <span id={helpId} className="text-sm leading-snug text-history-muted">{help}</span>
             {error && <Feedback id={errorId} severity="error">{error}</Feedback>}
         </div>
     );
@@ -89,15 +89,15 @@ function KitchenDetailsForm({ kitchen, canEdit, saving, error, success, onSave, 
     }
 
     return (
-        <section className="min-w-0 rounded-4xl bg-surface p-5 shadow-history-card sm:p-8">
-            <form className="grid min-w-0 gap-7" onSubmit={(event) => void handleSubmit(event)} noValidate aria-busy={saving}>
+        <section className="min-w-0 rounded-3xl bg-surface p-4 shadow-history-card sm:p-5">
+            <form className="grid min-w-0 gap-4" onSubmit={(event) => void handleSubmit(event)} noValidate aria-busy={saving}>
                 <KitchenSectionHeading
                     icon={kitchenIcon}
                     title="Dados da cozinha"
                     description="É assim que a cozinha aparece para quem entra no time."
                 />
 
-                <div className="grid min-w-0 gap-5">
+                <div className="grid min-w-0 gap-4">
                     <KitchenFormField id="kitchen-name" label="Nome da cozinha" help="Até 120 caracteres. Não pode ficar vazio." error={fieldErrors.name}>
                         <Input
                             id="kitchen-name"
@@ -127,7 +127,7 @@ function KitchenDetailsForm({ kitchen, canEdit, saving, error, success, onSave, 
                         />
                     </KitchenFormField>
 
-                    <div className="grid min-w-0 gap-5 sm:grid-cols-[minmax(0,1fr)_minmax(7rem,0.22fr)] large-text:grid-cols-1">
+                    <div className="grid min-w-0 gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(7rem,0.22fr)] large-text:grid-cols-1">
                         <KitchenFormField id="kitchen-city" label="Cidade" help="Até 120 caracteres." error={fieldErrors.city}>
                             <Input
                                 id="kitchen-city"
@@ -169,8 +169,8 @@ function KitchenDetailsForm({ kitchen, canEdit, saving, error, success, onSave, 
                 {success && <Feedback severity="success">{success}</Feedback>}
                 {saving && <p className="sr-only" role="status" aria-live="polite">Salvando os dados da cozinha…</p>}
 
-                <div className="flex min-w-0 flex-wrap items-center justify-between gap-4 border-t border-history-border pt-5">
-                    <p className="m-0 min-w-0 flex-1 text-sm leading-relaxed text-history-muted">
+                <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 border-t border-history-border pt-4">
+                    <p className="m-0 min-w-0 flex-1 text-sm leading-snug text-history-muted">
                         {canEdit ? "Mudou algo? Só supervisor salva. Quem é do time só consulta." : "Os dados da cozinha ficam disponíveis para consulta da equipe."}
                     </p>
                     {canEdit && (

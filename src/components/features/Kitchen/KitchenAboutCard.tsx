@@ -23,15 +23,15 @@ interface KitchenInformationRowProps {
 
 function KitchenInformationRow({ icon, label, value }: KitchenInformationRowProps) {
     return (
-        <div className="flex min-w-0 items-center gap-3 border-b border-history-border py-3 last:border-b-0">
-            <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-login-field">
-                <img src={icon} alt="" aria-hidden="true" />
+        <div className="flex min-w-0 items-center gap-2.5 border-b border-history-border py-2.5 last:border-b-0">
+            <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-login-field">
+                <img src={icon} alt="" aria-hidden="true" className="size-5" />
             </span>
             <dl className="grid min-w-0 flex-1 gap-1">
                 <dt className="font-k2d text-xs font-medium uppercase tracking-history-header text-history-muted">{label}</dt>
-                <dd className="m-0 wrap-anywhere font-k2d text-base font-bold leading-snug text-ink">{value}</dd>
+                <dd className="m-0 wrap-anywhere font-k2d text-sm font-bold leading-snug text-ink">{value}</dd>
             </dl>
-            <img src={lockIcon} alt="Somente leitura" className="shrink-0" />
+            <img src={lockIcon} alt="Somente leitura" className="size-4 shrink-0" />
         </div>
     );
 }
@@ -58,8 +58,8 @@ function KitchenAboutCard({ kitchen, roleLabel, canManage }: KitchenAboutCardPro
     const location = latitude !== null && longitude !== null ? `${latitude} · ${longitude}` : "Localização ainda não calculada";
 
     return (
-        <section className="min-w-0 rounded-4xl bg-surface p-5 shadow-history-card sm:p-6">
-            <div className="grid gap-4">
+        <section className="min-w-0 rounded-3xl bg-surface p-4 shadow-history-card sm:p-5">
+            <div className="grid gap-3">
                 <KitchenSectionHeading icon={kitchenIcon} title="Sobre a cozinha" description="O Inventra define estes dados. Aqui você só consulta." />
                 <div className="grid min-w-0">
                     <KitchenInformationRow icon={statusIcon} label="Situação" value={getKitchenStatus(kitchen)} />
@@ -67,8 +67,8 @@ function KitchenAboutCard({ kitchen, roleLabel, canManage }: KitchenAboutCardPro
                     <KitchenInformationRow icon={profileIcon} label="Seu perfil" value={roleLabel} />
                     <KitchenInformationRow icon={dateIcon} label="Criada em" value={formatCreatedAt(kitchen.createdAt)} />
                 </div>
-                <div className="grid min-w-0 gap-3 rounded-2xl bg-history-card-header p-4">
-                    <p className="m-0 flex min-w-0 items-start gap-2 text-sm leading-relaxed text-history-muted">
+                <div className="grid min-w-0 gap-2 rounded-2xl bg-history-card-header p-3">
+                    <p className="m-0 flex min-w-0 items-start gap-2 text-sm leading-snug text-history-muted">
                         <img src={infoIcon} alt="" aria-hidden="true" className="mt-0.5 shrink-0" />
                         <span>A localização vem do endereço. Aprovar pedidos de entrada fica em Equipe e acessos.</span>
                     </p>

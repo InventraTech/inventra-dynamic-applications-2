@@ -26,20 +26,20 @@ function KitchenSafetyCard({ kitchen, canEdit, saving, error, success, onStatusC
     }
 
     return (
-        <section className="grid min-w-0 gap-5 rounded-4xl bg-surface p-5 shadow-history-card sm:p-8">
+        <section className="grid min-w-0 gap-3 rounded-3xl bg-surface p-4 shadow-history-card sm:p-5">
             <KitchenSectionHeading icon={warningIcon} title="Zona de cuidado" description="Ações que mudam o acesso ao time. A desativação pede confirmação." />
 
-            <div className="flex min-w-0 flex-col gap-4 border-b border-history-border pb-5 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex min-w-0 items-start gap-4">
-                    <span className="grid size-13 shrink-0 place-items-center rounded-2xl bg-feedback-error-bg">
-                        <img src={warningIcon} alt="" aria-hidden="true" className="size-7" />
+            <div className="flex min-w-0 flex-col gap-3 border-b border-history-border pb-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex min-w-0 items-start gap-3">
+                    <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-feedback-error-bg">
+                        <img src={warningIcon} alt="" aria-hidden="true" className="size-5" />
                     </span>
-                    <div className="grid min-w-0 gap-2">
-                        <h3 className="m-0 flex min-w-0 flex-wrap items-center gap-2 font-k2d text-lg font-bold text-ink sm:text-xl">
+                    <div className="grid min-w-0 gap-1.5">
+                        <h3 className="m-0 flex min-w-0 flex-wrap items-center gap-2 font-k2d text-base font-bold text-ink sm:text-lg">
                             {kitchen.active ? "Desativar cozinha" : "Cozinha desativada"}
-                            <span className="rounded-full bg-sidebar-active px-3 py-1 font-k2d text-xs font-bold text-sidebar-purple">Só supervisor</span>
+                            <span className="rounded-full bg-sidebar-active px-2.5 py-0.5 font-k2d text-xs font-bold text-sidebar-purple">Só supervisor</span>
                         </h3>
-                        <p className="m-0 text-sm leading-relaxed text-history-muted">
+                        <p className="m-0 text-sm leading-snug text-history-muted">
                             {kitchen.active
                                 ? "A cozinha some da descoberta e os pedidos pendentes ficam parados até ser reativada. A equipe e o histórico continuam como estão."
                                 : "A cozinha não aparece na descoberta e pedidos pendentes ficam parados. Supervisores podem reativá-la a qualquer momento."}
@@ -51,17 +51,17 @@ function KitchenSafetyCard({ kitchen, canEdit, saving, error, success, onStatusC
                     : <Button variant="standard" className="w-full shrink-0 sm:w-auto" type="button" onClick={() => void onStatusChange(true)} disabled={saving}>{saving ? "Reativando…" : "Reativar cozinha"}</Button>)}
             </div>
 
-            <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex min-w-0 items-start gap-4">
-                    <span className="grid size-13 shrink-0 place-items-center rounded-2xl bg-feedback-error-bg">
-                        <img src={exitIcon} alt="" aria-hidden="true" className="size-7" />
+            <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex min-w-0 items-start gap-3">
+                    <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-feedback-error-bg">
+                        <img src={exitIcon} alt="" aria-hidden="true" className="size-5" />
                     </span>
-                    <div className="grid min-w-0 gap-2">
-                        <h3 className="m-0 flex min-w-0 flex-wrap items-center gap-2 font-k2d text-lg font-bold text-ink sm:text-xl">
+                    <div className="grid min-w-0 gap-1.5">
+                        <h3 className="m-0 flex min-w-0 flex-wrap items-center gap-2 font-k2d text-base font-bold text-ink sm:text-lg">
                             Sair da cozinha
-                            <span className="rounded-full bg-history-card-header px-3 py-1 font-k2d text-xs font-bold text-history-muted">Indisponível</span>
+                            <span className="rounded-full bg-history-card-header px-2.5 py-0.5 font-k2d text-xs font-bold text-history-muted">Indisponível</span>
                         </h3>
-                        <p className="m-0 text-sm leading-relaxed text-history-muted">A API atual não permite remover a associação da sua conta à cozinha. Nenhuma ação será simulada.</p>
+                        <p className="m-0 text-sm leading-snug text-history-muted">A API atual não permite remover a associação da sua conta à cozinha. Nenhuma ação será simulada.</p>
                     </div>
                 </div>
                 <Button variant="outline" className="w-full shrink-0 sm:w-auto" type="button" disabled aria-describedby="kitchen-leave-unavailable">Sair da cozinha</Button>
@@ -72,13 +72,13 @@ function KitchenSafetyCard({ kitchen, canEdit, saving, error, success, onStatusC
             {saving && <p role="status" aria-live="polite" className="sr-only">Atualizando situação da cozinha…</p>}
 
             <Dialog open={confirmDeactivate} onOpenChange={setConfirmDeactivate} aria-labelledby="kitchen-deactivate-title" aria-describedby="kitchen-deactivate-description">
-                <div className="grid min-w-0 gap-5 p-6 sm:p-8">
-                    <div className="grid size-14 place-items-center rounded-full bg-feedback-error-bg">
-                        <img src={warningIcon} alt="" aria-hidden="true" className="size-7" />
+                <div className="grid min-w-0 gap-4 p-5 sm:p-6">
+                    <div className="grid size-12 place-items-center rounded-full bg-feedback-error-bg">
+                        <img src={warningIcon} alt="" aria-hidden="true" className="size-6" />
                     </div>
                     <div className="grid min-w-0 gap-2">
-                        <h2 id="kitchen-deactivate-title" className="m-0 font-k2d text-xl font-bold text-ink sm:text-2xl">Desativar esta cozinha?</h2>
-                        <p id="kitchen-deactivate-description" className="m-0 text-sm leading-relaxed text-history-muted">Ela deixará de aparecer na descoberta. Os pedidos de entrada pendentes ficarão parados, e a equipe e o histórico serão mantidos. Você poderá reativá-la depois.</p>
+                        <h2 id="kitchen-deactivate-title" className="m-0 font-k2d text-lg font-bold text-ink sm:text-xl">Desativar esta cozinha?</h2>
+                        <p id="kitchen-deactivate-description" className="m-0 text-sm leading-snug text-history-muted">Ela deixará de aparecer na descoberta. Os pedidos de entrada pendentes ficarão parados, e a equipe e o histórico serão mantidos. Você poderá reativá-la depois.</p>
                     </div>
                     {error && <Feedback severity="error">{error}</Feedback>}
                     <div className="flex min-w-0 flex-wrap justify-end gap-3">

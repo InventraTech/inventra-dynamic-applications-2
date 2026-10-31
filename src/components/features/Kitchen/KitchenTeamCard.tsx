@@ -21,7 +21,7 @@ function KitchenTeamCard({ kitchenId, canManage, users, accessRequests, loading,
     const pendingRequests = accessRequests.filter((request) => request.kitchen.id === kitchenId && request.status === "PENDING");
 
     return (
-        <section className="grid min-w-0 gap-5 rounded-4xl bg-surface p-5 shadow-history-card sm:p-6">
+        <section className="grid min-w-0 gap-4 rounded-3xl bg-surface p-4 shadow-history-card sm:p-5">
             <KitchenSectionHeading icon={teamIcon} title="Equipe da cozinha" description="Quem está aqui e quem pediu para entrar." />
 
             {loading ? (
@@ -37,11 +37,11 @@ function KitchenTeamCard({ kitchenId, canManage, users, accessRequests, loading,
                 </div>
             ) : canManage ? (
                 <>
-                    <p className="m-0 inline-flex w-fit max-w-full flex-wrap items-center gap-2 rounded-full border border-sidebar-purple bg-sidebar-active px-4 py-2 font-k2d text-sm font-bold text-sidebar-purple">
+                    <p className="m-0 inline-flex w-fit max-w-full flex-wrap items-center gap-2 rounded-full border border-sidebar-purple bg-sidebar-active px-3 py-1.5 font-k2d text-sm font-bold text-sidebar-purple">
                         <span className="size-2.5 rounded-full bg-login-gold" aria-hidden="true" />
                         <span>{kitchenUsers.length} {kitchenUsers.length === 1 ? "pessoa" : "pessoas"} · {pendingRequests.length} {pendingRequests.length === 1 ? "pedido pendente" : "pedidos pendentes"}</span>
                     </p>
-                    <Link className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-sidebar-purple bg-surface px-4 py-2 text-center font-k2d text-sm font-bold text-sidebar-purple transition-colors hover:bg-history-card-header focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to="/equipe-acessos">
+                    <Link className="inline-flex min-h-10 w-full items-center justify-center rounded-xl border border-sidebar-purple bg-surface px-3 py-2 text-center font-k2d text-sm font-bold text-sidebar-purple transition-colors hover:bg-history-card-header focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to="/equipe-acessos">
                         Abrir Equipe e acessos
                     </Link>
                 </>

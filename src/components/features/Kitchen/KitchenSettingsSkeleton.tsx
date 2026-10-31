@@ -4,30 +4,30 @@ function SkeletonBlock({ className = "" }: { className?: string }) {
 
 function KitchenSettingsSkeleton() {
     return (
-        <div className="grid min-w-0 gap-5 px-4 pb-8 pt-5 sm:px-6 sm:pt-6" aria-busy="true">
+        <div className="grid min-w-0 gap-4 px-4 pb-6 pt-4 sm:px-5 sm:pt-5" aria-busy="true">
             <p className="sr-only" role="status" aria-live="polite">Carregando dados da cozinha…</p>
-            <SkeletonBlock className="min-h-48 rounded-4xl bg-brand" />
-            <div className="grid min-w-0 gap-5 xl:grid-cols-3 large-text:grid-cols-1">
-                <div className="grid min-w-0 content-start gap-5 xl:col-span-2">
-                    <section className="grid min-w-0 gap-6 rounded-4xl bg-surface p-5 shadow-history-card sm:p-8" aria-hidden="true">
-                        <div className="flex items-center gap-4"><SkeletonBlock className="size-13 shrink-0" /><div className="grid flex-1 gap-2"><SkeletonBlock className="h-6 w-48 max-w-full" /><SkeletonBlock className="h-4 w-72 max-w-full" /></div></div>
-                        <div className="grid gap-5"><SkeletonBlock className="h-24" /><SkeletonBlock className="h-24" /><SkeletonBlock className="h-24" /></div>
-                        <SkeletonBlock className="h-16" />
-                        <div className="flex justify-between gap-4"><SkeletonBlock className="h-5 w-56 max-w-full" /><SkeletonBlock className="h-11 w-48 max-w-full" /></div>
+            <SkeletonBlock className="min-h-40 rounded-3xl bg-brand" />
+            <div className="grid min-w-0 gap-4 xl:grid-cols-3 large-text:grid-cols-1">
+                <div className="grid min-w-0 content-start gap-4 xl:col-span-2">
+                    <section className="grid min-w-0 gap-4 rounded-3xl bg-surface p-4 shadow-history-card sm:p-5" aria-hidden="true">
+                        <div className="flex items-center gap-3"><SkeletonBlock className="size-11 shrink-0" /><div className="grid flex-1 gap-1.5"><SkeletonBlock className="h-5 w-40 max-w-full" /><SkeletonBlock className="h-4 w-64 max-w-full" /></div></div>
+                        <div className="grid gap-4"><SkeletonBlock className="h-12" /><SkeletonBlock className="h-12" /><SkeletonBlock className="h-12" /></div>
+                        <SkeletonBlock className="h-12" />
+                        <div className="flex justify-between gap-3"><SkeletonBlock className="h-4 w-48 max-w-full" /><SkeletonBlock className="h-10 w-40 max-w-full" /></div>
                     </section>
-                    <section className="grid min-w-0 gap-6 rounded-4xl bg-surface p-5 shadow-history-card sm:p-8" aria-hidden="true">
-                        <div className="flex items-center gap-4"><SkeletonBlock className="size-13 shrink-0" /><div className="grid flex-1 gap-2"><SkeletonBlock className="h-6 w-48 max-w-full" /><SkeletonBlock className="h-4 w-64 max-w-full" /></div></div>
-                        <SkeletonBlock className="h-48" /><SkeletonBlock className="h-24" />
+                    <section className="grid min-w-0 gap-4 rounded-3xl bg-surface p-4 shadow-history-card sm:p-5" aria-hidden="true">
+                        <div className="flex items-center gap-3"><SkeletonBlock className="size-11 shrink-0" /><div className="grid flex-1 gap-1.5"><SkeletonBlock className="h-5 w-40 max-w-full" /><SkeletonBlock className="h-4 w-60 max-w-full" /></div></div>
+                        <SkeletonBlock className="h-36" /><SkeletonBlock className="h-20" />
                     </section>
-                    <section className="grid min-w-0 gap-6 rounded-4xl bg-surface p-5 shadow-history-card sm:p-8" aria-hidden="true">
-                        <div className="flex items-center gap-4"><SkeletonBlock className="size-13 shrink-0" /><div className="grid flex-1 gap-2"><SkeletonBlock className="h-6 w-40 max-w-full" /><SkeletonBlock className="h-4 w-72 max-w-full" /></div></div>
-                        <SkeletonBlock className="h-28" /><SkeletonBlock className="h-28" />
+                    <section className="grid min-w-0 gap-4 rounded-3xl bg-surface p-4 shadow-history-card sm:p-5" aria-hidden="true">
+                        <div className="flex items-center gap-3"><SkeletonBlock className="size-11 shrink-0" /><div className="grid flex-1 gap-1.5"><SkeletonBlock className="h-5 w-36 max-w-full" /><SkeletonBlock className="h-4 w-64 max-w-full" /></div></div>
+                        <SkeletonBlock className="h-20" /><SkeletonBlock className="h-20" />
                     </section>
                 </div>
-                <aside className="grid min-w-0 content-start gap-5">
-                    <section className="grid min-w-0 gap-4 rounded-4xl bg-surface p-5 shadow-history-card" aria-hidden="true"><SkeletonBlock className="h-7 w-40 max-w-full" /><SkeletonBlock className="h-56" /></section>
-                    <section className="grid min-w-0 gap-4 rounded-4xl bg-surface p-5 shadow-history-card" aria-hidden="true"><SkeletonBlock className="h-7 w-48 max-w-full" /><SkeletonBlock className="h-20" /><SkeletonBlock className="h-11" /></section>
-                    <SkeletonBlock className="min-h-32 rounded-3xl" />
+                <aside className="grid min-w-0 content-start gap-4">
+                    <section className="grid min-w-0 gap-3 rounded-3xl bg-surface p-4 shadow-history-card" aria-hidden="true"><SkeletonBlock className="h-6 w-36 max-w-full" /><SkeletonBlock className="h-44" /></section>
+                    <section className="grid min-w-0 gap-3 rounded-3xl bg-surface p-4 shadow-history-card" aria-hidden="true"><SkeletonBlock className="h-6 w-44 max-w-full" /><SkeletonBlock className="h-16" /><SkeletonBlock className="h-10" /></section>
+                    <SkeletonBlock className="min-h-28 rounded-3xl" />
                 </aside>
             </div>
         </div>
