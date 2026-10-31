@@ -22,6 +22,7 @@ export interface KitchenSettingsState {
     discoverySuccess: string | null;
     statusSaving: boolean;
     statusError: string | null;
+    statusSuccess: string | null;
 }
 
 export interface KitchenSettingsActions {
@@ -50,6 +51,7 @@ const initialState: KitchenSettingsState = {
     discoverySuccess: null,
     statusSaving: false,
     statusError: null,
+    statusSuccess: null,
 };
 
 function getErrorMessage(error: unknown, fallback: string): string {
@@ -140,13 +142,13 @@ export default function useKitchenSettings(kitchenId: number | null, canManage: 
 
     const setKitchenActive = useCallback(async (active: boolean): Promise<boolean> => {
         if (kitchenId === null) return false;
-        setState((current) => ({ ...current, statusSaving: true, statusError: null }));
+        setState((current) => ({ ...current, statusSaving: true, statusError: null, statusSuccess: null }));
         try {
             if (active) await activateKitchen(kitchenId);
             else await deactivateKitchen(kitchenId);
             setState((current) => current.kitchen
-                ? { ...current, kitchen: { ...current.kitchen, active }, statusSaving: false, statusError: null }
-                : { ...current, statusSaving: false });
+                ? { ...current, kitchen: { ...current.kitchen, active }, statusSaving: false, statusError: null, statusSuccess: active ? "Cozinha reativada." : "Cozinha desativada." }
+                : { ...current, statusSaving: false, statusSuccess: active ? "Cozinha reativada." : "Cozinha desativada." });
             return true;
         } catch (error: unknown) {
             setState((current) => ({ ...current, statusSaving: false, statusError: getErrorMessage(error, "Não foi possível atualizar a situação da cozinha.") }));

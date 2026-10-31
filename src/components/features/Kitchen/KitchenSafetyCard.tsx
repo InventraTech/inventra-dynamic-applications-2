@@ -13,10 +13,11 @@ interface KitchenSafetyCardProps {
     canEdit: boolean;
     saving: boolean;
     error: string | null;
+    success: string | null;
     onStatusChange: (active: boolean) => Promise<boolean>;
 }
 
-function KitchenSafetyCard({ kitchen, canEdit, saving, error, onStatusChange }: KitchenSafetyCardProps) {
+function KitchenSafetyCard({ kitchen, canEdit, saving, error, success, onStatusChange }: KitchenSafetyCardProps) {
     const [confirmDeactivate, setConfirmDeactivate] = useState(false);
 
     async function confirmAction() {
@@ -66,7 +67,8 @@ function KitchenSafetyCard({ kitchen, canEdit, saving, error, onStatusChange }: 
                 <Button variant="outline" className="w-full shrink-0 sm:w-auto" type="button" disabled aria-describedby="kitchen-leave-unavailable">Sair da cozinha</Button>
             </div>
             <p id="kitchen-leave-unavailable" className="sr-only">Função indisponível: o backend ainda não oferece uma operação para sair da cozinha.</p>
-            {error && <Feedback severity="error">{error}</Feedback>}
+            {error && !confirmDeactivate && <Feedback severity="error">{error}</Feedback>}
+            {success && <Feedback severity="success">{success}</Feedback>}
             {saving && <p role="status" aria-live="polite" className="sr-only">Atualizando situação da cozinha…</p>}
 
             <Dialog open={confirmDeactivate} onOpenChange={setConfirmDeactivate} aria-labelledby="kitchen-deactivate-title" aria-describedby="kitchen-deactivate-description">

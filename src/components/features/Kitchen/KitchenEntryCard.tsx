@@ -5,6 +5,7 @@ import infoIcon from "../../../assets/icons/info.svg";
 import successIcon from "../../../assets/icons/aprovado.svg";
 import copyIcon from "../../../assets/icons/copiar-codigo.svg";
 import peopleIcon from "../../../assets/icons/conta.svg";
+import lockIcon from "../../../assets/icons/senha.svg";
 import type { KitchenResponse } from "../../../types/kitchen";
 import Button from "../../ui/Button";
 import Feedback from "../../ui/Feedback";
@@ -45,7 +46,7 @@ function KitchenEntryCard({ kitchen, canEdit, savingDiscovery, discoveryError, d
                         <div className="flex min-w-0 flex-wrap items-center gap-3">
                             <h3 className="m-0 font-k2d text-lg font-bold text-ink sm:text-xl">Código de convite</h3>
                             <span className="inline-flex items-center gap-2 rounded-full bg-sidebar-active px-3 py-1.5 font-k2d text-sm font-bold text-sidebar-purple">
-                                <span aria-hidden="true">🔒</span> Somente leitura
+                                <img src={lockIcon} alt="" aria-hidden="true" className="size-4" /> Somente leitura
                             </span>
                         </div>
                         <Button variant="outline" type="button" onClick={() => void copyInviteCode()} aria-label="Copiar código de convite">
@@ -86,7 +87,7 @@ function KitchenEntryCard({ kitchen, canEdit, savingDiscovery, discoveryError, d
                             <img src={successIcon} alt="" aria-hidden="true" className="mt-0.5 size-5 shrink-0" />
                             <p className="m-0 min-w-0 text-sm leading-relaxed text-ink">
                                 <strong className="block font-k2d text-feedback-success">Ligado</strong>
-                                A cozinha aparece na busca e aceita pedidos feitos por ela.
+                                A cozinha aparece na busca e aceita pedidos de entrada.
                             </p>
                         </div>
                         <div className={`flex min-w-0 items-start gap-3 rounded-2xl border p-4 ${!kitchen.acceptingRequests ? "border-feedback-info/30 bg-feedback-info-bg" : "border-history-border bg-history-card-header"}`}>

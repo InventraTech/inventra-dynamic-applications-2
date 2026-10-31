@@ -94,7 +94,7 @@ function KitchenRouteLoading() {
     return (
         <div className="flex min-h-screen min-w-0 flex-col bg-linear-to-b from-history-background-start to-history-background-end adjusted-contrast:bg-none adjusted-contrast:bg-history-background-start">
             <Topbar title="Cozinha" description="Os dados, o código e a situação da sua cozinha" userInitials={userInitials} userPhotoUrl={session?.user.photoUrl} userName={userName} userRole={userRole} />
-            <main id="conteudo-principal" tabIndex={-1} className="min-w-0 flex-1 outline-none"><h1 className="sr-only">Cozinha</h1><KitchenSettingsSkeleton /></main>
+            <main id="conteudo-principal" tabIndex={-1} className="min-w-0 flex-1 outline-none"><KitchenSettingsSkeleton /></main>
         </div>
     );
 }

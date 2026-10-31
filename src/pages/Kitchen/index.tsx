@@ -91,6 +91,7 @@ function Kitchen() {
                                     canEdit={canManage}
                                     saving={state.statusSaving}
                                     error={state.statusError}
+                                    success={state.statusSuccess}
                                     onStatusChange={actions.setKitchenActive}
                                 />
                             </div>
