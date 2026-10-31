@@ -310,7 +310,6 @@ function Profile({ onUserUpdated }: ProfileProps) {
                                 <div className="flex min-w-0 flex-col gap-1.5">
                                     <label className="font-k2d text-sm font-bold text-sidebar-text" htmlFor="perfil-email">E-mail</label>
                                     <Input id="perfil-email" type="email" value={user.email} readOnly aria-describedby="perfil-email-ajuda" />
-                                    <p id="perfil-email-ajuda" className="font-k2d text-xs leading-relaxed text-history-muted">O backend não disponibiliza alteração de e-mail.</p>
                                 </div>
                                 {nameSuccess && <Feedback severity="success">{nameSuccess}</Feedback>}
                                 {savingName && <p className="sr-only" role="status" aria-live="polite">Salvando seu nome…</p>}

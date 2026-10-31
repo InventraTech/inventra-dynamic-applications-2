@@ -34,7 +34,7 @@ const menuSections: MenuSection[] = [
         { id: "historico", page: "Histórico", pageIcon: historyIcon, pagePath: "/historico", availability: "available" },
     ] },
     { sectionTitle: "Administração", menuOptions: [
-        { id: "cozinha", page: "Cozinha", pageIcon: kitchenIcon, availability: "coming-soon" },
+        { id: "cozinha", page: "Cozinha", pageIcon: kitchenIcon, pagePath: "/cozinha", availability: "available" },
         { id: "equipe-acessos", page: "Equipe e acessos", pageIcon: teamIcon, pagePath: "/equipe-acessos", availability: "available" },
     ] },
     { sectionTitle: "Preferências", menuOptions: [
