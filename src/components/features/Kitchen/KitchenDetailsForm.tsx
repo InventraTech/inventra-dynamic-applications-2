@@ -72,7 +72,7 @@ function KitchenDetailsForm({ kitchen, canEdit, saving, error, success, onSave, 
         event.preventDefault();
         if (!canEdit || saving) return;
 
-        const validation = validateKitchenSettings(form);
+        const validation = validateKitchenSettings(form, kitchen.state);
         setFieldErrors(validation.errors);
         if (!validation.request) {
             focusFirstInvalidField(event.currentTarget);
@@ -142,13 +142,12 @@ function KitchenDetailsForm({ kitchen, canEdit, saving, error, success, onSave, 
                             />
                         </KitchenFormField>
 
-                        <KitchenFormField id="kitchen-state" label="Estado (UF)" help="Duas letras." error={fieldErrors.state}>
+                    <KitchenFormField id="kitchen-state" label="Estado (UF)" help="Opcional; se preenchido, use duas letras." error={fieldErrors.state}>
                             <Input
                                 id="kitchen-state"
                                 name="state"
                                 autoComplete="address-level1"
                                 maxLength={2}
-                                required
                                 readOnly={!canEdit}
                                 value={form.state}
                                 onChange={(event) => updateField("state", event.target.value)}
