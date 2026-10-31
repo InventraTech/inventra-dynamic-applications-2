@@ -31,7 +31,7 @@ function RequisitionPagination({ page, pageSize, totalCount, onPageChange, onPag
             <p className="m-0">Mostrando {firstVisible}–{lastVisible} de {totalCount} {totalCount === 1 ? "requisição" : "requisições"}</p>
             <div className="flex min-w-0 flex-wrap items-center gap-2">
                 <nav className="flex flex-wrap items-center gap-1" aria-label="Paginação das requisições">
-                    {totalPages > 1 && <Button variant="ghost" type="button" className="size-9 bg-sidebar-active px-0 text-brand hover:bg-history-card-header" disabled={page <= 1} onClick={() => onPageChange(page - 1)} aria-label="Página anterior">←</Button>}
+                    {totalPages > 1 && <Button variant="ghost" type="button" className="text-brand" disabled={page <= 1} onClick={() => onPageChange(page - 1)} aria-label="Página anterior">←</Button>}
                     {visiblePages.map((pageNumber, index) => (
                         <span key={pageNumber} className="flex items-center gap-1">
                             {index > 0 && pageNumber - visiblePages[index - 1] > 1 && <span aria-hidden="true" className="px-1">…</span>}

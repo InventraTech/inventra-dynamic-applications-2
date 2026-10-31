@@ -35,7 +35,7 @@ export default function StockProductFilters({ products, query, categoryId, statu
     return (
         <div className="grid min-w-0 gap-3">
             <div className="grid min-w-0 gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
-                <SearchField className="w-full" label="Buscar produto por nome" placeholder="Buscar produto por nome" value={query} onChange={(event) => onQueryChange(event.target.value)} />
+                <SearchField className="w-full" variant="subtle" label="Buscar produto por nome" placeholder="Buscar produto por nome" value={query} onChange={(event) => onQueryChange(event.target.value)} />
                 <label className="flex min-h-11 min-w-0 items-center gap-2 rounded-2xl border border-history-border bg-surface px-3 text-sm text-history-muted" htmlFor={categorySelectId}>
                     <span className="shrink-0">Categoria:</span>
                     <select id={categorySelectId} className="min-h-9 min-w-0 flex-1 bg-transparent font-semibold text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:flex-none" value={categoryId ?? "ALL"} onChange={(event) => onCategoryChange(event.target.value === "ALL" ? null : Number(event.target.value))}>
