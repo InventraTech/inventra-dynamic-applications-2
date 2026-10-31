@@ -15,6 +15,8 @@ import Products from "../pages/Products";
 import RouteAccessibility from "../components/layout/RouteAccessibility";
 import ProfileLoadingSkeleton from "../components/features/Profile/ProfileLoadingSkeleton";
 import ProfileErrorBoundary from "../components/features/Profile/ProfileErrorBoundary";
+import Topbar from "../components/layout/Topbar";
+import KitchenSettingsSkeleton from "../components/features/Kitchen/KitchenSettingsSkeleton";
 import PublicLayout from "./PublicLayout";
 import { getSession } from "../services/authSession";
 
@@ -25,6 +27,7 @@ const ProductReferenceManagement = lazy(() => import("../components/features/Pro
 const Profile = lazy(() => import("../pages/Profile"));
 const Requisitions = lazy(() => import("../pages/Requisitions"));
 const Stock = lazy(() => import("../pages/Stock"));
+const Kitchen = lazy(() => import("../pages/Kitchen"));
 
 function ProductRouteLoading() {
     return <section className="flex min-w-0 flex-col gap-4 px-6 pb-8 pt-6 max-md:px-4 max-sm:px-3" aria-busy="true"><p className="sr-only" role="status" aria-live="polite">Carregando tela de produtos…</p><div className="h-12 w-full rounded-2xl bg-surface motion-safe:animate-pulse" aria-hidden="true" /><div className="min-h-72 rounded-3xl bg-surface shadow-history-card motion-safe:animate-pulse" aria-hidden="true" /></section>;
@@ -79,6 +82,27 @@ function withStockLoading(element: ReactNode) {
     return <Suspense fallback={<StockRouteLoading />}>{element}</Suspense>;
 }
 
+function KitchenRouteLoading() {
+    const session = getSession();
+    const nameParts = (session?.user.name ?? "Usuário").trim().split(/\s+/).filter(Boolean);
+    const initials = nameParts.length > 1 ? [nameParts[0], nameParts.at(-1)] : nameParts;
+    const userInitials = initials.map((part) => [...(part ?? "")][0]?.toLocaleUpperCase("pt-BR") ?? "").join("") || "IN";
+    const userName = nameParts.length > 1 ? `${nameParts[0]} ${nameParts.at(-1)}` : nameParts[0] ?? "Usuário";
+    const profile = session?.user.profile;
+    const userRole = typeof profile === "string" ? profile : profile?.name ?? profile?.accessType?.replaceAll("_", " ") ?? "Membro";
+
+    return (
+        <div className="flex min-h-screen min-w-0 flex-col bg-linear-to-b from-history-background-start to-history-background-end adjusted-contrast:bg-none adjusted-contrast:bg-history-background-start">
+            <Topbar title="Cozinha" description="Os dados, o código e a situação da sua cozinha" userInitials={userInitials} userPhotoUrl={session?.user.photoUrl} userName={userName} userRole={userRole} />
+            <main id="conteudo-principal" tabIndex={-1} className="min-w-0 flex-1 outline-none"><h1 className="sr-only">Cozinha</h1><KitchenSettingsSkeleton /></main>
+        </div>
+    );
+}
+
+function withKitchenLoading(element: ReactNode) {
+    return <Suspense fallback={<KitchenRouteLoading />}>{element}</Suspense>;
+}
+
 function SupervisorOnlyRoute() {
     const profile = getSession()?.user.profile;
     const accessType = typeof profile === "string" ? profile : profile?.accessType;
@@ -129,6 +153,7 @@ export default function AppRoutes() {
                         <Route path="/requisicoes/:requestId" element={withRequisitionLoading(<Requisitions mode="detail" />)} />
                     </Route>
                     <Route path="/estoque" element={withStockLoading(<Stock />)} />
+                    <Route path="/cozinha" element={withKitchenLoading(<Kitchen />)} />
                     <Route element={<SupervisorOnlyRoute />}>
                         <Route path="/equipe-acessos" element={<TeamAccess />} />
                         <Route path="/produtos" element={<Products />}>

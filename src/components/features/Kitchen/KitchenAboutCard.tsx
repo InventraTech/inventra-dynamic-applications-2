@@ -12,6 +12,7 @@ import KitchenSectionHeading from "./KitchenSectionHeading";
 interface KitchenAboutCardProps {
     kitchen: KitchenResponse;
     roleLabel: string;
+    canManage: boolean;
 }
 
 interface KitchenInformationRowProps {
@@ -51,7 +52,7 @@ function getKitchenStatus(kitchen: KitchenResponse): string {
     return kitchen.acceptingRequests ? "Ativa · aceita pedidos" : "Ativa · não aparece na descoberta";
 }
 
-function KitchenAboutCard({ kitchen, roleLabel }: KitchenAboutCardProps) {
+function KitchenAboutCard({ kitchen, roleLabel, canManage }: KitchenAboutCardProps) {
     const latitude = formatCoordinate(kitchen.latitude);
     const longitude = formatCoordinate(kitchen.longitude);
     const location = latitude !== null && longitude !== null ? `${latitude} · ${longitude}` : "Localização ainda não calculada";
@@ -71,9 +72,11 @@ function KitchenAboutCard({ kitchen, roleLabel }: KitchenAboutCardProps) {
                         <img src={infoIcon} alt="" aria-hidden="true" className="mt-0.5 shrink-0" />
                         <span>A localização vem do endereço. Aprovar pedidos de entrada fica em Equipe e acessos.</span>
                     </p>
-                    <Link className="w-fit max-w-full font-k2d text-sm font-bold text-link underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to="/equipe-acessos">
-                        Ir para Equipe e acessos →
-                    </Link>
+                    {canManage && (
+                        <Link className="w-fit max-w-full font-k2d text-sm font-bold text-link underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to="/equipe-acessos">
+                            Ir para Equipe e acessos →
+                        </Link>
+                    )}
                 </div>
             </div>
         </section>
