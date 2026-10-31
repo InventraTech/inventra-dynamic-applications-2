@@ -1,4 +1,4 @@
-import type { CreateKitchenRequest, KitchenResponse } from "../types/kitchen";
+import type { CreateKitchenRequest, KitchenResponse, UpdateKitchenRequest } from "../types/kitchen";
 import type { KitchenStockProductReference } from "../types/stock";
 import { apiRequest } from "./api";
 
@@ -7,6 +7,25 @@ export async function createKitchen(request: CreateKitchenRequest): Promise<Kitc
         method: "POST",
         body: JSON.stringify(request),
     });
+}
+
+export function getKitchen(id: number, signal?: AbortSignal): Promise<KitchenResponse> {
+    return apiRequest<KitchenResponse>(`/kitchens/${id}`, { signal });
+}
+
+export function updateKitchen(id: number, request: UpdateKitchenRequest): Promise<KitchenResponse> {
+    return apiRequest<KitchenResponse>(`/kitchens/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(request),
+    });
+}
+
+export function activateKitchen(id: number): Promise<void> {
+    return apiRequest<void>(`/kitchens/${id}/activate`, { method: "PATCH" });
+}
+
+export function deactivateKitchen(id: number): Promise<void> {
+    return apiRequest<void>(`/kitchens/${id}/deactivate`, { method: "PATCH" });
 }
 
 export async function getKitchenStockProducts(

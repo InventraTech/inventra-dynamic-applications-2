@@ -8,7 +8,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://ms-inventra-api.onrender.com",
+        target: "http://ec2-34-201-182-193.compute-1.amazonaws.com",
         changeOrigin: true,
         configure: (proxy) => {
           proxy.on("proxyReq", (proxyRequest) => {

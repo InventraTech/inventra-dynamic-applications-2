@@ -70,7 +70,7 @@ export default function StockProductCatalog({ products, query, categoryId, statu
                     <div className="flex min-w-0 flex-wrap items-center gap-2">
                         <span className="text-xs text-history-muted sm:text-sm">{visibleProducts.length} de {products.length} produtos</span>
                         <Button variant="primary" type="button" onClick={onRegisterEntry}>
-                            <span aria-hidden="true">＋</span> Registrar entrada
+                            <span aria-hidden="true">＋ㅤ</span> Registrar entrada
                         </Button>
                     </div>
                 </div>

@@ -63,7 +63,6 @@ export default function StockMovementTable({ movements, products, loading, error
             <header className="flex min-w-0 flex-wrap items-start justify-between gap-4 px-5 py-5 sm:px-7 sm:py-6">
                 <div className="grid min-w-0 gap-1">
                     <h2 id="estoque-movimentacoes-heading" className="m-0 font-k2d text-xl font-bold text-ink sm:text-2xl">Movimentações recentes</h2>
-                    <p className="m-0 max-w-prose text-sm leading-relaxed text-history-muted">Da mais nova para a mais antiga, só desta cozinha. A quantidade mostra o impacto da movimentação; o saldo do lote mostra quanto restou depois dela. A lista mostra um limite de registros, não o histórico completo.<span className="hidden xl:inline"> Na tabela, role para o lado para ver todas as colunas.</span></p>
                 </div>
                 <div className="flex min-w-0 flex-wrap gap-2">
                     <label className="flex min-h-10 min-w-0 items-center gap-2 rounded-xl border border-history-border bg-surface px-3 text-xs text-history-muted" htmlFor="estoque-movimentacao-tipo">
