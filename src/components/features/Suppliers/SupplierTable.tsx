@@ -76,13 +76,13 @@ function SupplierTable({ suppliers, totalCount, canManage, emptyTitle, emptyDesc
                                     <td className="whitespace-nowrap px-3 py-3 text-history-muted">{formatCreatedAt(supplier.createdAt)}</td>
                                     <td className="px-3 py-3"><SupplierStatusBadge active={supplier.active} /></td>
                                     <td className="px-3 py-3">
-                                        <div className="flex min-w-max justify-end gap-2">
-                                            <Button variant="outline" type="button" onClick={(event) => onView(supplier, event.currentTarget)} className="min-h-9 rounded-lg px-3 py-1.5 text-xs">Ver detalhes</Button>
+                                        <div className="flex min-w-max items-center justify-end gap-2">
+                                            <Button variant="outline" type="button" onClick={(event) => onView(supplier, event.currentTarget)} className="h-10 w-32 shrink-0 justify-center rounded-lg px-2 text-xs">Ver detalhes</Button>
                                             {canManage && <>
-                                                <Button variant="icon" type="button" onClick={(event) => onEdit(supplier, event.currentTarget)} aria-label={`Editar ${supplier.legalName}`} title={`Editar ${supplier.legalName}`} className="size-10 rounded-xl bg-sidebar-active text-sidebar-purple hover:bg-sidebar-line">
+                                                <Button variant="icon" type="button" onClick={(event) => onEdit(supplier, event.currentTarget)} aria-label={`Editar ${supplier.legalName}`} title={`Editar ${supplier.legalName}`} className="size-10 shrink-0 rounded-xl bg-sidebar-active p-0 text-sidebar-purple hover:bg-sidebar-line">
                                                     <img className="size-4.5" src={editIcon} alt="" aria-hidden="true" />
                                                 </Button>
-                                                <Button variant="outline" type="button" onClick={(event) => onChangeStatus(supplier, event.currentTarget)} className={`min-h-9 rounded-lg px-3 py-1.5 text-xs ${supplier.active ? "border-feedback-error/40 text-feedback-error hover:bg-feedback-error-bg" : "border-feedback-success/40 text-feedback-success hover:bg-feedback-success-bg"}`}>
+                                                <Button variant="outline" type="button" onClick={(event) => onChangeStatus(supplier, event.currentTarget)} className={`h-10 w-24 shrink-0 justify-center rounded-lg px-2 text-xs ${supplier.active ? "border-feedback-error/40 text-feedback-error hover:bg-feedback-error-bg" : "border-feedback-success/40 text-feedback-success hover:bg-feedback-success-bg"}`}>
                                                     {supplier.active ? "Desativar" : "Reativar"}
                                                 </Button>
                                             </>}
