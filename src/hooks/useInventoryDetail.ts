@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { getInventory, listInventoryCounts } from "../services/inventory";
 import { getKitchenStock, getStockBatchesByKitchen } from "../services/stock";
 import type { Inventory, InventoryCount, InventoryBatch } from "../types/inventory";
@@ -30,10 +30,14 @@ export default function useInventoryDetail(inventoryId: number | null, kitchenId
     const [state, setState] = useState<InventoryDetailState>(initialState);
     const [retryVersion, setRetryVersion] = useState(0);
     const [refreshVersion, setRefreshVersion] = useState(0);
+    const loadedInventoryKey = useRef<string | null>(null);
     const retry = useCallback(() => setRetryVersion((version) => version + 1), []);
     const refresh = useCallback(() => setRefreshVersion((version) => version + 1), []);
 
     useEffect(() => {
+        const inventoryKey = `${inventoryId ?? ""}:${kitchenId ?? ""}`;
+        const inventoryChanged = loadedInventoryKey.current !== inventoryKey;
+        loadedInventoryKey.current = inventoryKey;
         if (inventoryId === null || kitchenId === null) {
             setState({ ...initialState, loading: false, error: inventoryId === null ? "O identificador do inventário é inválido." : null });
             return;
@@ -43,7 +47,7 @@ export default function useInventoryDetail(inventoryId: number | null, kitchenId
         const currentKitchenId = kitchenId;
 
         const controller = new AbortController();
-        setState((current) => ({ ...current, loading: true, error: null }));
+        setState((current) => inventoryChanged ? { ...initialState, loading: true } : { ...current, loading: true, error: null });
 
         async function load() {
             try {

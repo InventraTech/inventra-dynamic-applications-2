@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import { Link } from "react-router-dom";
 import useInventoryActions from "../../../hooks/useInventoryActions";
 import useInventoryDetail from "../../../hooks/useInventoryDetail";
@@ -18,8 +17,7 @@ interface InventoryDetailProps {
 
 export default function InventoryDetail({ inventoryId, kitchenId }: InventoryDetailProps) {
     const detail = useInventoryDetail(inventoryId, kitchenId);
-    const onChanged = useCallback(() => detail.refresh(), [detail.refresh]);
-    const actions = useInventoryActions(inventoryId, onChanged);
+    const actions = useInventoryActions(inventoryId, detail.refresh);
 
     if (kitchenId === null) return (
         <div className="grid justify-items-center gap-3 px-4 py-12 text-center sm:px-6">

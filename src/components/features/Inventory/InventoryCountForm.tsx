@@ -63,12 +63,12 @@ export default function InventoryCountForm({ batches, counts, products, loadingB
             </header>
 
             {loadingBatches ? <p className="m-0 text-sm text-history-muted" role="status" aria-live="polite">Carregando lotes da cozinha…</p> : batchesError ? (
-                <div className="grid min-w-0 justify-items-start gap-2"><Feedback severity="error">{batchesError}</Feedback><Button variant="link" type="button" onClick={onRetryBatches}>Tentar carregar lotes novamente</Button></div>
+                <div className="grid min-w-0 justify-items-start gap-2"><Feedback severity="error">{batchesError}</Feedback><Button variant="link" type="button" onClick={onRetryBatches}>Tentar carregar os dados novamente</Button></div>
             ) : batches.length === 0 ? <Feedback severity="info">Esta cozinha ainda não tem lotes disponíveis para contagem.</Feedback> : (
                 <form className="grid min-w-0 gap-4" onSubmit={(event) => void submit(event)} noValidate aria-busy={submitting}>
                     <div className="grid min-w-0 content-start gap-1 self-start">
                         <label htmlFor={`${id}-batch`} className="font-semibold text-ink">Lote da cozinha <span aria-hidden="true">*</span></label>
-                        <select id={`${id}-batch`} autoFocus className="min-h-12 min-w-0 rounded-xl border border-history-border bg-history-card-header px-3 text-ink outline-none focus-visible:border-sidebar-indicator focus-visible:ring-4 focus-visible:ring-sidebar-active" value={form.batchId} onChange={(event) => update("batchId", event.target.value)} aria-invalid={Boolean(errors.batchId)} aria-describedby={errors.batchId ? `${id}-batch-error` : `${id}-batch-help`}>
+                        <select id={`${id}-batch`} autoFocus className="min-h-12 min-w-0 rounded-xl border border-history-border bg-history-card-header px-3 text-ink outline-none focus-visible:border-sidebar-indicator focus-visible:ring-4 focus-visible:ring-sidebar-active" value={form.batchId} onChange={(event) => { setForm((current) => ({ ...current, batchId: event.target.value, physicalQuantity: "", note: "" })); setErrors({}); }} aria-invalid={Boolean(errors.batchId)} aria-describedby={errors.batchId ? `${id}-batch-error` : `${id}-batch-help`}>
                             <option value="">Selecione um produto e lote</option>
                             {availableBatches.map((batch) => {
                                 const counted = countedBatchIds.has(batch.id);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { listInventories } from "../services/inventory";
 import type { Inventory } from "../types/inventory";
 
@@ -12,15 +12,18 @@ export default function useInventories(kitchenId: number | null) {
     const [state, setState] = useState<InventoryListState>({ data: [], loading: true, error: null });
     const [retryVersion, setRetryVersion] = useState(0);
     const [reloadVersion, setReloadVersion] = useState(0);
+    const loadedKitchenId = useRef<number | null>(null);
 
     useEffect(() => {
+        const kitchenChanged = loadedKitchenId.current !== kitchenId;
+        loadedKitchenId.current = kitchenId;
         if (kitchenId === null) {
             setState({ data: [], loading: false, error: null });
             return;
         }
 
         const controller = new AbortController();
-        setState((current) => ({ ...current, loading: true, error: null }));
+        setState((current) => kitchenChanged ? { data: [], loading: true, error: null } : { ...current, loading: true, error: null });
         listInventories(kitchenId, controller.signal)
             .then((data) => {
                 if (!controller.signal.aborted) setState({ data, loading: false, error: null });
