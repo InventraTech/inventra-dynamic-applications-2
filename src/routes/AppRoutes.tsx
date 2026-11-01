@@ -18,6 +18,7 @@ import ProfileErrorBoundary from "../components/features/Profile/ProfileErrorBou
 import KitchenSettingsSkeleton from "../components/features/Kitchen/KitchenSettingsSkeleton";
 import { displayProfileRole, getProfileDisplayName, getProfileInitials } from "../components/features/Profile/profileHelpers";
 import SupplierLoadingSkeleton from "../components/features/Suppliers/SupplierLoadingSkeleton";
+import InventoryListSkeleton from "../components/features/Inventory/InventoryListSkeleton";
 import PublicLayout from "./PublicLayout";
 import { getSession } from "../services/authSession";
 import Topbar from "../components/layout/Topbar";
@@ -31,6 +32,7 @@ const Requisitions = lazy(() => import("../pages/Requisitions"));
 const Stock = lazy(() => import("../pages/Stock"));
 const Kitchen = lazy(() => import("../pages/Kitchen"));
 const Suppliers = lazy(() => import("../pages/Suppliers"));
+const Inventory = lazy(() => import("../pages/Inventory"));
 
 function ProductRouteLoading() {
     return <section className="flex min-w-0 flex-col gap-4 px-6 pb-8 pt-6 max-md:px-4 max-sm:px-3" aria-busy="true"><p className="sr-only" role="status" aria-live="polite">Carregando tela de produtos…</p><div className="h-12 w-full rounded-2xl bg-surface motion-safe:animate-pulse" aria-hidden="true" /><div className="min-h-72 rounded-3xl bg-surface shadow-history-card motion-safe:animate-pulse" aria-hidden="true" /></section>;
@@ -151,6 +153,14 @@ function withSupplierLoading(element: ReactNode) {
     return <Suspense fallback={<SupplierRouteLoading />}>{element}</Suspense>;
 }
 
+function InventoryRouteLoading() {
+    return <main id="conteudo-principal" tabIndex={-1} className="min-w-0 outline-none" aria-busy="true"><h1 className="sr-only">Inventários</h1><p className="sr-only" role="status" aria-live="polite">Carregando inventários…</p><InventoryListSkeleton /></main>;
+}
+
+function withInventoryLoading(element: ReactNode) {
+    return <Suspense fallback={<InventoryRouteLoading />}>{element}</Suspense>;
+}
+
 function SupervisorOnlyRoute() {
     const profile = getSession()?.user.profile;
     const accessType = typeof profile === "string" ? profile : profile?.accessType;
@@ -201,6 +211,7 @@ export default function AppRoutes() {
                         <Route path="/requisicoes/:requestId" element={withRequisitionLoading(<Requisitions mode="detail" />)} />
                     </Route>
                     <Route path="/estoque" element={withStockLoading(<Stock />)} />
+                    <Route path="/inventarios" element={withInventoryLoading(<Inventory />)} />
                     <Route path="/cozinha" element={withKitchenLoading(<Kitchen />)} />
                     <Route path="/fornecedores" element={withSupplierLoading(<Suppliers />)} />
                     <Route element={<SupervisorOnlyRoute />}>
