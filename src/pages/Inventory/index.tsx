@@ -1,6 +1,7 @@
 import Topbar from "../../components/layout/Topbar";
+import InventoryDetail from "../../components/features/Inventory/InventoryDetail";
 import InventoryList from "../../components/features/Inventory/InventoryList";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import { getSession } from "../../services/authSession";
 
 function getUserDisplay(name: string | undefined) {
@@ -12,6 +13,10 @@ function getUserDisplay(name: string | undefined) {
 }
 
 export default function InventoryPage() {
+    const { inventoryId: inventoryIdParam } = useParams<{ inventoryId: string }>();
+    const inventoryId = inventoryIdParam === undefined ? null : Number(inventoryIdParam);
+    if (inventoryIdParam !== undefined && (!Number.isInteger(inventoryId) || (inventoryId ?? 0) <= 0)) return <Navigate to="/inventarios" replace />;
+
     const session = getSession();
     const user = session?.user;
     const profile = user?.profile;
@@ -21,9 +26,9 @@ export default function InventoryPage() {
 
     return (
         <div className="flex min-h-screen min-w-0 flex-col bg-linear-to-b from-history-background-start to-history-background-end adjusted-contrast:bg-none adjusted-contrast:bg-history-background-start">
-            <Topbar title="Inventários" description="Confira a quantidade física por lote da cozinha atual." userInitials={display.initials} userPhotoUrl={user?.photoUrl} userName={display.displayName} userRole={role.replaceAll("_", " ")} />
+            <Topbar title={inventoryId ? `Inventário #${inventoryId}` : "Inventários"} description={inventoryId ? "Registre as quantidades físicas e confira divergências por lote." : "Confira a quantidade física por lote da cozinha atual."} userInitials={display.initials} userPhotoUrl={user?.photoUrl} userName={display.displayName} userRole={role.replaceAll("_", " ")} />
             <main id="conteudo-principal" tabIndex={-1} className="min-w-0 flex-1 outline-none">
-                {canAccess ? <InventoryList kitchenId={user?.kitchen?.id ?? null} kitchenName={user?.kitchen?.name ?? null} /> : (
+                {canAccess ? inventoryId ? <InventoryDetail inventoryId={inventoryId} kitchenId={user?.kitchen?.id ?? null} /> : <InventoryList kitchenId={user?.kitchen?.id ?? null} kitchenName={user?.kitchen?.name ?? null} /> : (
                     <section className="mx-4 my-6 grid justify-items-center gap-3 rounded-3xl bg-surface p-6 text-center shadow-history-card sm:mx-6 sm:p-8" aria-labelledby="inventory-access-title">
                         <span className="grid size-12 place-items-center rounded-2xl bg-feedback-error-bg font-k2d text-xl font-bold text-feedback-error" aria-hidden="true">!</span>
                         <h2 id="inventory-access-title" className="m-0 font-k2d text-xl font-bold text-ink">Você não tem acesso aos inventários</h2>

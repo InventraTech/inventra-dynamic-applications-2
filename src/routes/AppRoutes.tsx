@@ -212,6 +212,7 @@ export default function AppRoutes() {
                     </Route>
                     <Route path="/estoque" element={withStockLoading(<Stock />)} />
                     <Route path="/inventarios" element={withInventoryLoading(<Inventory />)} />
+                    <Route path="/inventarios/:inventoryId" element={withInventoryLoading(<Inventory />)} />
                     <Route path="/cozinha" element={withKitchenLoading(<Kitchen />)} />
                     <Route path="/fornecedores" element={withSupplierLoading(<Suppliers />)} />
                     <Route element={<SupervisorOnlyRoute />}>
