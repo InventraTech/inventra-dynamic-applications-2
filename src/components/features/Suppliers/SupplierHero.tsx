@@ -7,7 +7,7 @@ import pattern from "../../../assets/images/requisition-hex-pattern.svg";
 
 interface SupplierHeroProps {
     canManage: boolean;
-    onCreate: () => void;
+    onCreate: (trigger: HTMLButtonElement) => void;
     children?: ReactNode;
 }
 
@@ -25,7 +25,7 @@ function SupplierHero({ canManage, onCreate, children }: SupplierHeroProps) {
                     <p className="mt-2 text-sm leading-relaxed text-on-brand/90 sm:text-base">Quem abastece as cozinhas do Inventra. O cadastro é compartilhado; o vínculo com produtos é feito na tela de Produtos.</p>
                 </div>
                 {children}
-                {canManage && <Button variant="accent" type="button" onClick={onCreate} className="w-fit min-h-11 rounded-xl px-5 text-sm">
+                {canManage && <Button variant="accent" type="button" onClick={(event) => onCreate(event.currentTarget)} className="w-fit min-h-11 rounded-xl px-5 text-sm">
                     <img className="size-5" src={addIcon} alt="" aria-hidden="true" />
                     Novo fornecedor
                 </Button>}
