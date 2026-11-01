@@ -13,6 +13,7 @@ import type { SupplierFormValues } from "../utils/validateSupplier";
 export type SupplierActionKind = "create" | "edit" | "status" | "photo" | null;
 
 export interface SupplierActionFeedback {
+    action: Exclude<SupplierActionKind, null>;
     severity: "error" | "success";
     message: string;
 }
@@ -76,17 +77,17 @@ export function useSupplierActions(): UseSupplierActionsResult {
             if (photo) {
                 try {
                     const withPhoto = await uploadSupplierPhoto(created.id, photo);
-                    setFeedback({ severity: "success", message: "Fornecedor e foto cadastrados." });
+                    setFeedback({ action: "create", severity: "success", message: "Fornecedor e foto cadastrados." });
                     return { supplier: withPhoto, partial: false };
                 } catch (photoError) {
-                    setFeedback({ severity: "error", message: `Fornecedor cadastrado, mas a foto não foi enviada. ${getErrorMessage(photoError, "Tente enviar a foto novamente pelos detalhes do fornecedor.")}` });
+                    setFeedback({ action: "create", severity: "error", message: `Fornecedor cadastrado, mas a foto não foi enviada. ${getErrorMessage(photoError, "Tente enviar a foto novamente pelos detalhes do fornecedor.")}` });
                     return { supplier: created, partial: true };
                 }
             }
-            setFeedback({ severity: "success", message: "Fornecedor cadastrado." });
+            setFeedback({ action: "create", severity: "success", message: "Fornecedor cadastrado." });
             return { supplier: created, partial: false };
         } catch (error) {
-            setFeedback({ severity: "error", message: getErrorMessage(error, "Não foi possível cadastrar o fornecedor.") });
+            setFeedback({ action: "create", severity: "error", message: getErrorMessage(error, "Não foi possível cadastrar o fornecedor.") });
             return null;
         } finally {
             setBusyAction(null);
@@ -104,13 +105,13 @@ export function useSupplierActions(): UseSupplierActionsResult {
                 if (removePhoto && supplier.photoUrl) updated = await removeSupplierPhoto(supplier.id);
                 else if (photo) updated = await uploadSupplierPhoto(supplier.id, photo);
             } catch (photoError) {
-                setFeedback({ severity: "error", message: `Os dados foram salvos, mas a foto não foi atualizada. ${getErrorMessage(photoError, "Tente a operação de foto novamente nos detalhes.")}` });
+                setFeedback({ action: "edit", severity: "error", message: `Os dados foram salvos, mas a foto não foi atualizada. ${getErrorMessage(photoError, "Tente a operação de foto novamente nos detalhes.")}` });
                 return { supplier: updated, partial: true };
             }
-            setFeedback({ severity: "success", message: "Dados do fornecedor atualizados." });
+            setFeedback({ action: "edit", severity: "success", message: "Dados do fornecedor atualizados." });
             return { supplier: updated, partial: false };
         } catch (error) {
-            setFeedback({ severity: "error", message: getErrorMessage(error, "Não foi possível salvar as alterações do fornecedor.") });
+            setFeedback({ action: "edit", severity: "error", message: getErrorMessage(error, "Não foi possível salvar as alterações do fornecedor.") });
             return null;
         } finally {
             setBusyAction(null);
@@ -124,10 +125,10 @@ export function useSupplierActions(): UseSupplierActionsResult {
         setFeedback(null);
         try {
             const supplier = await uploadSupplierPhoto(supplierId, file);
-            setFeedback({ severity: "success", message: "Foto do fornecedor atualizada." });
+            setFeedback({ action: "photo", severity: "success", message: "Foto do fornecedor atualizada." });
             return supplier;
         } catch (error) {
-            setFeedback({ severity: "error", message: getErrorMessage(error, "Não foi possível enviar a foto do fornecedor.") });
+            setFeedback({ action: "photo", severity: "error", message: getErrorMessage(error, "Não foi possível enviar a foto do fornecedor.") });
             return null;
         } finally {
             setBusyAction(null);
@@ -141,10 +142,10 @@ export function useSupplierActions(): UseSupplierActionsResult {
         setFeedback(null);
         try {
             const supplier = await removeSupplierPhoto(supplierId);
-            setFeedback({ severity: "success", message: "Foto do fornecedor removida." });
+            setFeedback({ action: "photo", severity: "success", message: "Foto do fornecedor removida." });
             return supplier;
         } catch (error) {
-            setFeedback({ severity: "error", message: getErrorMessage(error, "Não foi possível remover a foto do fornecedor.") });
+            setFeedback({ action: "photo", severity: "error", message: getErrorMessage(error, "Não foi possível remover a foto do fornecedor.") });
             return null;
         } finally {
             setBusyAction(null);
@@ -158,10 +159,10 @@ export function useSupplierActions(): UseSupplierActionsResult {
         setFeedback(null);
         try {
             await setSupplierActive(supplier.id, !supplier.active);
-            setFeedback({ severity: "success", message: supplier.active ? "Fornecedor desativado e movido para Inativos." : "Fornecedor reativado e disponível na lista de Ativos." });
+            setFeedback({ action: "status", severity: "success", message: supplier.active ? "Fornecedor desativado e movido para Inativos." : "Fornecedor reativado e disponível na lista de Ativos." });
             return true;
         } catch (error) {
-            setFeedback({ severity: "error", message: getErrorMessage(error, supplier.active ? "Não foi possível desativar o fornecedor." : "Não foi possível reativar o fornecedor.") });
+            setFeedback({ action: "status", severity: "error", message: getErrorMessage(error, supplier.active ? "Não foi possível desativar o fornecedor." : "Não foi possível reativar o fornecedor.") });
             return false;
         } finally {
             setBusyAction(null);
