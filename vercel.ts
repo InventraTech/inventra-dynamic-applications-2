@@ -1,6 +1,4 @@
-interface VercelConfig {
-    rewrites: Array<{ source: string; destination: string }>;
-}
+import { routes, type VercelConfig } from "@vercel/config/v1";
 
 const apiOriginValue = process.env.API_ORIGIN;
 
@@ -21,13 +19,7 @@ if (
 
 export const config: VercelConfig = {
     rewrites: [
-        {
-            source: "/api/:path*",
-            destination: `${apiOriginUrl.origin}/api/:path*`,
-        },
-        {
-            source: "/(.*)",
-            destination: "/index.html",
-        },
+        routes.rewrite("/api/:path*", `${apiOriginUrl.origin}/api/:path*`),
+        routes.rewrite("/(.*)", "/index.html"),
     ],
 };
