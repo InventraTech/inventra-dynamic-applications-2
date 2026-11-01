@@ -10,6 +10,9 @@ interface SupplierTableProps {
     suppliers: Supplier[];
     totalCount: number;
     canManage: boolean;
+    emptyTitle: string;
+    emptyDescription: string;
+    onClearFilters: () => void;
     onView: (supplier: Supplier, trigger: HTMLButtonElement) => void;
     onEdit: (supplier: Supplier, trigger: HTMLButtonElement) => void;
     onChangeStatus: (supplier: Supplier, trigger: HTMLButtonElement) => void;
@@ -20,7 +23,7 @@ function formatCreatedAt(createdAt: string): string {
     return Number.isNaN(date.getTime()) ? "—" : new Intl.DateTimeFormat("pt-BR").format(date);
 }
 
-function SupplierTable({ suppliers, totalCount, canManage, onView, onEdit, onChangeStatus }: SupplierTableProps) {
+function SupplierTable({ suppliers, totalCount, canManage, emptyTitle, emptyDescription, onClearFilters, onView, onEdit, onChangeStatus }: SupplierTableProps) {
     return (
         <section className="min-w-0 rounded-3xl bg-surface p-3 shadow-history-card sm:p-5" aria-labelledby="supplier-table-title">
             <div className="mb-3 flex flex-wrap items-end justify-between gap-2 px-1 sm:px-2">
@@ -33,8 +36,9 @@ function SupplierTable({ suppliers, totalCount, canManage, onView, onEdit, onCha
 
             {suppliers.length === 0 ? (
                 <div className="rounded-2xl bg-history-card-header px-4 py-10 text-center">
-                    <p className="font-k2d font-semibold text-sidebar-text">Nenhum fornecedor corresponde à busca ou situação selecionada.</p>
-                    <p className="mt-1 text-sm text-history-muted">Altere a busca ou escolha outro filtro.</p>
+                    <p className="font-k2d font-semibold text-sidebar-text">{emptyTitle}</p>
+                    <p className="mt-1 text-sm text-history-muted">{emptyDescription}</p>
+                    <Button variant="outline" type="button" onClick={onClearFilters} className="mt-3">Limpar busca e filtros</Button>
                 </div>
             ) : (
                 <div className="min-w-0 overflow-x-auto rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" role="region" aria-label="Tabela de fornecedores. Deslize horizontalmente para consultar todos os dados." tabIndex={0}>
