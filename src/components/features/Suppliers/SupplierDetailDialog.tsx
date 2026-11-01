@@ -15,6 +15,9 @@ interface SupplierDetailDialogProps {
     photoFile: File | null;
     photoBusy: boolean;
     photoError: string | null;
+    photoNotice: string | null;
+    loading: boolean;
+    loadError: string | null;
     onOpenChange: (open: boolean) => void;
     onEdit: (supplier: Supplier) => void;
     onChangeStatus: (supplier: Supplier) => void;
@@ -30,7 +33,7 @@ function formatCreatedAt(createdAt: string): string {
         : new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short" }).format(date);
 }
 
-function SupplierDetailDialog({ open, supplier, canManage, photoFile, photoBusy, photoError, onOpenChange, onEdit, onChangeStatus, onSelectPhoto, onUploadPhoto, onRemovePhoto }: SupplierDetailDialogProps) {
+function SupplierDetailDialog({ open, supplier, canManage, photoFile, photoBusy, photoError, photoNotice, loading, loadError, onOpenChange, onEdit, onChangeStatus, onSelectPhoto, onUploadPhoto, onRemovePhoto }: SupplierDetailDialogProps) {
     const id = useId();
     const whatsappDigits = supplier?.whatsapp?.replace(/\D/g, "") ?? "";
 
@@ -46,6 +49,8 @@ function SupplierDetailDialog({ open, supplier, canManage, photoFile, photoBusy,
                 </header>
 
                 <div className="grid min-h-0 min-w-0 flex-1 gap-4 overflow-y-auto px-5 py-5 sm:px-7">
+                    {loading && <p className="text-sm text-history-muted" role="status" aria-live="polite">Atualizando os dados do fornecedor…</p>}
+                    {loadError && <Feedback severity="info">Os dados detalhados não puderam ser atualizados. As informações da lista continuam disponíveis. {loadError}</Feedback>}
                     <section className="flex min-w-0 flex-wrap items-center gap-4 rounded-3xl bg-history-card-header p-4 sm:p-5" aria-label="Identificação do fornecedor">
                         <SupplierAvatar supplier={supplier} size="large" />
                         <div className="min-w-0 flex-1">
@@ -85,6 +90,7 @@ function SupplierDetailDialog({ open, supplier, canManage, photoFile, photoBusy,
                             disabled={!canManage || photoBusy}
                         />
                         {photoError && <Feedback severity="error">{photoError}</Feedback>}
+                        {photoNotice && <Feedback severity="success">{photoNotice}</Feedback>}
                         {canManage && photoFile && <Button variant="standard" type="button" onClick={onUploadPhoto} disabled={photoBusy} className="justify-self-start">{photoBusy ? "Enviando foto…" : "Enviar foto"}</Button>}
                         {photoBusy && <p className="sr-only" role="status" aria-live="polite">Salvando foto do fornecedor…</p>}
                     </section>
