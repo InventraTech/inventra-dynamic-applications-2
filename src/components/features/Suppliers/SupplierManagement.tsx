@@ -40,6 +40,8 @@ function SupplierManagement({ canManage }: SupplierManagementProps) {
     const [search, setSearch] = useState("");
     const deferredSearch = useDeferredValue(search);
     const [filter, setFilter] = useState<SupplierStatusFilter>("all");
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(20);
 
     const [formOpen, setFormOpen] = useState(false);
     const [formMode, setFormMode] = useState<SupplierDialogMode>("create");
@@ -95,6 +97,9 @@ function SupplierManagement({ canManage }: SupplierManagementProps) {
         const cnpjMatches = digitSearch.length > 0 && supplier.cnpj.replace(/\D/g, "").includes(digitSearch);
         return textMatches || cnpjMatches;
     });
+    const totalPages = Math.max(1, Math.ceil(visibleSuppliers.length / pageSize));
+    const currentPage = Math.min(page, totalPages);
+    const paginatedSuppliers = visibleSuppliers.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
     function openCreate(trigger: HTMLButtonElement | null = null) {
         actions.clearFeedback();
@@ -164,7 +169,10 @@ function SupplierManagement({ canManage }: SupplierManagementProps) {
         if (!result) return;
         setFormOpen(false);
         setFormSupplier(null);
-        if (formMode === "create") setFilter("all");
+        if (formMode === "create") {
+            setFilter("all");
+            setPage(1);
+        }
         suppliers.reload();
     }
 
@@ -175,6 +183,7 @@ function SupplierManagement({ canManage }: SupplierManagementProps) {
         setStatusOpen(false);
         setStatusSupplier(null);
         setFilter("all");
+        setPage(1);
         suppliers.reload();
     }
 
@@ -234,21 +243,26 @@ function SupplierManagement({ canManage }: SupplierManagementProps) {
                 <section className="min-w-0 rounded-3xl bg-surface p-4 shadow-history-card sm:p-5" aria-label="Busca e filtros de fornecedores">
                     <SupplierToolbar
                         query={search}
-                        onQueryChange={setSearch}
+                        onQueryChange={(query) => { setSearch(query); setPage(1); }}
                         filter={filter}
-                        onFilterChange={setFilter}
+                        onFilterChange={(nextFilter) => { setFilter(nextFilter); setPage(1); }}
                         activeCount={suppliers.activeSuppliers.length}
                         inactiveCount={suppliers.inactiveSuppliers.length}
                         canSeeInactive={canManage}
                     />
                 </section>
                 <SupplierTable
-                    suppliers={visibleSuppliers}
-                    totalCount={statusSuppliers.length}
+                    suppliers={paginatedSuppliers}
+                    totalCount={visibleSuppliers.length}
+                    page={currentPage}
+                    pageSize={pageSize}
+                    totalPages={totalPages}
+                    onPageChange={setPage}
+                    onPageSizeChange={(nextPageSize) => { setPageSize(nextPageSize); setPage(1); }}
                     canManage={canManage}
                     emptyTitle={normalizedSearch ? `Nenhum fornecedor encontrado para “${deferredSearch.trim()}”.` : filter === "inactive" ? "Nenhum fornecedor inativo." : "Nenhum fornecedor ativo."}
                     emptyDescription={normalizedSearch ? "Confira a razão social, o CNPJ ou os dados de contato, ou limpe a busca." : "Escolha outra situação para consultar os demais cadastros."}
-                    onClearFilters={() => { setSearch(""); setFilter("all"); }}
+                    onClearFilters={() => { setSearch(""); setFilter("all"); setPage(1); }}
                     onView={openDetails}
                     onEdit={openEdit}
                     onChangeStatus={(supplier, trigger) => openStatus(supplier, trigger)}

@@ -9,6 +9,11 @@ import emailIcon from "../../../assets/icons/email.svg";
 interface SupplierTableProps {
     suppliers: Supplier[];
     totalCount: number;
+    page: number;
+    pageSize: number;
+    totalPages: number;
+    onPageChange: (page: number) => void;
+    onPageSizeChange: (pageSize: number) => void;
     canManage: boolean;
     emptyTitle: string;
     emptyDescription: string;
@@ -23,7 +28,10 @@ function formatCreatedAt(createdAt: string): string {
     return Number.isNaN(date.getTime()) ? "—" : new Intl.DateTimeFormat("pt-BR").format(date);
 }
 
-function SupplierTable({ suppliers, totalCount, canManage, emptyTitle, emptyDescription, onClearFilters, onView, onEdit, onChangeStatus }: SupplierTableProps) {
+function SupplierTable({ suppliers, totalCount, page, pageSize, totalPages, onPageChange, onPageSizeChange, canManage, emptyTitle, emptyDescription, onClearFilters, onView, onEdit, onChangeStatus }: SupplierTableProps) {
+    const firstVisible = totalCount === 0 ? 0 : (page - 1) * pageSize + 1;
+    const lastVisible = Math.min(page * pageSize, totalCount);
+
     return (
         <section className="min-w-0 rounded-3xl bg-surface p-3 shadow-history-card sm:p-5" aria-labelledby="supplier-table-title">
             <div className="mb-3 flex flex-wrap items-end justify-between gap-2 px-1 sm:px-2">
@@ -31,7 +39,7 @@ function SupplierTable({ suppliers, totalCount, canManage, emptyTitle, emptyDesc
                     <h2 id="supplier-table-title" className="font-k2d text-lg font-bold text-sidebar-text">Cadastro de fornecedores</h2>
                     <p className="mt-1 text-sm leading-relaxed text-history-muted">Em ordem alfabética pela razão social. Busca e situação filtram os cadastros carregados.</p>
                 </div>
-                <p className="text-sm text-history-muted" aria-live="polite">{suppliers.length} {suppliers.length === 1 ? "fornecedor" : "fornecedores"}</p>
+                <p className="text-sm text-history-muted" aria-live="polite">{totalCount} {totalCount === 1 ? "fornecedor" : "fornecedores"}</p>
             </div>
 
             {suppliers.length === 0 ? (
@@ -95,9 +103,26 @@ function SupplierTable({ suppliers, totalCount, canManage, emptyTitle, emptyDesc
                 </div>
             )}
 
-            <div className="mt-3 flex flex-wrap items-center justify-between gap-2 px-2 text-xs text-history-muted">
-                <span>Mostrando {suppliers.length} de {totalCount} {totalCount === 1 ? "fornecedor" : "fornecedores"}. A API devolve a lista inteira, sem paginação.</span>
-                <span>{canManage ? "Edição, foto e situação: somente supervisor." : "A lista ativa é somente para consulta."}</span>
+            <div className="mt-3 flex min-w-0 flex-wrap items-center justify-between gap-3 border-t border-history-border px-2 pt-3 text-xs text-history-muted">
+                <div className="grid gap-1">
+                    <span aria-live="polite">Mostrando {firstVisible}–{lastVisible} de {totalCount} {totalCount === 1 ? "fornecedor" : "fornecedores"}</span>
+                    <span>{canManage ? "Edição, foto e situação: somente supervisor." : "A lista ativa é somente para consulta."}</span>
+                </div>
+                <div className="flex min-w-0 flex-wrap items-center gap-2">
+                    <nav className="flex items-center gap-2" aria-label="Paginação de fornecedores">
+                        <Button variant="ghost" type="button" className="size-9 px-0 text-sidebar-purple hover:bg-sidebar-active disabled:opacity-50" disabled={page <= 1} onClick={() => onPageChange(page - 1)} aria-label="Página anterior">←</Button>
+                        <span className="whitespace-nowrap" aria-live="polite">Página {page} de {totalPages}</span>
+                        <Button variant="ghost" type="button" className="size-9 px-0 text-sidebar-purple hover:bg-sidebar-active disabled:opacity-50" disabled={page >= totalPages} onClick={() => onPageChange(page + 1)} aria-label="Próxima página">→</Button>
+                    </nav>
+                    <label className="flex items-center gap-2" htmlFor="supplier-page-size">
+                        <span>por página</span>
+                        <select id="supplier-page-size" className="min-h-9 rounded-full border border-history-border bg-surface px-3 font-k2d text-sm text-sidebar-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" value={pageSize} onChange={(event) => onPageSizeChange(Number(event.target.value))}>
+                            <option value={10}>10</option>
+                            <option value={20}>20</option>
+                            <option value={50}>50</option>
+                        </select>
+                    </label>
+                </div>
             </div>
         </section>
     );
