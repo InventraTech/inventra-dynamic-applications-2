@@ -1,4 +1,4 @@
-import { useEffect, useId, useState, type FormEvent } from "react";
+import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import type { Supplier, SupplierDialogMode } from "../../../types/suppliers";
 import { formatSupplierCnpj, validateSupplier, type SupplierFormErrors, type SupplierFormValues } from "../../../utils/validateSupplier";
 import Button from "../../ui/Button";
@@ -36,6 +36,7 @@ function valuesFromSupplier(supplier?: Supplier | null): SupplierFormValues {
 
 function SupplierFormDialog({ open, mode, supplier = null, saving, error, onOpenChange, onSubmit }: SupplierFormDialogProps) {
     const id = useId();
+    const fieldsRef = useRef<HTMLDivElement>(null);
     const [values, setValues] = useState<SupplierFormValues>(() => valuesFromSupplier(supplier));
     const [errors, setErrors] = useState<SupplierFormErrors>({});
     const [photo, setPhoto] = useState<File | null>(null);
@@ -48,6 +49,7 @@ function SupplierFormDialog({ open, mode, supplier = null, saving, error, onOpen
         setErrors({});
         setPhoto(null);
         setRemovePhoto(false);
+        fieldsRef.current?.scrollTo({ top: 0 });
     }, [open, mode, supplier]);
 
     function update<K extends keyof SupplierFormValues>(field: K, value: SupplierFormValues[K]) {
@@ -76,9 +78,9 @@ function SupplierFormDialog({ open, mode, supplier = null, saving, error, onOpen
     }
 
     return (
-        <Dialog open={open} onOpenChange={onOpenChange} aria-labelledby={`${id}-title`} className="flex max-h-dvh max-w-2xl flex-col">
-            <form onSubmit={submit} noValidate aria-busy={saving} className="flex min-h-0 flex-col">
-                <header className="flex items-start justify-between gap-4 border-b border-history-border px-5 py-5 sm:px-7">
+        <Dialog open={open} onOpenChange={onOpenChange} aria-labelledby={`${id}-title`} placement="top" className="flex max-w-2xl flex-col">
+            <form onSubmit={submit} noValidate aria-busy={saving} className="flex max-h-[calc(100dvh-2rem)] min-h-0 flex-col">
+                <header className="flex shrink-0 items-start justify-between gap-4 border-b border-history-border px-5 py-5 sm:px-7">
                     <div className="min-w-0">
                         <h2 id={`${id}-title`} className="font-k2d text-xl font-bold text-sidebar-text">{editing ? "Editar fornecedor" : "Novo fornecedor"}</h2>
                         <p className="mt-1 text-sm leading-relaxed text-history-muted">{editing ? "Atualize os dados deste cadastro compartilhado." : "Cadastre uma empresa fornecedora para todas as cozinhas."}</p>
@@ -86,7 +88,7 @@ function SupplierFormDialog({ open, mode, supplier = null, saving, error, onOpen
                     <Button variant="icon" type="button" onClick={() => onOpenChange(false)} disabled={saving} aria-label="Fechar cadastro" className="size-10 rounded-full bg-history-card-header text-history-muted">×</Button>
                 </header>
 
-                <div className="grid min-h-0 min-w-0 flex-1 gap-4 overflow-y-auto px-5 py-5 sm:grid-cols-2 sm:px-7">
+                <div ref={fieldsRef} className="grid min-h-0 min-w-0 flex-1 gap-4 overflow-y-auto overscroll-contain px-5 py-5 sm:grid-cols-2 sm:px-7">
                     {error && <Feedback severity="error" className="sm:col-span-2">{error}</Feedback>}
                     {saving && <p className="sr-only sm:col-span-2" role="status" aria-live="polite">Salvando fornecedor…</p>}
                     <div className="grid min-w-0 gap-1.5 sm:col-span-2">
@@ -123,7 +125,7 @@ function SupplierFormDialog({ open, mode, supplier = null, saving, error, onOpen
                     </div>
                 </div>
 
-                <footer className="flex flex-wrap justify-end gap-2 border-t border-history-border bg-history-card-header px-5 py-4 sm:px-7">
+                <footer className="flex shrink-0 flex-wrap justify-end gap-2 border-t border-history-border bg-history-card-header px-5 py-4 sm:px-7">
                     <Button variant="outline" type="button" onClick={() => onOpenChange(false)} disabled={saving}>Cancelar</Button>
                     <Button variant="standard" type="submit" disabled={saving}>{saving ? "Salvando…" : editing ? "Salvar alterações" : "Cadastrar fornecedor"}</Button>
                 </footer>

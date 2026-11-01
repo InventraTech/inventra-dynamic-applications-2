@@ -20,7 +20,7 @@ function SupplierStatusDialog({ open, supplier, saving, error, onOpenChange, onC
     const activating = supplier ? !supplier.active : false;
 
     return (
-        <Dialog open={open && Boolean(supplier)} onOpenChange={onOpenChange} aria-labelledby={`${id}-title`} className="max-w-xl">
+        <Dialog open={open && Boolean(supplier)} onOpenChange={onOpenChange} aria-labelledby={`${id}-title`} placement="top" className="max-w-xl">
             {supplier && <div className="grid min-w-0 gap-5 p-5 sm:p-7" aria-busy={saving}>
                 <div>
                     <h2 id={`${id}-title`} className="font-k2d text-xl font-bold text-sidebar-text">{activating ? "Reativar fornecedor?" : "Desativar fornecedor?"}</h2>

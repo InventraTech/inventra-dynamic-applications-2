@@ -38,9 +38,9 @@ function SupplierDetailDialog({ open, supplier, canManage, photoFile, photoBusy,
     const whatsappDigits = supplier?.whatsapp?.replace(/\D/g, "") ?? "";
 
     return (
-        <Dialog open={open && Boolean(supplier)} onOpenChange={onOpenChange} aria-labelledby={`${id}-title`} className="max-w-3xl">
-            {supplier && <div className="flex max-h-dvh min-w-0 flex-col">
-                <header className="flex items-start justify-between gap-4 border-b border-history-border px-5 py-5 sm:px-7">
+        <Dialog open={open && Boolean(supplier)} onOpenChange={onOpenChange} aria-labelledby={`${id}-title`} placement="top" className="max-w-3xl">
+            {supplier && <div className="flex max-h-[calc(100dvh-2rem)] min-w-0 flex-col">
+                <header className="flex shrink-0 items-start justify-between gap-4 border-b border-history-border px-5 py-5 sm:px-7">
                     <div className="min-w-0">
                         <h2 id={`${id}-title`} className="font-k2d text-xl font-bold text-sidebar-text">Detalhes do fornecedor</h2>
                         <p className="mt-1 text-sm text-history-muted">Cadastro compartilhado entre cozinhas.</p>
@@ -48,7 +48,7 @@ function SupplierDetailDialog({ open, supplier, canManage, photoFile, photoBusy,
                     <Button variant="icon" type="button" onClick={() => onOpenChange(false)} aria-label="Fechar detalhes" className="size-10 rounded-full bg-history-card-header text-history-muted">×</Button>
                 </header>
 
-                <div className="grid min-h-0 min-w-0 flex-1 gap-4 overflow-y-auto px-5 py-5 sm:px-7">
+                <div className="grid min-h-0 min-w-0 flex-1 gap-4 overflow-y-auto overscroll-contain px-5 py-5 sm:px-7">
                     {loading && <p className="text-sm text-history-muted" role="status" aria-live="polite">Atualizando os dados do fornecedor…</p>}
                     {loadError && <Feedback severity="info">Os dados detalhados não puderam ser atualizados. As informações da lista continuam disponíveis. {loadError}</Feedback>}
                     <section className="flex min-w-0 flex-wrap items-center gap-4 rounded-3xl bg-history-card-header p-4 sm:p-5" aria-label="Identificação do fornecedor">
@@ -98,7 +98,7 @@ function SupplierDetailDialog({ open, supplier, canManage, photoFile, photoBusy,
                     <Feedback severity="info">Este fornecedor não é vinculado automaticamente a uma cozinha ou produto. O vínculo com produtos é feito na tela de Produtos.</Feedback>
                 </div>
 
-                <footer className="flex flex-wrap items-center justify-between gap-2 border-t border-history-border bg-history-card-header px-5 py-4 sm:px-7">
+                <footer className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-t border-history-border bg-history-card-header px-5 py-4 sm:px-7">
                     {canManage ? (
                         <Button variant="outline" type="button" onClick={() => onChangeStatus(supplier)} disabled={photoBusy} className={supplier.active ? "border-feedback-error/40 text-feedback-error hover:bg-feedback-error-bg" : "border-feedback-success/40 text-feedback-success hover:bg-feedback-success-bg"}>
                             {supplier.active ? "Desativar fornecedor" : "Reativar fornecedor"}
