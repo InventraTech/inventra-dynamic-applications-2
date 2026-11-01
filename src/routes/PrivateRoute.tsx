@@ -30,7 +30,7 @@ const menuSections: MenuSection[] = [
         { id: "estoque", page: "Estoque", pageIcon: stockIcon, pagePath: "/estoque", availability: "available" },
         { id: "inventarios", page: "Inventários", pageIcon: inventoryIcon, availability: "coming-soon" },
         { id: "produtos", page: "Produtos", pageIcon: productIcon, pagePath: "/produtos", availability: "available" },
-        { id: "fornecedores", page: "Fornecedores", pageIcon: supplierIcon, availability: "coming-soon" },
+        { id: "fornecedores", page: "Fornecedores", pageIcon: supplierIcon, pagePath: "/fornecedores", availability: "available" },
         { id: "historico", page: "Histórico", pageIcon: historyIcon, pagePath: "/historico", availability: "available" },
     ] },
     { sectionTitle: "Administração", menuOptions: [
