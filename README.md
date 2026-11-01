@@ -1,5 +1,9 @@
 # React + TypeScript + Vite
 
+## Configuração da API
+
+O front-end chama a API pelo caminho relativo `/api`. Em desenvolvimento, o proxy do Vite encaminha as chamadas para `API_ORIGIN`; na Vercel, o rewrite usa essa mesma variável para encaminhar as requisições ao backend. Configure `API_ORIGIN` no `.env.local` já existente, sem sobrescrever outros valores, e também nas variáveis de ambiente de Preview e Production da Vercel. Use `.env.example` como referência e não versione valores reais.
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:

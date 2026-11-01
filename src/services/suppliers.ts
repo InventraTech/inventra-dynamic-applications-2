@@ -1,9 +1,14 @@
+import type { ProductSupplierOption } from "../types/products";
 import type { CreateSupplierInput, Supplier, UpdateSupplierInput } from "../types/suppliers";
 import { apiRequest } from "./api";
 
 export function listSuppliers(active: boolean, signal?: AbortSignal): Promise<Supplier[]> {
     const params = new URLSearchParams({ active: String(active) });
     return apiRequest<Supplier[]>(`/suppliers?${params.toString()}`, { signal });
+}
+
+export function getActiveSuppliers(signal?: AbortSignal): Promise<ProductSupplierOption[]> {
+    return apiRequest<ProductSupplierOption[]>("/suppliers", { signal });
 }
 
 export function getSupplier(id: number, signal?: AbortSignal): Promise<Supplier> {

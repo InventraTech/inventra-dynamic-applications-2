@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import type { ProductCategory, ProductUnit } from "../../../types/products";
 import { ApiError } from "../../../services/api";
-import { createCategory, createUnit, deleteCategory, deleteUnit, getProductCategories, getProductUnits, updateCategory, updateUnit } from "../../../services/products";
+import { createCategory, deleteCategory, getProductCategories, updateCategory } from "../../../services/categories";
+import { createUnit, deleteUnit, getProductUnits, updateUnit } from "../../../services/units";
 import Feedback from "../../ui/Feedback";
 import ProductReferencePanel, { type ProductReference, type ProductReferenceKind } from "./ProductReferencePanel";
 
