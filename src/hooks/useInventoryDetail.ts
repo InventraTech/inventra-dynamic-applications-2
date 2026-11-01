@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getInventory, listInventoryCounts } from "../services/inventory";
 import { getKitchenStock, getStockBatchesByKitchen } from "../services/stock";
 import type { Inventory, InventoryCount, InventoryBatch } from "../types/inventory";
@@ -30,6 +30,8 @@ export default function useInventoryDetail(inventoryId: number | null, kitchenId
     const [state, setState] = useState<InventoryDetailState>(initialState);
     const [retryVersion, setRetryVersion] = useState(0);
     const [refreshVersion, setRefreshVersion] = useState(0);
+    const retry = useCallback(() => setRetryVersion((version) => version + 1), []);
+    const refresh = useCallback(() => setRefreshVersion((version) => version + 1), []);
 
     useEffect(() => {
         if (inventoryId === null || kitchenId === null) {
@@ -75,7 +77,7 @@ export default function useInventoryDetail(inventoryId: number | null, kitchenId
 
     return {
         ...state,
-        retry: () => setRetryVersion((version) => version + 1),
-        refresh: () => setRefreshVersion((version) => version + 1),
+        retry,
+        refresh,
     };
 }

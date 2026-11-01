@@ -13,13 +13,15 @@ interface InventoryCountFormProps {
     loadingBatches: boolean;
     batchesError: string | null;
     submitting: boolean;
+    submitError: string | null;
+    submitSuccess: string | null;
     onSubmit: (request: RegisterInventoryCountRequest) => Promise<boolean>;
     onRetryBatches: () => void;
 }
 
 const emptyForm: InventoryCountFormValues = { batchId: "", physicalQuantity: "", note: "" };
 
-export default function InventoryCountForm({ batches, counts, products, loadingBatches, batchesError, submitting, onSubmit, onRetryBatches }: InventoryCountFormProps) {
+export default function InventoryCountForm({ batches, counts, products, loadingBatches, batchesError, submitting, submitError, submitSuccess, onSubmit, onRetryBatches }: InventoryCountFormProps) {
     const id = useId();
     const [form, setForm] = useState<InventoryCountFormValues>(emptyForm);
     const [errors, setErrors] = useState<InventoryCountErrors>({});
@@ -101,6 +103,8 @@ export default function InventoryCountForm({ batches, counts, products, loadingB
                     <footer className="flex min-w-0 flex-wrap justify-end border-t border-history-border pt-4">
                         <Button variant="standard" type="submit" disabled={submitting || !selectedBatch || countedBatchIds.has(selectedBatch.id)}>{submitting ? "Registrando…" : "Registrar contagem"}</Button>
                     </footer>
+                    {submitError && <Feedback severity="error">{submitError}</Feedback>}
+                    {submitSuccess && <Feedback severity="success">{submitSuccess}</Feedback>}
                 </form>
             )}
         </section>

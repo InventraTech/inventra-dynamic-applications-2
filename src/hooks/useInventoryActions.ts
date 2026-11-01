@@ -31,7 +31,6 @@ export default function useInventoryActions(inventoryId: number, onChanged: () =
             return false;
         } finally {
             setSaving(false);
-            setAction(null);
         }
     }, [onChanged, saving]);
 

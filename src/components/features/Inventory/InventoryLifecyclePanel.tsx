@@ -55,15 +55,15 @@ export default function InventoryLifecyclePanel({ inventory, count, saving, acti
                     </div>
                 </>}
 
-                {!decision && error && <Feedback severity="error">{error}</Feedback>}
-                {success && <Feedback severity="success">{success}</Feedback>}
+                {!decision && inventory.status === "OPEN" && (action === "close" || action === "cancel") && error && <Feedback severity="error">{error}</Feedback>}
+                {inventory.status === "OPEN" && (action === "close" || action === "cancel") && success && <Feedback severity="success">{success}</Feedback>}
             </section>
 
             <InventoryDecisionDialog
                 decision={decision}
                 count={count}
                 saving={saving && (action === "close" || action === "cancel")}
-                error={decision ? error : null}
+                error={decision && action === decision ? error : null}
                 onOpenChange={(open) => { if (!open) setDecision(null); }}
                 onConfirm={decision === "close" ? onClose : onCancel}
             />
