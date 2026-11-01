@@ -23,8 +23,9 @@ export function getDashboardCounts(id: number, signal?: AbortSignal): Promise<Da
     return apiRequest<DashboardCount[]>(`/inventories/${id}/counts`, { signal });
 }
 
-export async function getDashboardSuppliers(kitchenId: number, signal?: AbortSignal): Promise<Supplier[]> {
-    const results = await Promise.all([true, false].map(active =>
+export async function getDashboardSuppliers(kitchenId: number, includeInactive: boolean, signal?: AbortSignal): Promise<Supplier[]> {
+    const activeStatuses = includeInactive ? [true, false] : [true];
+    const results = await Promise.all(activeStatuses.map(active =>
         apiRequest<Supplier[]>(`/suppliers?kitchenId=${kitchenId}&active=${active}`, { signal }),
     ));
     return results.flat();

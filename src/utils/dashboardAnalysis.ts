@@ -1,5 +1,5 @@
 import type { DashboardData } from "../hooks/useDashboard";
-import type { DashboardFilters, DashboardResource, DashboardTab } from "../types/dashboard";
+import type { ChartDatum, DashboardFilters, DashboardResource, DashboardTab } from "../types/dashboard";
 import { getDaysUntilDate } from "./stockPresentation.ts";
 import { average, domainLabel, groupMonths, groupValues, hasProductFilter, matchesPeriod, matchesProduct, quantityByUnit, stockValue } from "./dashboardAggregations.ts";
 
@@ -50,14 +50,73 @@ export function analyzeDashboard(data: DashboardData, filters: DashboardFilters,
     const value = stockValue(batches);
     const pricedBatches = batches.filter(row => row.unitPrice !== null);
     const sumBy = (field: "status" | "severity" | "type", rows: { status?: string; severity?: string; type?: string }[]) => groupValues(rows, row => row[field]!, row => domainLabel(row[field]!));
+    const requisitionStatuses = ["DRAFT", "UNDER_REVIEW", "APPROVED", "REJECTED", "CANCELLED"];
+    const requisitionsByType = ["PURCHASE", "CONSUMPTION", "TRANSFER"].map(type => ({
+        key: type,
+        label: domainLabel(type),
+        segments: requisitionStatuses.map(status => ({
+            key: status,
+            label: domainLabel(status),
+            value: requisitions.filter(row => row.type === type && row.status === status).length,
+        })),
+    })).filter(row => row.segments.some(segment => segment.value > 0));
+    const stockCoverage = stock.filter(row => row.minStock !== null && row.minStock > 0).map(row => ({
+        key: String(row.product.id),
+        label: row.product.name,
+        quantity: row.totalQuantity,
+        minimum: row.minStock!,
+        unit: row.unit.symbol,
+        percent: row.totalQuantity / row.minStock! * 100,
+    })).sort((left, right) => left.percent - right.percent);
+    const stockTreemapGroups = new Map<string, { key: string; label: string; value: number; items: Map<string, ChartDatum> }>();
+    for (const batch of pricedBatches) {
+        if (batch.currentQuantity <= 0 || batch.unitPrice! <= 0) continue;
+        const value = batch.currentQuantity * batch.unitPrice!;
+        if (!Number.isFinite(value) || value <= 0) continue;
+        const product = productMap.get(batch.product.id);
+        const categoryId = String(product?.category?.id ?? "uncategorized");
+        const categoryName = product?.category?.name ?? "Sem categoria";
+        const group = stockTreemapGroups.get(categoryId) ?? { key: categoryId, label: categoryName, value: 0, items: new Map<string, ChartDatum>() };
+        const productKey = String(batch.product.id);
+        const item = group.items.get(productKey) ?? { key: productKey, label: product?.name ?? batch.product.name, value: 0 };
+        item.value += value;
+        group.value += value;
+        group.items.set(productKey, item);
+        stockTreemapGroups.set(categoryId, group);
+    }
+    const stockTreemap = [...stockTreemapGroups.values()].map(group => ({
+        key: group.key,
+        label: group.label,
+        value: group.value,
+        items: [...group.items.values()].sort((left, right) => right.value - left.value || left.label.localeCompare(right.label, "pt-BR")),
+    })).sort((left, right) => right.value - left.value || left.label.localeCompare(right.label, "pt-BR"));
+    const inventoryDivergenceGroups = new Map<string, { key: string; label: string; unit: string; shortage: number; surplus: number }>();
+    for (const row of divergences) {
+        const unit = unitFor(allBatches.get(row.batch.id)?.product.id ?? -1);
+        const key = `${row.inventoryId}:${unit}`;
+        const current = inventoryDivergenceGroups.get(key) ?? {
+            key,
+            label: `Inventário #${row.inventoryId}`,
+            unit,
+            shortage: 0,
+            surplus: 0,
+        };
+        if (row.divergence! < 0) current.shortage += Math.abs(row.divergence!);
+        else current.surplus += row.divergence!;
+        inventoryDivergenceGroups.set(key, current);
+    }
+    const inventoryDivergences = [...inventoryDivergenceGroups.values()].sort((left, right) =>
+        right.shortage + right.surplus - left.shortage - left.surplus,
+    );
 
     return {
         products, selectedProducts: selectedProducts.filter(row => registeredIds.has(row.id) && (!stockPeriod || scopedProductIds.has(row.id))), productMap, batches, stock, requisitions, items, alerts, inventories, counts, divergences, allBatches, links, suppliers,
         value, quantity: quantityByUnit(batches, row => unitFor(row.product.id), row => row.currentQuantity),
         lowStock: stock.filter(row => row.lowStock).length,
         expired: batches.filter(row => row.status === "EXPIRED" || (row.status === "ACTIVE" && row.expirationDate !== null && getDaysUntilDate(row.expirationDate, today) < 0)).length,
+        expiringSoon: batches.filter(row => row.status === "ACTIVE" && row.expirationDate !== null && getDaysUntilDate(row.expirationDate, today) >= 0 && getDaysUntilDate(row.expirationDate, today) <= 30).length,
         monthlyEntries: batches.filter(row => row.entryDate.slice(0, 7) === `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}`).length,
-        consumption: consumption.length ? quantityByUnit(consumption, row => unitFor(row.productId), row => row.averageDailyConsumption!) : null,
+        consumption: groupValues(consumption, row => unitFor(row.productId), unit => unit, row => row.averageDailyConsumption!),
         missingConsumption: parameters.filter(row => row.averageDailyConsumption === null).length,
         pending: requisitions.filter(row => row.status === "UNDER_REVIEW").length,
         estimatedTotal: requisitions.reduce((sum, row) => sum + row.estimatedTotal, 0),
@@ -65,13 +124,13 @@ export function analyzeDashboard(data: DashboardData, filters: DashboardFilters,
         categoryValue: groupValues(pricedBatches, row => String(productMap.get(row.product.id)?.category?.id ?? "uncategorized"), row => productMap.get(row.product.id)?.category?.name ?? "Sem categoria", row => row.currentQuantity * row.unitPrice!),
         topProducts: groupValues(pricedBatches, row => String(row.product.id), row => row.product.name, row => row.currentQuantity * row.unitPrice!).slice(0, 10),
         alertSeverities: sumBy("severity", alerts), requestStatuses: sumBy("status", requisitions), batchStatuses: sumBy("status", batches),
+        requisitionsByType, stockCoverage, inventoryDivergences, stockTreemap,
         requestTypes: sumBy("type", requisitions), inventoryStatuses: sumBy("status", inventories), alertTypes: sumBy("type", alerts),
         entryMonths: groupMonths(batches, row => row.entryDate), alertMonths: groupMonths(alerts, row => row.createdAt),
         // Count occurrences in distinct requests, avoiding a sum of kg, litres and units in a ranking.
         topRequested: groupValues(requisitions.flatMap(request => [...new Map((data.items.data?.records[request.id] ?? []).filter(item => productMatches(item.product.id)).map(item => [item.product.id, item])).values()]), row => String(row.product.id), row => row.product.name).slice(0, 10),
         ratings: groupValues(suppliers, row => row.rating === null ? "missing" : String(row.rating), row => row.rating === null ? "Sem avaliação" : `Nota ${row.rating}`),
-        // Divergent quantities remain separated by unit even within the same inventory.
-        divergenceByInventory: groupValues(divergences, row => `${row.inventoryId}:${unitFor(allBatches.get(row.batch.id)?.product.id ?? -1)}`, row => `Inventário #${row.inventoryId} · ${unitFor(allBatches.get(row.batch.id)?.product.id ?? -1)}`, row => Math.abs(row.divergence!)),
+        // Divergent quantities remain separated by unit; shortages and surpluses are not netted.
         sortedBatches: [...batches].sort((a, b) => (a.expirationDate ?? "9999").localeCompare(b.expirationDate ?? "9999") || a.id - b.id),
         scopedBatchIds,
         states: {

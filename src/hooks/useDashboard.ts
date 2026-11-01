@@ -24,6 +24,9 @@ function useResource<T>(key: string | null, revision: number, loader: (signal: A
 export default function useDashboard(tab: DashboardTab, productFilterActive: boolean) {
     const session = getSession();
     const kitchenId = session?.user.kitchen?.id ?? null;
+    const profile = session?.user.profile;
+    const accessType = typeof profile === "string" ? profile : profile?.accessType;
+    const includeInactiveSuppliers = accessType?.toLocaleUpperCase("pt-BR") === "SUPERVISOR";
     // A new authenticated session never reuses another user's data.
     const scope = session && kitchenId !== null ? `${session.user.id}:${kitchenId}:${session.token}` : null;
     const [revision, setRevision] = useState(0);
@@ -49,14 +52,14 @@ export default function useDashboard(tab: DashboardTab, productFilterActive: boo
     const productIds = useMemo(() => products.data ? Object.keys(products.data.records).map(Number) : [], [products.data]);
     const parameterLoader = useCallback((signal: AbortSignal) => getRelatedRecords(productIds, getProductKitchenParameters, signal), [productIds]);
     const parameters = useResource(scope && products.data && visited.has("stock") ? scope : null, revision, parameterLoader);
-    const supplierLoader = useCallback((signal: AbortSignal) => getDashboardSuppliers(kitchenId!, signal), [kitchenId]);
+    const supplierLoader = useCallback((signal: AbortSignal) => getDashboardSuppliers(kitchenId!, includeInactiveSuppliers, signal), [kitchenId, includeInactiveSuppliers]);
     const suppliers = useResource(scope && visited.has("purchases") ? scope : null, revision, supplierLoader);
     const linkLoader = useCallback((signal: AbortSignal) => getRelatedRecords(productIds, getProductSuppliers, signal), [productIds]);
     const links = useResource(scope && products.data && visited.has("purchases") ? scope : null, revision, linkLoader);
     const inventoryLoader = useCallback((signal: AbortSignal) => getDashboardInventories(kitchenId!, signal), [kitchenId]);
     const inventories = useResource(scope && visited.has("control") ? scope : null, revision, inventoryLoader);
     const countLoader = useCallback((signal: AbortSignal) => getRelatedRecords((inventories.data ?? []).map(row => row.id), getDashboardCounts, signal), [inventories.data]);
-    const counts = useResource(scope && inventories.data ? scope : null, revision, countLoader);
+    const counts = useResource(scope && inventories.data && (visited.has("control") || productFilterActive) ? scope : null, revision, countLoader);
 
     return { stock, batches, products, requisitions, alerts, parameters, items, suppliers, links, inventories, counts,
         refresh: () => setRevision(value => value + 1),

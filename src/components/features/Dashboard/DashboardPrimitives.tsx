@@ -1,16 +1,32 @@
 import { useId, useMemo, useState, type ReactNode } from "react";
-import type { ChartDatum, DashboardResource } from "../../../types/dashboard";
-import { dashboardNumber } from "../../../utils/dashboardAggregations";
+import type { ChartDatum, DashboardInventoryDivergence, DashboardResource, DashboardStackedDatum, DashboardStockCoverage, DashboardTreemapGroup } from "../../../types/dashboard";
+import { dashboardMoney, dashboardNumber } from "../../../utils/dashboardAggregations";
 import Button from "../../ui/Button";
 import Feedback from "../../ui/Feedback";
 
 export const panelClass = "min-w-0 rounded-3xl border border-history-border bg-surface p-4 shadow-history-card sm:p-6";
 
-export function Metric({ title, value, note, featured = false, pending = false }: { title: string; value: ReactNode; note: string; featured?: boolean; pending?: boolean }) {
-    return <div className={`${panelClass} text-ink ${featured ? "border-b-4 border-b-login-gold" : ""}`}>
-        <dt className="text-sm font-semibold text-history-muted">{title}</dt>
-        <dd className="mt-3 text-2xl font-bold leading-tight wrap-anywhere sm:text-3xl">{pending ? <span className="text-base font-normal">Carregando…</span> : value ?? "Indisponível"}</dd>
-        <dd className="mt-2 text-xs leading-relaxed text-history-muted">{note}</dd>
+export function Metric({ title, value, note, featured = false, pending = false, tone, icon }: { title: string; value: ReactNode; note: string; featured?: boolean; pending?: boolean; tone?: "brand" | "warning" | "success" | "danger"; icon?: string }) {
+    const accent = tone ?? (featured ? "brand" : null);
+    const accentClasses = {
+        brand: "border-l-4 border-l-brand",
+        warning: "border-l-4 border-l-history-status-observation-text",
+        success: "border-l-4 border-l-feedback-success",
+        danger: "border-l-4 border-l-feedback-error",
+    };
+    const iconBackground = {
+        brand: "bg-sidebar-active",
+        warning: "bg-history-status-observation-bg",
+        success: "bg-feedback-success-bg",
+        danger: "bg-feedback-error-bg",
+    };
+    return <div className={`${panelClass} flex min-h-36 flex-col text-ink ${accent ? accentClasses[accent] : ""}`}>
+        <div className="flex min-w-0 items-start justify-between gap-3">
+            <dt className="min-w-0 pt-1 text-sm font-semibold leading-snug text-history-muted">{title}</dt>
+            {icon && <span className={`grid size-10 shrink-0 place-items-center rounded-2xl ${accent ? iconBackground[accent] : "bg-sidebar-active"}`} aria-hidden="true"><img className="size-5" src={icon} alt="" /></span>}
+        </div>
+        <dd className="mt-2 text-2xl font-bold leading-tight wrap-anywhere sm:text-3xl">{pending ? <span className="text-base font-normal">Carregando…</span> : value ?? "Indisponível"}</dd>
+        <dd className="mt-auto pt-3 text-xs leading-relaxed text-history-muted">{note}</dd>
     </div>;
 }
 
@@ -31,7 +47,7 @@ export function ChartCard({ title, description, children, ready = true, loading 
     </section>;
 }
 
-export function EmptyChart() { return <p className="grid min-h-40 place-content-center text-center text-sm text-history-muted">Nenhum registro para esta análise e os filtros selecionados.</p>; }
+export function EmptyChart({ message = "Nenhum registro para esta análise e os filtros selecionados." }: { message?: string } = {}) { return <p className="grid min-h-40 place-content-center text-center text-sm text-history-muted">{message}</p>; }
 
 const palette = ["var(--color-heading)", "var(--color-feedback-success)", "var(--color-feedback-error)", "var(--color-history-muted)", "var(--color-history-status-observation-text)", "var(--color-feedback-info)"];
 function chartColor(key: string, index: number) {
@@ -53,6 +69,111 @@ export function BarChart({ data, format = dashboardNumber, onSelect, selected }:
         </div>
         <svg className="h-2.5 w-full overflow-visible" viewBox="0 0 100 4" preserveAspectRatio="none" aria-hidden="true"><rect width="100" height="4" rx="2" className="fill-history-card-header" /><rect width={Math.abs(row.value) / max * 100} height="4" rx="2" fill={chartColor(row.key, index)} /></svg>
     </li>)}</ul>;
+}
+
+export function StackedBarChart({ data }: { data: DashboardStackedDatum[] }) {
+    if (!data.length) return <EmptyChart />;
+    const totalFor = (row: DashboardStackedDatum) => row.segments.reduce((sum, segment) => sum + segment.value, 0);
+    const statuses = [...new Map<string, ChartDatum>(data.flatMap(row => row.segments.filter(segment => segment.value > 0).map(segment => [segment.key, segment] as const))).values()];
+    const paletteIndex = new Map<string, number>(statuses.map((status, index) => [status.key, index] as const));
+    return <ul className="grid gap-4" aria-label="Requisições por tipo e situação">
+        {data.map(row => {
+            const total = totalFor(row);
+            return <li key={row.key} className="grid min-w-0 gap-2">
+                <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 text-sm"><span className="font-semibold text-ink">{row.label}</span><span className="text-history-muted">{dashboardNumber(total)} {total === 1 ? "requisição" : "requisições"}</span></div>
+                <div className="flex h-5 min-w-0 overflow-hidden rounded-full bg-history-card-header" aria-hidden="true">
+                    {row.segments.filter(segment => segment.value > 0).map(segment => <span key={segment.key} className="h-full border-r border-surface last:border-0" style={{ width: `${segment.value / total * 100}%`, backgroundColor: chartColor(segment.key, paletteIndex.get(segment.key) ?? 0) }} />)}
+                </div>
+                <ul className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-history-muted" aria-label={`Situações em ${row.label}`}>
+                    {row.segments.filter(segment => segment.value > 0).map(segment => <li key={segment.key} className="inline-flex items-center gap-1.5"><span className="size-2.5 shrink-0 rounded-sm" style={{ backgroundColor: chartColor(segment.key, paletteIndex.get(segment.key) ?? 0) }} aria-hidden="true" />{segment.label}: <strong className="text-ink">{dashboardNumber(segment.value)}</strong></li>)}
+                </ul>
+            </li>;
+        })}
+    </ul>;
+}
+
+export function StockCoverageChart({ data }: { data: DashboardStockCoverage[] }) {
+    if (!data.length) return <p className="grid min-h-40 place-content-center text-center text-sm text-history-muted">Nenhum produto desta seleção tem estoque mínimo definido para comparação.</p>;
+    const visible = data.slice(0, 8);
+    const scaleMax = Math.min(Math.max(150, ...visible.map(row => row.percent)), 300);
+    const targetPosition = 100 / scaleMax * 100;
+    return <div className="grid gap-4">
+        <p className="text-xs leading-relaxed text-history-muted">Cada barra compara um produto com o próprio mínimo cadastrado. A marca vertical indica 100%; produtos com unidades diferentes não são somados.</p>
+        <ul className="grid gap-4" aria-label="Saldo de cada produto comparado ao mínimo">
+            {visible.map(row => <li key={row.key} className="grid min-w-0 gap-2">
+                <div className="flex min-w-0 flex-wrap items-baseline justify-between gap-x-3 gap-y-1 text-sm">
+                    <span className="min-w-0 flex-1 font-semibold text-ink">{row.label}</span>
+                    <span className="shrink-0 font-semibold text-ink">{dashboardNumber(row.quantity)} / {dashboardNumber(row.minimum)} {row.unit} <span className="font-normal text-history-muted">({dashboardNumber(row.percent)}% do mínimo)</span></span>
+                </div>
+                <div className="relative h-3 rounded-full bg-history-card-header" aria-hidden="true">
+                    <span className="absolute inset-y-0 left-0 rounded-full" style={{ width: `${Math.min(row.percent, scaleMax) / scaleMax * 100}%`, backgroundColor: row.percent < 100 ? "var(--color-feedback-error)" : "var(--color-feedback-success)" }} />
+                    <span className="absolute -top-1 h-5 w-0.5 bg-heading" style={{ left: `${targetPosition}%` }} />
+                </div>
+                <span className={`text-xs font-semibold ${row.percent < 100 ? "text-feedback-error" : "text-feedback-success"}`}>{row.percent < 100 ? "Abaixo do mínimo" : "No mínimo ou acima"}</span>
+            </li>)}
+        </ul>
+        {data.length > visible.length && <p className="text-xs text-history-muted">Exibindo os {visible.length} produtos com menor cobertura; a tabela de estoque contém a lista completa.</p>}
+        <div className="flex flex-wrap items-center justify-between gap-2 border-t border-history-border pt-3 text-xs text-history-muted"><span>0% do mínimo</span><span className="font-semibold text-heading">│ 100% · mínimo</span><span>{dashboardNumber(scaleMax)}% ou mais</span></div>
+    </div>;
+}
+
+export function TreemapChart({ data, format = dashboardMoney, onSelect, selected }: { data: DashboardTreemapGroup[]; format?: (value: number) => string; onSelect?: (key: string) => void; selected?: string }) {
+    if (!data.length) return <EmptyChart message="Não há lotes com saldo positivo e preço conhecido para esta seleção." />;
+    const width = 1200;
+    const height = 320;
+    const total = data.reduce((sum, group) => sum + group.value, 0);
+    const fills = ["var(--color-sidebar-active)", "var(--color-history-card-header)", "var(--color-feedback-info-bg)", "var(--color-feedback-success-bg)", "var(--color-feedback-error-bg)", "var(--color-history-status-observation-bg)"];
+    let offsetX = 0;
+    const groups = data.map((group, index) => {
+        const groupWidth = width * group.value / total;
+        let offsetY = 0;
+        const items = group.items.map(item => {
+            const itemHeight = height * item.value / group.value;
+            const tile = { ...item, x: offsetX, y: offsetY, width: groupWidth, height: itemHeight, fill: fills[index % fills.length] };
+            offsetY += itemHeight;
+            return tile;
+        });
+        const layout = { ...group, x: offsetX, width: groupWidth, fill: fills[index % fills.length], items };
+        offsetX += groupWidth;
+        return layout;
+    });
+
+    return <div className="grid min-w-0 gap-4">
+        <p className="text-xs leading-relaxed text-history-muted">A área de cada bloco é proporcional ao saldo positivo com preço conhecido. As colunas agrupam produtos por categoria.</p>
+        <svg className="h-64 w-full rounded-2xl sm:h-72" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" role="img" aria-label="Treemap do valor em estoque por categoria e produto">
+            {groups.flatMap(group => group.items.map(item => {
+                return <g key={`${group.key}:${item.key}`}>
+                    <title>{`${item.label} · ${group.label}: ${format(item.value)}`}</title>
+                    <rect x={item.x} y={item.y} width={item.width} height={item.height} fill={item.fill} stroke="var(--color-surface)" strokeWidth="5" />
+                </g>;
+            }))}
+        </svg>
+        <ul className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-history-muted" aria-label="Categorias do treemap">
+            {groups.map(group => <li key={group.key} className="inline-flex min-w-0 items-center gap-2"><span className="size-3 shrink-0 rounded-sm border border-history-border" style={{ backgroundColor: group.fill }} aria-hidden="true" />{onSelect ? <Button variant="link" className={`min-h-11 min-w-0 rounded-lg px-2 text-left text-heading ${selected === group.key ? "bg-sidebar-active text-brand" : "hover:bg-sidebar-active"}`} aria-pressed={selected === group.key} onClick={() => onSelect(group.key)}>{group.label}</Button> : <span className="min-w-0">{group.label}</span>}<strong className="text-ink">{format(group.value)}</strong></li>)}
+        </ul>
+        <details className="text-sm text-ink"><summary className="min-h-11 cursor-pointer py-3 font-semibold text-heading">Ver produtos e valores por categoria</summary><div className="grid gap-4">{groups.map(group => <section key={group.key} aria-label={group.label}><h4 className="font-semibold text-heading">{group.label} · {format(group.value)}</h4><ul className="mt-2 grid gap-1">{group.items.map(item => <li key={item.key} className="flex flex-wrap justify-between gap-x-3 gap-y-1 border-b border-history-border py-2"><span>{item.label}</span><strong>{format(item.value)}</strong></li>)}</ul></section>)}</div></details>
+    </div>;
+}
+
+export function DivergingBarChart({ data }: { data: DashboardInventoryDivergence[] }) {
+    if (!data.length) return <EmptyChart />;
+    const visible = data.slice(0, 8);
+    const maxValue = Math.max(...visible.flatMap(row => [row.shortage, row.surplus]), 1);
+    return <div className="grid gap-4">
+        <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-history-muted"><span><span className="mr-1.5 inline-block size-2.5 rounded-sm bg-feedback-error align-middle" aria-hidden="true" />Faltou</span><span><span className="mr-1.5 inline-block size-2.5 rounded-sm bg-feedback-success align-middle" aria-hidden="true" />Sobrou</span></div>
+        <ul className="grid gap-4" aria-label="Faltas e sobras separadas por inventário e unidade">
+            {visible.map(row => <li key={row.key} className="grid min-w-0 gap-2">
+                <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 text-sm"><span className="font-semibold text-ink">{row.label} · {row.unit}</span><span className="text-xs text-history-muted">As quantidades não são compensadas entre si</span></div>
+                <div className="flex items-center gap-2" aria-hidden="true">
+                    <div className="flex h-3 flex-1 justify-end rounded-l-full bg-history-card-header"><span className="h-full rounded-l-full bg-feedback-error" style={{ width: `${row.shortage / maxValue * 100}%` }} /></div>
+                    <span className="h-5 w-px shrink-0 bg-history-border" />
+                    <div className="flex h-3 flex-1 rounded-r-full bg-history-card-header"><span className="h-full rounded-r-full bg-feedback-success" style={{ width: `${row.surplus / maxValue * 100}%` }} /></div>
+                </div>
+                <div className="grid grid-cols-2 gap-3 text-xs"><span className="font-semibold text-feedback-error">Faltou: {dashboardNumber(row.shortage)} {row.unit}</span><span className="text-right font-semibold text-feedback-success">Sobrou: {dashboardNumber(row.surplus)} {row.unit}</span></div>
+            </li>)}
+        </ul>
+        {data.length > visible.length && <p className="text-xs text-history-muted">Exibindo os {visible.length} inventários com maior divergência total; a tabela abaixo contém todos os registros.</p>}
+    </div>;
 }
 
 export function DonutChart({ data }: { data: ChartDatum[] }) {
@@ -90,14 +211,20 @@ export function ScatterChart({ data }: { data: { key: string; label: string; x: 
     if (!data.length) return <EmptyChart />;
     const maxX = Math.max(...data.map(row => row.x), 1);
     const maxY = Math.max(...data.map(row => row.y), 1);
+    const halfX = maxX / 2;
+    const halfY = maxY / 2;
     return <>
-        <p className="text-xs text-history-muted">Preço de referência (R$): 0 a {dashboardNumber(maxY)}</p>
-        <svg className="h-52 w-full text-heading" viewBox="0 0 400 200" aria-hidden="true">
-            {[20, 100, 180].map(y => <line key={y} x1="20" x2="380" y1={y} y2={y} className="stroke-history-border" />)}
-            {data.map(row => <circle key={row.key} cx={20 + row.x / maxX * 360} cy={180 - row.y / maxY * 160} r="5" fill="currentColor" fillOpacity="0.75" />)}
-        </svg>
-        <p className="text-center text-xs text-history-muted">Prazo de entrega: 0 a {dashboardNumber(maxX)} dias</p>
-        <p className="mt-3 text-xs text-history-muted">Cada ponto representa uma relação de produto e fornecedor. Consulte os valores na tabela de detalhamento.</p>
+        <p className="text-xs leading-relaxed text-history-muted">Cada ponto compara uma relação produto–fornecedor. Eixo horizontal: prazo de entrega, em dias. Eixo vertical: preço de referência, em reais.</p>
+        <div className="mt-3 flex min-w-0 gap-2">
+            <div className="flex w-20 shrink-0 flex-col justify-between py-2 text-xs text-history-muted" aria-hidden="true"><span>{dashboardMoney(maxY)}</span><span>{dashboardMoney(halfY)}</span><span>{dashboardMoney(0)}</span></div>
+            <svg className="h-48 min-w-0 flex-1 text-heading sm:h-56" viewBox="0 0 400 200" aria-hidden="true">
+                {[20, 100, 180].map(y => <line key={y} x1="32" x2="388" y1={y} y2={y} className="stroke-history-border" />)}
+                {[32, 210, 388].map(x => <line key={x} x1={x} x2={x} y1="20" y2="180" className="stroke-history-border" />)}
+                {data.map(row => <circle key={row.key} cx={32 + row.x / maxX * 356} cy={180 - row.y / maxY * 160} r="5" fill="currentColor" fillOpacity="0.75" />)}
+            </svg>
+        </div>
+        <div className="ml-20 flex justify-between text-xs text-history-muted" aria-hidden="true"><span>0 dias</span><span>{dashboardNumber(halfX)} dias</span><span>{dashboardNumber(maxX)} dias</span></div>
+        <details className="mt-3 text-sm text-ink"><summary className="min-h-11 cursor-pointer py-3 font-semibold text-heading">Ver valores dos pontos ({data.length})</summary><ul className="grid gap-2">{data.map(row => <li key={row.key} className="border-b border-history-border py-2"><strong className="block">{row.label}</strong><span className="text-history-muted">Prazo: {dashboardNumber(row.x)} dias · Preço: {dashboardMoney(row.y)}</span></li>)}</ul></details>
     </>;
 }
 

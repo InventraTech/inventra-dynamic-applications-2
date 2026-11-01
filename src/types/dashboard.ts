@@ -81,3 +81,30 @@ export interface ChartDatum {
     label: string;
     value: number;
 }
+
+export interface DashboardStackedDatum {
+    key: string;
+    label: string;
+    segments: ChartDatum[];
+}
+
+export interface DashboardStockCoverage {
+    key: string;
+    label: string;
+    quantity: number;
+    minimum: number;
+    unit: string;
+    percent: number;
+}
+
+export interface DashboardInventoryDivergence {
+    key: string;
+    label: string;
+    unit: string;
+    shortage: number;
+    surplus: number;
+}
+
+export interface DashboardTreemapGroup extends ChartDatum {
+    items: ChartDatum[];
+}

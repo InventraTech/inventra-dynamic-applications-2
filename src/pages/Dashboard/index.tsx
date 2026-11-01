@@ -12,13 +12,13 @@ import { getSession } from "../../services/authSession";
 import type { DashboardFilters as Filters, DashboardTab } from "../../types/dashboard";
 import { EMPTY_DASHBOARD_FILTERS, hasProductFilter } from "../../utils/dashboardAggregations";
 import { analyzeDashboard } from "../../utils/dashboardAnalysis";
-import { getProfileDisplayName, getProfileInitials } from "../../components/features/Profile/profileHelpers";
+import { displayProfileRole, getProfileDisplayName, getProfileInitials } from "../../components/features/Profile/profileHelpers";
 
 const tabs: { id: DashboardTab; title: string; description: string }[] = [
-    { id: "overview", title: "Visão geral", description: "Uma visão integrada do estoque, dos alertas e das requisições." },
-    { id: "stock", title: "Estoque e validade", description: "Saldos, consumo e vencimentos para apoiar sua operação." },
-    { id: "purchases", title: "Compras e fornecedores", description: "Requisições e referências para planejar o abastecimento." },
-    { id: "control", title: "Inventário, alertas e controle", description: "Contagens e alertas para acompanhar a sua cozinha." },
+    { id: "overview", title: "Visão geral", description: "Indicadores principais e pontos que pedem atenção na cozinha." },
+    { id: "stock", title: "Estoque", description: "Saldos, consumo, lotes e validade dos produtos acompanhados." },
+    { id: "purchases", title: "Requisições", description: "Pedidos, estimativas e referências de fornecedores." },
+    { id: "control", title: "Inventários e alertas", description: "Contagens, divergências e avisos recebidos pela sua conta." },
 ];
 
 export default function Dashboard() {
@@ -37,6 +37,8 @@ function DashboardContent() {
     const data = useDashboard(tab, hasProductFilter(filters));
     const analysis = analyzeDashboard(data, filters, tab, kitchenId);
     const name = getProfileDisplayName(session?.user.name ?? "Usuário");
+    const profile = session?.user.profile;
+    const role = typeof profile === "string" ? profile : profile?.accessType;
     const currentTab = tabs.find(item => item.id === tab)!;
     const resources = [data.stock, data.batches, data.requisitions, data.alerts, data.products, data.parameters, data.items, data.suppliers, data.links, data.inventories, data.counts];
     const loading = resources.some(resource => resource.loading);
@@ -64,15 +66,32 @@ function DashboardContent() {
     const viewProps = { analysis, filters, onFilter: changeFilter, onRetry: data.refresh };
     if (!session) return <Navigate to="/login" replace state={{ message: "Sua sessão expirou. Entre novamente para consultar o painel." }} />;
     return <div className="flex min-h-screen min-w-0 flex-col bg-linear-to-b from-history-background-start to-history-background-end adjusted-contrast:bg-none adjusted-contrast:bg-history-background-start">
-        <Topbar title="Painel" description="Inteligência para cuidar do estoque da sua cozinha." userName={name} userInitials={getProfileInitials(name)} userPhotoUrl={session?.user.photoUrl} userRole="Supervisor" searchPlaceholder="Buscar produto no painel…" searchValue={filters.search} onSearch={value => changeFilter("search", value)} hasNotifications={Boolean(data.alerts.data?.some(row => !row.read))} onNotifications={() => selectTab("control")} />
-        <main id="conteudo-principal" tabIndex={-1} className="flex min-w-0 flex-1 flex-col gap-5 px-3 pb-10 pt-5 outline-none sm:px-6">
+        <Topbar title="Painel" description="Inteligência para cuidar do estoque da sua cozinha." userName={name} userInitials={getProfileInitials(name)} userPhotoUrl={session?.user.photoUrl} userRole={displayProfileRole(role)} searchPlaceholder="Buscar produto no painel…" searchValue={filters.search} onSearch={value => changeFilter("search", value)} hasNotifications={Boolean(data.alerts.data?.some(row => !row.read))} onNotifications={() => selectTab("control")} />
+        <main id="conteudo-principal" tabIndex={-1} className="mx-auto flex min-w-0 w-full max-w-7xl flex-1 flex-col gap-5 px-3 pb-10 pt-5 outline-none sm:px-6 lg:px-8">
             {!kitchen ? <section className={`${panelClass} grid justify-items-start gap-3`}><Mascot size="compacto" /><h2 className="text-xl font-bold text-heading">Seu painel começa com uma cozinha</h2><p className="text-sm text-history-muted">Crie sua cozinha para acompanhar os indicadores com os dados da sua operação.</p><Link className="inline-flex min-h-11 items-center rounded-xl bg-brand px-4 py-2 font-bold text-on-brand" to="/cadastro/cozinha">Criar cozinha</Link></section> : <>
-                <section className="flex min-w-0 flex-wrap items-center justify-between gap-4 rounded-3xl bg-linear-to-r from-brand-strong to-brand p-5 text-on-brand shadow-history-card sm:p-6 adjusted-contrast:bg-brand adjusted-contrast:bg-none" aria-label="Apresentação do painel">
-                    <div className="min-w-0 flex-1"><h2 className="text-xl font-bold">Olá, {name.split(" ")[0]}</h2><p className="mt-1 text-sm">Seu estoque sob controle. Acompanhe os indicadores de {kitchen.name}.</p><div className="mt-4 flex min-w-0 flex-wrap gap-2"><Link className="inline-flex min-h-11 items-center rounded-full bg-login-gold px-4 py-2 text-sm font-bold text-brand-strong" to="/requisicoes/nova">+ Nova requisição</Link><Link className="inline-flex min-h-11 items-center rounded-full border border-on-brand px-4 py-2 text-sm font-semibold text-on-brand" to="/estoque">Ver estoque</Link></div></div>
-                    <Mascot size="compacto" className="w-20 shrink-0 max-sm:hidden large-text:hidden" />
+                <section className="relative min-w-0 overflow-hidden rounded-3xl bg-linear-to-r from-brand-strong to-brand p-5 text-on-brand shadow-history-card sm:p-6 adjusted-contrast:bg-brand adjusted-contrast:bg-none" aria-label="Resumo da cozinha">
+                    <div className="flex min-w-0 flex-wrap items-center justify-between gap-4">
+                        <div className="min-w-0 flex-1">
+                            <p className="text-xs font-semibold uppercase tracking-wide text-on-brand/75">Painel da cozinha</p>
+                            <h2 className="mt-1 text-2xl font-bold leading-tight sm:text-3xl">Olá, {name.split(" ")[0]}</h2>
+                            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-on-brand/90">Acompanhe os indicadores e priorize o que precisa de atenção em {kitchen.name}.</p>
+                        </div>
+                        <Mascot size="compacto" className="w-20 shrink-0 max-sm:hidden large-text:hidden" />
+                    </div>
+                    <div className="mt-5 flex min-w-0 flex-wrap items-center justify-between gap-3 border-t border-on-brand/20 pt-4">
+                        <div className="min-w-0">
+                            <p className="text-xs text-on-brand/75">Dados da cozinha</p>
+                            <p className="mt-0.5 break-words text-sm font-semibold">{kitchen.name}</p>
+                            <p role="status" aria-live="polite" className="mt-1 text-xs text-on-brand/80">{loading ? "Atualizando indicadores…" : updatedAt ? `Consultado às ${updatedAt}` : "Carregando dados da cozinha…"}</p>
+                        </div>
+                        <div className="flex min-w-0 flex-wrap gap-2">
+                            <Button variant="outline" disabled={loading} onClick={data.refresh}>Atualizar dados</Button>
+                            <Link className="inline-flex min-h-11 items-center justify-center rounded-xl bg-login-gold px-4 py-2 text-sm font-bold text-brand-strong transition-colors hover:bg-login-gold/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to="/requisicoes/nova">Nova requisição</Link>
+                            <Link className="inline-flex min-h-11 items-center justify-center rounded-xl border border-on-brand/60 px-4 py-2 text-sm font-semibold text-on-brand transition-colors hover:bg-on-brand/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to="/estoque">Ver estoque</Link>
+                        </div>
+                    </div>
                 </section>
-                <div className="flex min-w-0 flex-wrap items-center justify-between gap-3"><div className="min-w-0"><p className="text-xs font-semibold uppercase tracking-wide text-history-muted">Painel gerencial</p><p className="mt-1 text-lg font-bold text-heading">{kitchen.name}</p></div><div className="flex flex-wrap items-center gap-3"><p role="status" aria-live="polite" className="text-xs text-history-muted">{loading ? "Atualizando os indicadores…" : updatedAt ? `Dados consultados às ${updatedAt}` : "Aguardando dados"}</p><Button variant="outline" disabled={loading} onClick={data.refresh}>Atualizar dados</Button></div></div>
-                <div role="tablist" aria-label="Áreas do painel de BI" className="flex min-w-0 flex-wrap gap-1 rounded-3xl bg-surface p-1.5 shadow-history-card large-text:flex-col">{tabs.map((item, index) => <Button key={item.id} ref={element => { refs.current[index] = element; }} id={`tab-${item.id}`} role="tab" variant="ghost" aria-selected={tab === item.id} aria-controls={`panel-${item.id}`} tabIndex={tab === item.id ? 0 : -1} className={`min-h-12 min-w-0 flex-1 rounded-2xl px-4 py-3 text-sm leading-normal ${tab === item.id ? "bg-brand-strong text-on-brand shadow-history-tab" : "text-history-muted hover:bg-history-card-header"}`} onClick={() => selectTab(item.id)} onKeyDown={event => tabKeys(event, index)}>{item.title}</Button>)}</div>
+                <div role="tablist" aria-label="Áreas do painel" className="grid min-w-0 grid-cols-2 gap-2 rounded-3xl border border-history-border bg-surface p-2 shadow-history-card xl:grid-cols-4 large-text:grid-cols-1">{tabs.map((item, index) => <Button key={item.id} ref={element => { refs.current[index] = element; }} id={`tab-${item.id}`} role="tab" variant="ghost" aria-selected={tab === item.id} aria-controls={`panel-${item.id}`} tabIndex={tab === item.id ? 0 : -1} className={`min-h-12 min-w-0 rounded-2xl px-3 py-3 text-sm leading-normal ${tab === item.id ? "bg-sidebar-active font-bold text-brand-strong" : "text-history-muted hover:bg-history-card-header hover:text-heading"}`} onClick={() => selectTab(item.id)} onKeyDown={event => tabKeys(event, index)}>{item.title}</Button>)}</div>
                 <DashboardFilters filters={filters} tab={tab} products={analysis.products} dates={dates} alertTypes={[...new Set((data.alerts.data ?? []).map(row => row.type))].sort()} onChange={changeFilter} onClear={() => setFilters({ ...EMPTY_DASHBOARD_FILTERS })} />
                 {(errors > 0 || incomplete > 0) && <div className="grid justify-items-start gap-3"><Feedback severity="error">Parte dos dados não pôde ser carregada. As análises que dependem desses dados aparecem indisponíveis; os demais indicadores continuam acessíveis.</Feedback><Button variant="outline" onClick={data.refresh} disabled={loading}>Tentar carregar novamente</Button></div>}
                 <section id={`panel-${tab}`} role="tabpanel" aria-labelledby={`tab-${tab}`} tabIndex={0} className="grid min-w-0 gap-5">
