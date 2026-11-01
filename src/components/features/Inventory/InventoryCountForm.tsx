@@ -74,12 +74,13 @@ export default function InventoryCountForm({ batches, counts, products, loadingB
                                 const counted = countedBatchIds.has(batch.id);
                                 const productName = batch.product.name;
                                 const productUnit = products.find((product) => product.product.id === batch.product.id)?.unit.symbol;
-                                return <option key={batch.id} value={batch.id} disabled={counted}>{productName} · Lote {batch.batchNumber} · {formatInventoryQuantity(batch.currentQuantity)} {productUnit ?? "unidade"}{counted ? " · já contado" : ""}</option>;
+                                return <option key={batch.id} value={batch.id} disabled={counted || !productUnit}>{productName} · Lote {batch.batchNumber} · {formatInventoryQuantity(batch.currentQuantity)} {productUnit ?? "unidade indisponível"}{counted ? " · já contado" : ""}</option>;
                             })}
                         </select>
                         <p id={`${id}-batch-help`} className="m-0 text-xs leading-relaxed text-history-muted">Lotes já contados neste inventário não podem ser selecionados novamente.</p>
+                        {availableBatches.some((batch) => !products.some((product) => product.product.id === batch.product.id)) && <Feedback severity="info">Alguns lotes não têm unidade identificada. A contagem deles fica indisponível até que os dados do produto carreguem corretamente.</Feedback>}
                         {fieldError("batchId")}
-                        {selectedBatch && <p className="m-0 text-sm text-history-muted">Saldo atual do sistema: <strong className="text-ink">{formatInventoryQuantity(selectedBatch.currentQuantity)} {unit ?? "unidade"}</strong>{selectedBatch.expirationDate ? ` · validade ${formatInventoryDate(selectedBatch.expirationDate)}` : ""}</p>}
+                        {selectedBatch && <p className="m-0 text-sm text-history-muted">Saldo atual do sistema: <strong className="text-ink">{formatInventoryQuantity(selectedBatch.currentQuantity)} {unit ?? "unidade não identificada"}</strong>{selectedBatch.expirationDate ? ` · validade ${formatInventoryDate(selectedBatch.expirationDate)}` : ""}</p>}
                     </div>
 
                     <div className="grid min-w-0 gap-4 sm:grid-cols-2">
@@ -101,7 +102,7 @@ export default function InventoryCountForm({ batches, counts, products, loadingB
                     </div>
 
                     <footer className="flex min-w-0 flex-wrap justify-end border-t border-history-border pt-4">
-                        <Button variant="standard" type="submit" disabled={submitting || !selectedBatch || countedBatchIds.has(selectedBatch.id)}>{submitting ? "Registrando…" : "Registrar contagem"}</Button>
+                        <Button variant="standard" type="submit" disabled={submitting || !selectedBatch || !unit || countedBatchIds.has(selectedBatch.id)}>{submitting ? "Registrando…" : "Registrar contagem"}</Button>
                     </footer>
                     {submitError && <Feedback severity="error">{submitError}</Feedback>}
                     {submitSuccess && <Feedback severity="success">{submitSuccess}</Feedback>}

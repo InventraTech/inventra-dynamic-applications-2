@@ -39,18 +39,21 @@ export default function useInventoryDetail(inventoryId: number | null, kitchenId
             return;
         }
 
+        const currentInventoryId = inventoryId;
+        const currentKitchenId = kitchenId;
+
         const controller = new AbortController();
         setState((current) => ({ ...current, loading: true, error: null }));
 
         async function load() {
             try {
-                const inventory = await getInventory(inventoryId, controller.signal);
-                if (inventory.kitchen.id !== kitchenId) throw new Error("Este inventário não pertence à cozinha vinculada à sua conta.");
+                const inventory = await getInventory(currentInventoryId, controller.signal);
+                if (inventory.kitchen.id !== currentKitchenId) throw new Error("Este inventário não pertence à cozinha vinculada à sua conta.");
 
                 const [countsResult, batchesResult, productsResult] = await Promise.allSettled([
-                    listInventoryCounts(inventoryId, controller.signal),
-                    getStockBatchesByKitchen(kitchenId, controller.signal),
-                    getKitchenStock(kitchenId, {}, controller.signal),
+                    listInventoryCounts(currentInventoryId, controller.signal),
+                    getStockBatchesByKitchen(currentKitchenId, controller.signal),
+                    getKitchenStock(currentKitchenId, {}, controller.signal),
                 ]);
                 if (controller.signal.aborted) return;
                 if (countsResult.status === "rejected") throw countsResult.reason;

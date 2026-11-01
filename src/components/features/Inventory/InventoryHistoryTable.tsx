@@ -57,8 +57,8 @@ export default function InventoryHistoryTable({ inventories }: InventoryHistoryT
 
             {visibleInventories.length === 0 ? (
                 <div className="grid justify-items-center gap-3 px-5 py-10 text-center">
-                    <p className="m-0 text-sm text-history-muted">Nenhum inventário corresponde a esta situação.</p>
-                    {statusFilter !== "ALL" && <Button variant="outline" type="button" onClick={clearFilters}>Limpar filtro</Button>}
+                    <p className="m-0 text-sm text-history-muted">{inventories.length === 0 ? "Nenhum inventário foi registrado nesta cozinha." : "Nenhum inventário corresponde a esta situação."}</p>
+                    {statusFilter !== "ALL" && inventories.length > 0 && <Button variant="outline" type="button" onClick={clearFilters}>Limpar filtro</Button>}
                 </div>
             ) : (
                 <div className="min-w-0 overflow-x-auto focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus" tabIndex={0} aria-label="Tabela rolável do histórico de inventários">
