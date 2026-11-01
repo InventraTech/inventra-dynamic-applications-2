@@ -1,16 +1,11 @@
 import type {
     ProductBarcodeLookup,
-    ProductCategory,
     ProductInput,
     ProductKitchenParameters,
     ProductKitchenParametersInput,
     ProductPage,
     ProductRecord,
     ProductSearch,
-    ProductSupplier,
-    ProductSupplierInput,
-    ProductSupplierOption,
-    ProductUnit,
 } from "../types/products";
 import { getKitchenStockProducts } from "./kitchenService";
 import { getStockBatchProductsByKitchen } from "./stock";
@@ -89,22 +84,6 @@ export function getProduct(id: number, signal?: AbortSignal): Promise<ProductRec
     return apiRequest<ProductRecord>(`/products/${id}`, { signal });
 }
 
-export function getProductCategories(signal?: AbortSignal): Promise<ProductCategory[]> {
-    return apiRequest<ProductCategory[]>("/categories", { signal });
-}
-
-export function getProductUnits(signal?: AbortSignal): Promise<ProductUnit[]> {
-    return apiRequest<ProductUnit[]>("/units", { signal });
-}
-
-export function getActiveSuppliers(signal?: AbortSignal): Promise<ProductSupplierOption[]> {
-    return apiRequest<ProductSupplierOption[]>("/suppliers", { signal });
-}
-
-export function getProductSuppliers(productId: number, signal?: AbortSignal): Promise<ProductSupplier[]> {
-    return apiRequest<ProductSupplier[]>(`/products/${productId}/suppliers`, { signal });
-}
-
 export function getProductKitchenParameters(productId: number, signal?: AbortSignal): Promise<ProductKitchenParameters[]> {
     return apiRequest<ProductKitchenParameters[]>(`/products/${productId}/kitchen-parameters`, { signal });
 }
@@ -154,34 +133,6 @@ export function setProductActive(id: number, active: boolean): Promise<void> {
     return apiRequest<void>(`/products/${id}/${active ? "activate" : "deactivate"}`, { method: "PATCH" });
 }
 
-export function linkProductSupplier(productId: number, input: ProductSupplierInput): Promise<void> {
-    return apiRequest<void>(`/products/${productId}/suppliers`, { method: "POST", body: JSON.stringify(input) });
-}
-
 export function setKitchenParameters(productId: number, input: ProductKitchenParametersInput): Promise<void> {
     return apiRequest<void>(`/products/${productId}/kitchen-parameters`, { method: "PUT", body: JSON.stringify(input) });
-}
-
-export function createCategory(input: Pick<ProductCategory, "name" | "description">): Promise<ProductCategory> {
-    return apiRequest<ProductCategory>("/categories", { method: "POST", body: JSON.stringify(input) });
-}
-
-export function updateCategory(id: number, input: Partial<Pick<ProductCategory, "name" | "description">>): Promise<ProductCategory> {
-    return apiRequest<ProductCategory>(`/categories/${id}`, { method: "PUT", body: JSON.stringify(input) });
-}
-
-export function deleteCategory(id: number): Promise<void> {
-    return apiRequest<void>(`/categories/${id}`, { method: "DELETE" });
-}
-
-export function createUnit(input: Pick<ProductUnit, "symbol" | "description">): Promise<ProductUnit> {
-    return apiRequest<ProductUnit>("/units", { method: "POST", body: JSON.stringify(input) });
-}
-
-export function updateUnit(id: number, input: Partial<Pick<ProductUnit, "symbol" | "description">>): Promise<ProductUnit> {
-    return apiRequest<ProductUnit>(`/units/${id}`, { method: "PUT", body: JSON.stringify(input) });
-}
-
-export function deleteUnit(id: number): Promise<void> {
-    return apiRequest<void>(`/units/${id}`, { method: "DELETE" });
 }

@@ -19,5 +19,5 @@
     // "erasableSyntaxOnly": true, (Dar um jeito dps pq tá dando erro e tá me incomodando)
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["vite.config.ts"]
+  "include": ["vite.config.ts", "vercel.ts"]
 }
