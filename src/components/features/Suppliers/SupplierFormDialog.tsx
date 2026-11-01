@@ -78,7 +78,7 @@ function SupplierFormDialog({ open, mode, supplier = null, saving, error, onOpen
     }
 
     return (
-        <Dialog open={open} onOpenChange={onOpenChange} aria-labelledby={`${id}-title`} placement="right" className="flex flex-col">
+        <Dialog open={open} onOpenChange={onOpenChange} aria-labelledby={`${id}-title`} placement="right">
             <form onSubmit={submit} noValidate aria-busy={saving} className="flex h-full min-h-0 flex-col">
                 <header className="flex shrink-0 items-start justify-between gap-4 border-b border-history-border px-5 py-5 sm:px-7">
                     <div className="min-w-0">

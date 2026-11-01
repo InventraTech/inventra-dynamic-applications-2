@@ -29,7 +29,7 @@ export default function Dialog({ open, onOpenChange, children, className = "", p
             ref={dialogRef}
             onCancel={(event) => { event.preventDefault(); onOpenChange(false); }}
             onClick={(event) => { if (event.target === event.currentTarget) onOpenChange(false); }}
-            className={`${placementClasses} ${placement === "right" ? "" : "w-11/12 max-w-xl rounded-3xl"} border border-history-border bg-surface p-0 text-ink shadow-2xl backdrop:bg-ink/50 ${className}`.trim()}
+            className={`${!open ? "hidden" : ""} ${placementClasses} ${placement === "right" ? "" : "w-11/12 max-w-xl rounded-3xl"} border border-history-border bg-surface p-0 text-ink shadow-2xl backdrop:bg-ink/50 ${className}`.trim()}
         >
             {children}
         </dialog>
