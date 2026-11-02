@@ -24,13 +24,13 @@ export function Overview({ analysis: a, onRetry, filters, onFilter }: ViewProps)
     return <>
         <dl className="grid min-w-0 gap-3 sm:grid-cols-2 xl:grid-cols-4 large-text:grid-cols-1">
             <Metric title="Valor em estoque" value={a.states.batches.ready ? dashboardMoney(a.value.total) : null} note={a.value.missing ? `Parcial: ${a.value.missing} lote(s) com saldo sem preço informado.` : "Saldo atual × preço unitário conhecido."} featured pending={a.states.batches.loading} icon={stockIcon} />
-            <Metric title="Produtos abaixo do mínimo" value={a.states.stock.ready ? dashboardNumber(a.lowStock) : null} note="Produtos que a API sinaliza abaixo do limite cadastrado." tone={a.states.stock.ready ? a.lowStock ? "danger" : "success" : undefined} pending={a.states.stock.loading} icon={warningIcon} />
+            <Metric title="Produtos abaixo do mínimo" value={a.states.stock.ready ? dashboardNumber(a.lowStock) : null} note="Produtos sinalizados abaixo do limite cadastrado." tone={a.states.stock.ready ? a.lowStock ? "danger" : "success" : undefined} pending={a.states.stock.loading} icon={warningIcon} />
             <Metric title="Lotes vencendo em 30 dias" value={a.states.batches.ready ? dashboardNumber(a.expiringSoon) : null} note="Lotes ativos com validade próxima, conforme os filtros." tone={a.states.batches.ready ? a.expiringSoon ? "warning" : "success" : undefined} pending={a.states.batches.loading} icon={expiryIcon} />
             <Metric title="Requisições em análise" value={a.states.requisitions.ready ? dashboardNumber(a.pending) : null} note="Aguardando decisão do supervisor." tone={a.states.requisitions.ready ? a.pending ? "warning" : "success" : undefined} pending={a.states.requisitions.loading} icon={requisitionIcon} />
         </dl>
         <div className="grid min-w-0 gap-4">
             <ChartCard title="Concentração do valor em estoque" description={a.value.missing ? "Distribuição do saldo positivo dos lotes com preço conhecido. O total é parcial porque há lotes sem preço informado." : "Distribuição do saldo positivo dos lotes com preço conhecido por categoria."} {...a.states.categories} onRetry={onRetry}><CategoryConcentrationChart data={a.categoryValue} format={dashboardMoney} selected={filters.category} onSelect={key => onFilter("category", filters.category === key ? "" : key)} /></ChartCard>
-            <ChartCard title="Alertas por severidade" description="Alertas retornados para sua conta nesta cozinha." {...a.states.alerts} onRetry={onRetry}><DonutChart data={a.alertSeverities} /></ChartCard>
+            <ChartCard title="Alertas por severidade" description="Alertas retornados para sua conta nesta cozinha." {...a.states.alerts} onRetry={onRetry}><DonutChart data={a.alertSeverities} centerLabel="alertas" /></ChartCard>
         </div>
         <OverviewAttention analysis={a} />
     </>;
@@ -90,10 +90,10 @@ export function StockView({ analysis: a, onRetry, filters, onFilter }: ViewProps
             <Metric title="Consumo médio diário" value={a.states.parameters.ready ? a.consumption.length ? <ul className="flex flex-wrap gap-2 text-sm" aria-label="Consumo médio por unidade e por dia">{a.consumption.map(row => <li key={row.key} className="inline-flex items-baseline gap-1.5 rounded-lg bg-sidebar-active px-2.5 py-1.5"><strong className="text-brand">{dashboardNumber(row.value)}</strong><span className="text-history-muted">{row.label}</span></li>)}</ul> : "Não informado" : null} note={a.missingConsumption ? `Por unidade/dia; ${a.missingConsumption} parâmetro(s) sem consumo informado.` : "Valores apresentados por unidade, sem somar medidas diferentes."} pending={a.states.parameters.loading} />
             <Metric title="Entradas no mês atual" value={a.states.batches.ready ? dashboardNumber(a.monthlyEntries) : null} note="Lotes com entrada neste mês, dentro da seleção. O restante do painel inclui todo o período." pending={a.states.batches.loading} />
         </dl>
-        <div className={chartsClass}>
+        <div className="grid min-w-0 gap-4">
             <ChartCard title="Valor do estoque por categoria" description="Lotes com preço informado. Selecione uma categoria para filtrar." {...a.states.categories} onRetry={onRetry}><BarChart data={a.categoryValue} format={dashboardMoney} onSelect={key => onFilter("category", filters.category === key ? "" : key)} selected={filters.category} /></ChartCard>
-            <ChartCard title="Lotes por status" {...a.states.batches} onRetry={onRetry}><DonutChart data={a.batchStatuses} /></ChartCard>
             <ChartCard title="Saldo de produtos em relação ao mínimo" description="Cobertura normalizada por produto, sem somar kg, litros ou unidades." {...a.states.stock} onRetry={onRetry}><StockCoverageChart data={a.stockCoverage} /></ChartCard>
+            <ChartCard title="Lotes por status" {...a.states.batches} onRetry={onRetry}><DonutChart data={a.batchStatuses} centerLabel="lotes" /></ChartCard>
         </div>
         <ChartCard title="Entradas de lotes por mês" description="Quantidade de lotes por data de entrada, em ordem cronológica." {...a.states.batches} onRetry={onRetry}><LineChart data={a.entryMonths} /></ChartCard>
         <ChartCard title="Detalhamento de lotes" description="Validades mais próximas primeiro. Quantidades mantêm a unidade de cada produto." {...a.states.categories} onRetry={onRetry}>
@@ -149,7 +149,7 @@ export function ControlView({ analysis: a, onRetry }: ViewProps) {
             <Metric title="Total de alertas" value={a.states.alerts.ready ? dashboardNumber(a.alerts.length) : null} note="Alertas disponíveis para o supervisor conectado." pending={a.states.alerts.loading} />
         </dl>
         <div className={chartsClass}>
-            <ChartCard title="Inventários por status" {...a.states.inventories} onRetry={onRetry}><DonutChart data={a.inventoryStatuses} /></ChartCard>
+            <ChartCard title="Inventários por status" {...a.states.inventories} onRetry={onRetry}><DonutChart data={a.inventoryStatuses} centerLabel="inventários" /></ChartCard>
             <ChartCard title="Faltas e sobras por inventário" description="Divergências negativas e positivas ficam em lados opostos e são agrupadas por unidade, sem compensação entre elas." {...a.states.counts} onRetry={onRetry}><DivergingBarChart data={a.inventoryDivergences} /></ChartCard>
             <ChartCard title="Alertas por tipo" {...a.states.alerts} onRetry={onRetry}><BarChart data={a.alertTypes} /></ChartCard>
             <ChartCard title="Evolução dos alertas" description="Alertas por mês de criação, em ordem cronológica." {...a.states.alerts} onRetry={onRetry}><LineChart data={a.alertMonths} /></ChartCard>

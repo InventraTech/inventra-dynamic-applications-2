@@ -198,19 +198,31 @@ export function DivergingBarChart({ data }: { data: DashboardInventoryDivergence
     </div>;
 }
 
-export function DonutChart({ data }: { data: ChartDatum[] }) {
+export function DonutChart({ data, centerLabel = "registros" }: { data: ChartDatum[]; centerLabel?: string }) {
+    const chartId = useId().replaceAll(":", "");
     if (!data.length) return <EmptyChart />;
     const total = data.reduce((sum, row) => sum + row.value, 0);
-    return <div className="grid min-w-0 items-center gap-5 sm:grid-cols-[10rem_minmax(0,1fr)] sm:gap-8">
-        <svg className="size-36 justify-self-center sm:size-40" viewBox="0 0 42 42" aria-hidden="true">
+    const totalFontSize = total >= 1000 ? 5 : 8;
+    return <div className="@container min-w-0">
+      <div className="grid min-w-0 items-center gap-5 @lg:grid-cols-[10rem_minmax(0,1fr)] @lg:gap-8">
+        <svg className="size-36 justify-self-center @lg:size-40" viewBox="0 0 42 42" role="img" aria-labelledby={`${chartId}-title`}>
+            <title id={`${chartId}-title`}>{`${dashboardNumber(total)} ${centerLabel}: ${data.map(row => `${row.label}, ${dashboardNumber(row.value)} (${dashboardNumber(total ? row.value / total * 100 : 0)}%)`).join("; ")}`}</title>
             <circle cx="21" cy="21" r="15.9155" fill="none" strokeWidth="6" className="stroke-history-card-header" />
             {data.map((row, index) => {
                 const share = total ? row.value / total * 100 : 0;
                 const start = total ? data.slice(0, index).reduce((sum, item) => sum + item.value, 0) / total * 100 : 0;
                 return <circle key={row.key} cx="21" cy="21" r="15.9155" fill="none" strokeWidth="6" stroke={chartColor(row.key, index)} strokeDasharray={`${share} ${100 - share}`} strokeDashoffset={25 - start} />;
             })}
+            <text x="21" y="21" textAnchor="middle" fontSize={totalFontSize} className="fill-heading font-bold">{dashboardNumber(total)}</text>
+            <text x="21" y="27" textAnchor="middle" fontSize="3.2" className="fill-history-muted">{centerLabel}</text>
         </svg>
-        <ul className="grid min-w-0 gap-x-6 gap-y-3 text-sm sm:grid-cols-2 lg:grid-cols-3" aria-label="Valores do gráfico de distribuição">{data.map((row, index) => <li key={row.key} className="flex min-w-0 flex-wrap items-center gap-2"><svg className="size-3 shrink-0" viewBox="0 0 10 10" aria-hidden="true"><rect width="10" height="10" fill={chartColor(row.key, index)} /></svg><span className="min-w-0 flex-1 text-ink">{row.label}</span><strong className="text-ink">{dashboardNumber(row.value)}</strong><span className="text-history-muted">({dashboardNumber(total ? row.value / total * 100 : 0)}%)</span></li>)}</ul>
+        <ul className="flex min-w-0 flex-wrap gap-2 text-sm" aria-label="Valores do gráfico de distribuição">{data.map((row, index) => <li key={row.key} className="flex min-w-0 basis-56 grow items-center gap-2 rounded-xl bg-history-card-header px-3 py-2">
+            <svg className="size-3 shrink-0" viewBox="0 0 10 10" aria-hidden="true"><rect width="10" height="10" fill={chartColor(row.key, index)} /></svg>
+            <span className="min-w-0 flex-1 truncate text-ink" title={row.label}>{row.label}</span>
+            <strong className="shrink-0 tabular-nums text-ink">{dashboardNumber(row.value)}</strong>
+            <span className="shrink-0 tabular-nums text-history-muted">{dashboardNumber(total ? row.value / total * 100 : 0)}%</span>
+        </li>)}</ul>
+      </div>
     </div>;
 }
 
