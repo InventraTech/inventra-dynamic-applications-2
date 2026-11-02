@@ -31,8 +31,8 @@ test("período é aplicado a cada domínio e não vira filtro padrão", () => {
 test("não soma quantidades de divergência em unidades diferentes", () => {
     const a = analyzeDashboard(fixtureData(), EMPTY_DASHBOARD_FILTERS, "control", 7);
     assert.equal(a.divergences.length, 2);
-    assert.deepEqual(a.divergenceByInventory.map(row => row.value).sort(), [2, 3]);
-    assert.equal(a.divergenceByInventory.length, 2);
+    assert.deepEqual(a.inventoryDivergences.map(row => row.shortage + row.surplus).sort(), [2, 3]);
+    assert.equal(a.inventoryDivergences.length, 2);
 });
 
 test("dados de outra cozinha são descartados antes das agregações", () => {

@@ -1,10 +1,10 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import Topbar from "../../components/layout/Topbar";
-import { getSession } from "../../services/authSession";
+import { useAuth } from "../../context/auth";
 
 function Products() {
     const navigate = useNavigate();
-    const session = getSession();
+    const { session } = useAuth();
     const nameParts = (session?.user.name ?? "Usuário").trim().split(/\s+/).filter(Boolean);
     const userName = nameParts.length > 1 ? `${nameParts[0]} ${nameParts[nameParts.length - 1]}` : nameParts[0] ?? "Usuário";
     const initials = nameParts.length > 1 ? [nameParts[0], nameParts[nameParts.length - 1]] : nameParts;

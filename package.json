@@ -9,6 +9,7 @@
     "lint": "oxlint .",
     "test:accessibility": "tsc -p tests/tsconfig.json && node --experimental-strip-types --test tests/accessibility-settings.test.ts",
     "test:dashboard": "tsc -p tests/tsconfig.json && node --experimental-strip-types --test tests/dashboard.test.ts",
+    "test:requirements": "tsc -p tests/tsconfig.json && node --experimental-strip-types --test tests/requirements.test.ts",
     "dev:dashboard-validation": "vite --config tests/dashboard/vite.config.ts --open /tests/dashboard/index.html",
     "preview": "vite preview"
   },

@@ -1,6 +1,6 @@
 import Topbar from "../../components/layout/Topbar";
 import RequisitionFlow from "../../components/features/Requisitions";
-import { getSession } from "../../services/authSession";
+import { useAuth } from "../../context/auth";
 
 export type RequisitionPageMode = "list" | "create" | "edit" | "detail";
 
@@ -16,7 +16,7 @@ function getDisplayName(name: string | undefined): { name: string; initials: str
 }
 
 export default function Requisitions({ mode }: RequisitionsProps) {
-    const session = getSession();
+    const { session } = useAuth();
     const user = getDisplayName(session?.user.name);
     const role = typeof session?.user.profile === "string"
         ? session.user.profile

@@ -1,18 +1,19 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
-import AccessibilityCard from "../../components/features/Accessibility/AccessibilityCard";
-import AccessibilityHero from "../../components/features/Accessibility/AccessibilityHero";
-import AccessibilityPreview from "../../components/features/Accessibility/AccessibilityPreview";
-import ChoiceGroup from "../../components/features/Accessibility/ChoiceGroup";
-import SettingRow from "../../components/features/Accessibility/SettingRow";
+import AccessibilityCard from "../../components/features/Accessibility/AccessibilityCard/index";
+import AccessibilityHero from "../../components/features/Accessibility/AccessibilityHero/index";
+import AccessibilityPreview from "../../components/features/Accessibility/AccessibilityPreview/index";
+import ChoiceGroup from "../../components/features/Accessibility/ChoiceGroup/index";
+import SettingRow from "../../components/features/Accessibility/SettingRow/index";
 import Topbar from "../../components/layout/Topbar";
 import Toggle from "../../components/ui/Toggle";
 import Feedback from "../../components/ui/Feedback";
 import Button from "../../components/ui/Button";
 import { useAccessibility } from "../../context/accessibility";
+import { useAuth } from "../../context/auth";
 import type { AccessibilitySettings, ChoiceOption } from "../../types/accessibility";
-import { getSession } from "../../services/authSession";
+import type { AuthSession } from "../../types/auth";
 
 import fontIcon from "../../assets/icons/fonte.svg";
 import dyslexiaIcon from "../../assets/icons/fonte-dislexia.svg";
@@ -119,8 +120,7 @@ const cursorColorClasses: Record<AccessibilitySettings["cursorColor"], string> =
     white: "text-surface drop-shadow-md",
 };
 
-function getTopbarIdentity() {
-    const session = getSession();
+function getTopbarIdentity(session: AuthSession | null) {
     const nameParts = (session?.user.name ?? "Usuário").trim().split(/\s+/).filter(Boolean);
     const userName = nameParts.length > 1
         ? `${nameParts[0]} ${nameParts[nameParts.length - 1]}`
@@ -138,11 +138,12 @@ function getTopbarIdentity() {
 
 function Accessibility() {
     const { settings, storageAvailable, updateSettings, resetSettings } = useAccessibility();
+    const { session } = useAuth();
     const [preview, setPreview] = useState({ saved: settings, values: settings });
     const draft = preview.saved === settings ? preview.values : settings;
     const [savedMessage, setSavedMessage] = useState("");
-    const identity = useMemo(() => getTopbarIdentity(), []);
-    const signedIn = Boolean(getSession());
+    const identity = useMemo(() => getTopbarIdentity(session), [session]);
+    const signedIn = session !== null;
     const speechSupported = "speechSynthesis" in window;
     const hasChanges = JSON.stringify(draft) !== JSON.stringify(settings);
 

@@ -1,10 +1,10 @@
 import { Navigate } from "react-router-dom";
 
 import RegisterFeature from "../../components/features/Register";
-import { getSession } from "../../services/authSession";
+import { useAuth } from "../../context/auth";
 
 function KitchenRegistration() {
-    const session = getSession();
+    const { session } = useAuth();
     if (!session) return <Navigate to="/cadastro" replace />;
     if (session.user.kitchen) return <Navigate to="/historico" replace />;
 

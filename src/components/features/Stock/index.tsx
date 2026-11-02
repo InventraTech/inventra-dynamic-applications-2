@@ -6,17 +6,17 @@ import useStockBatches from "../../../hooks/useStockBatches";
 import Button from "../../ui/Button";
 import Feedback from "../../ui/Feedback";
 import Loading from "../../ui/Loading";
-import StockBatchDialog from "./StockBatchDialog";
-import StockConsumptionDialog from "./StockConsumptionDialog";
-import StockEntryDialog from "./StockEntryDialog";
-import StockExpiryAlert from "./StockExpiryAlert";
-import StockHero from "./StockHero";
-import StockLowStockAlert from "./StockLowStockAlert";
-import StockMetrics from "./StockMetrics";
-import StockMovementTable from "./StockMovementTable";
-import StockProductCatalog from "./StockProductCatalog";
-import StockWriteOffDialog from "./StockWriteOffDialog";
-import type { StockProductStatusFilter } from "./StockProductFilters";
+import StockBatchDialog from "./StockBatchDialog/index";
+import StockConsumptionDialog from "./StockConsumptionDialog/index";
+import StockEntryDialog from "./StockEntryDialog/index";
+import StockExpiryAlert from "./StockExpiryAlert/index";
+import StockHero from "./StockHero/index";
+import StockLowStockAlert from "./StockLowStockAlert/index";
+import StockMetrics from "./StockMetrics/index";
+import StockMovementTable from "./StockMovementTable/index";
+import StockProductCatalog from "./StockProductCatalog/index";
+import StockWriteOffDialog from "./StockWriteOffDialog/index";
+import type { StockProductStatusFilter } from "./StockProductFilters/index";
 import Mascot from "../../ui/Mascot";
 
 interface StockFlowProps {

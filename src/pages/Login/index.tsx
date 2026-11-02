@@ -1,10 +1,11 @@
 import { Navigate } from "react-router-dom";
 
 import LoginFeature from "../../components/features/Login";
-import { getSession } from "../../services/authSession";
+import { useAuth } from "../../context/auth";
 
 function Login() {
-    if (getSession()) return <Navigate to="/dashboard" replace />;
+    const { isAuthenticated } = useAuth();
+    if (isAuthenticated) return <Navigate to="/dashboard" replace />;
 
     return <LoginFeature />;
 }

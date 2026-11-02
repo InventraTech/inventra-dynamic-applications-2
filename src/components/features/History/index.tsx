@@ -1,13 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 
 import type { HistoryProps, HistoryRequest } from "../../../types/history";
-import { ApiError } from "../../../services/api";
-import { getSession, updateSessionKitchen } from "../../../services/authSession";
-import { getCurrentUser } from "../../../services/authService";
-import { getHistoryRequests } from "../../../services/history";
-import HistoryTabs from "./HistoryTabs";
-import HistorySearch from "./HistorySearch";
-import HistoryList from "./HistoryList";
+import { ApiError } from "../../../utils/apiError";
+import { useAuthServiceActions, useHistoryServiceActions } from "../../../hooks/useServiceActions";
+import { useAuth } from "../../../context/auth";
+import HistoryTabs from "./HistoryTabs/index";
+import HistorySearch from "./HistorySearch/index";
+import HistoryList from "./HistoryList/index";
 
 function getLoadError(error: unknown): string {
     if (error instanceof ApiError) return error.message;
@@ -18,7 +17,9 @@ function getLoadError(error: unknown): string {
 }
 
 function HistoryContent({ mode }: HistoryProps) {
-    const [session] = useState(() => getSession());
+    const { session } = useAuth();
+    const { getCurrentUser, updateSessionKitchen } = useAuthServiceActions();
+    const { getHistoryRequests } = useHistoryServiceActions();
     const [kitchen, setKitchen] = useState(() => session?.user.kitchen ?? null);
     const [checkingKitchen, setCheckingKitchen] = useState(() => Boolean(session && !session.user.kitchen));
     const [kitchenFailure, setKitchenFailure] = useState<string | null>(null);
@@ -56,7 +57,7 @@ function HistoryContent({ mode }: HistoryProps) {
             });
 
         return () => controller.abort();
-    }, [session, retryKey]);
+    }, [getCurrentUser, retryKey, session, updateSessionKitchen]);
 
     useEffect(() => {
         if (!kitchenId) return;
@@ -74,7 +75,7 @@ function HistoryContent({ mode }: HistoryProps) {
             });
 
         return () => controller.abort();
-    }, [mode, retryKey, kitchenId, loadKey]);
+    }, [getHistoryRequests, kitchenId, loadKey, mode, retryKey]);
 
     const filteredRequests = useMemo(() => {
         const normalizedSearch = search.trim().toLocaleLowerCase("pt-BR");

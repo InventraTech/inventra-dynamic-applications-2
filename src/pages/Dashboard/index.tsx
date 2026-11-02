@@ -4,11 +4,11 @@ import Topbar from "../../components/layout/Topbar";
 import Button from "../../components/ui/Button";
 import Feedback from "../../components/ui/Feedback";
 import Mascot from "../../components/ui/Mascot";
-import DashboardFilters from "../../components/features/Dashboard/DashboardFilters";
-import { ControlView, Overview, PartialDataNotice, PurchasesView, StockView } from "../../components/features/Dashboard/DashboardViews";
-import { panelClass } from "../../components/features/Dashboard/DashboardPrimitives";
+import DashboardFilters from "../../components/features/Dashboard/DashboardFilters/index";
+import { ControlView, Overview, PartialDataNotice, PurchasesView, StockView } from "../../components/features/Dashboard/DashboardViews/index";
+import { panelClass } from "../../components/features/Dashboard/DashboardPrimitives/index";
 import useDashboard from "../../hooks/useDashboard";
-import { getSession } from "../../services/authSession";
+import { useAuth } from "../../context/auth";
 import type { DashboardFilters as Filters, DashboardTab } from "../../types/dashboard";
 import { EMPTY_DASHBOARD_FILTERS, hasProductFilter } from "../../utils/dashboardAggregations";
 import { analyzeDashboard } from "../../utils/dashboardAnalysis";
@@ -22,13 +22,13 @@ const tabs: { id: DashboardTab; title: string; description: string }[] = [
 ];
 
 export default function Dashboard() {
-    const session = getSession();
+    const { session } = useAuth();
     // Changing the authenticated identity remounts all resource caches and local filters.
     return <DashboardContent key={`${session?.user.id}:${session?.user.kitchen?.id}:${session?.token}`} />;
 }
 
 function DashboardContent() {
-    const session = getSession();
+    const { session } = useAuth();
     const kitchen = session?.user.kitchen;
     const kitchenId = kitchen?.id ?? -1;
     const [tab, setTab] = useState<DashboardTab>("overview");

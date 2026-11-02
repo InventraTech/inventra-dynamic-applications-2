@@ -3,29 +3,29 @@ import { BrowserRouter, Navigate, Outlet, Routes, Route } from "react-router-dom
 
 import PrivateRoute from "./PrivateRoute";
 
-import Historico from "../pages/Historic";
-import Login from "../pages/Login";
-import Register from "../pages/Register";
-import KitchenRegistration from "../pages/KitchenRegistration";
-import Accessibility from "../pages/Accessibility";
-import NotFound from "../pages/NotFound";
-import TeamAccess from "../pages/TeamAccess";
-import Products from "../pages/Products";
 import RouteAccessibility from "../components/layout/RouteAccessibility";
 import ProfileLoadingSkeleton from "../components/features/Profile/ProfileLoadingSkeleton";
 import ProfileErrorBoundary from "../components/features/Profile/ProfileErrorBoundary";
-import KitchenSettingsSkeleton from "../components/features/Kitchen/KitchenSettingsSkeleton";
+import KitchenSettingsSkeleton from "../components/features/Kitchen/KitchenSettingsSkeleton/index";
 import { displayProfileRole, getProfileDisplayName, getProfileInitials } from "../components/features/Profile/profileHelpers";
-import SupplierLoadingSkeleton from "../components/features/Suppliers/SupplierLoadingSkeleton";
-import InventoryListSkeleton from "../components/features/Inventory/InventoryListSkeleton";
+import SupplierLoadingSkeleton from "../components/features/Suppliers/SupplierLoadingSkeleton/index";
+import InventoryListSkeleton from "../components/features/Inventory/InventoryListSkeleton/index";
 import PublicLayout from "./PublicLayout";
-import { getSession } from "../services/authSession";
+import { useAuth } from "../context/auth";
 import Topbar from "../components/layout/Topbar";
 
-const ProductCatalog = lazy(() => import("../components/features/Products/ProductCatalog"));
-const ProductEditor = lazy(() => import("../components/features/Products/ProductEditor"));
-const ProductDetail = lazy(() => import("../components/features/Products/ProductDetail"));
-const ProductReferenceManagement = lazy(() => import("../components/features/Products/ProductReferenceManagement"));
+const Historico = lazy(() => import("../pages/Historic"));
+const Login = lazy(() => import("../pages/Login"));
+const Register = lazy(() => import("../pages/Register"));
+const KitchenRegistration = lazy(() => import("../pages/KitchenRegistration"));
+const Accessibility = lazy(() => import("../pages/Accessibility"));
+const NotFound = lazy(() => import("../pages/NotFound"));
+const TeamAccess = lazy(() => import("../pages/TeamAccess"));
+const Products = lazy(() => import("../pages/Products"));
+const ProductCatalog = lazy(() => import("../components/features/Products/ProductCatalog/index"));
+const ProductEditor = lazy(() => import("../components/features/Products/ProductEditor/index"));
+const ProductDetail = lazy(() => import("../components/features/Products/ProductDetail/index"));
+const ProductReferenceManagement = lazy(() => import("../components/features/Products/ProductReferenceManagement/index"));
 const Profile = lazy(() => import("../pages/Profile"));
 const Requisitions = lazy(() => import("../pages/Requisitions"));
 const Stock = lazy(() => import("../pages/Stock"));
@@ -38,6 +38,19 @@ function DashboardRouteLoading() {
     return <main id="conteudo-principal" tabIndex={-1} className="min-w-0 p-4 outline-none sm:p-6" aria-busy="true"><h1 className="text-2xl font-bold text-heading">Painel</h1><p role="status" className="mt-4 text-history-muted">Carregando painel gerencial…</p><div className="mt-5 min-h-40 rounded-3xl bg-surface shadow-history-card motion-safe:animate-pulse" aria-hidden="true" /></main>;
 }
 
+function PageRouteLoading({ page }: { page: string }) {
+    return (
+        <main id="conteudo-principal" tabIndex={-1} className="min-w-0 p-4 outline-none sm:p-6" aria-busy="true">
+            <h1 className="sr-only">{page}</h1>
+            <p className="text-history-muted" role="status" aria-live="polite">Carregando {page.toLocaleLowerCase("pt-BR")}…</p>
+        </main>
+    );
+}
+
+function withPageLoading(element: ReactNode, page: string) {
+    return <Suspense fallback={<PageRouteLoading page={page} />}>{element}</Suspense>;
+}
+
 function ProductRouteLoading() {
     return <section className="flex min-w-0 flex-col gap-4 px-6 pb-8 pt-6 max-md:px-4 max-sm:px-3" aria-busy="true"><p className="sr-only" role="status" aria-live="polite">Carregando tela de produtos…</p><div className="h-12 w-full rounded-2xl bg-surface motion-safe:animate-pulse" aria-hidden="true" /><div className="min-h-72 rounded-3xl bg-surface shadow-history-card motion-safe:animate-pulse" aria-hidden="true" /></section>;
 }
@@ -47,7 +60,8 @@ function withProductLoading(element: ReactNode) {
 }
 
 function ProfileRouteLoading() {
-    const user = getSession()?.user;
+    const { session } = useAuth();
+    const user = session?.user;
     const profile = user?.profile;
     const userName = getProfileDisplayName(user?.name ?? "Usuário");
 
@@ -110,7 +124,7 @@ function withStockLoading(element: ReactNode) {
 }
 
 function KitchenRouteLoading() {
-    const session = getSession();
+    const { session } = useAuth();
     const nameParts = (session?.user.name ?? "Usuário").trim().split(/\s+/).filter(Boolean);
     const initials = nameParts.length > 1 ? [nameParts[0], nameParts.at(-1)] : nameParts;
     const userInitials = initials.map((part) => [...(part ?? "")][0]?.toLocaleUpperCase("pt-BR") ?? "").join("") || "IN";
@@ -131,7 +145,8 @@ function withKitchenLoading(element: ReactNode) {
 }
 
 function SupplierRouteLoading() {
-    const user = getSession()?.user;
+    const { session } = useAuth();
+    const user = session?.user;
     const profile = user?.profile;
     const userName = getProfileDisplayName(user?.name ?? "Usuário");
     const accessType = typeof profile === "string" ? profile : profile?.accessType;
@@ -166,7 +181,8 @@ function withInventoryLoading(element: ReactNode) {
 }
 
 function SupervisorOnlyRoute() {
-    const profile = getSession()?.user.profile;
+    const { session } = useAuth();
+    const profile = session?.user.profile;
     const accessType = typeof profile === "string" ? profile : profile?.accessType;
 
     return accessType?.toLocaleUpperCase("pt-BR") === "SUPERVISOR"
@@ -175,7 +191,8 @@ function SupervisorOnlyRoute() {
 }
 
 function RequisitionAccessRoute() {
-    const profile = getSession()?.user.profile;
+    const { session } = useAuth();
+    const profile = session?.user.profile;
     const accessType = typeof profile === "string" ? profile : profile?.accessType;
     const allowed = ["SUPERVISOR", "COMPRADOR"].includes(accessType?.toLocaleUpperCase("pt-BR") ?? "");
 
@@ -189,16 +206,16 @@ export default function AppRoutes() {
             <Routes>
                 {/* Páginas Públicas */}
                 <Route element={<PublicLayout />}>
-                    <Route path="/" element={<Login />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/cadastro" element={<Register />} />
-                    <Route path="/cadastro/cozinha" element={<KitchenRegistration />} />
+                    <Route path="/" element={withPageLoading(<Login />, "Login")} />
+                    <Route path="/login" element={withPageLoading(<Login />, "Login")} />
+                    <Route path="/cadastro" element={withPageLoading(<Register />, "Cadastro")} />
+                    <Route path="/cadastro/cozinha" element={withPageLoading(<KitchenRegistration />, "Cadastro da cozinha")} />
                     <Route path="/accessibilityconfig" element={<Navigate to="/acessibilidade" replace />} />
-                    <Route path="*" element={<NotFound />} />
+                    <Route path="*" element={withPageLoading(<NotFound />, "Página não encontrada")} />
                 </Route>
 
                 <Route element={<PrivateRoute allowPublic />}>
-                    <Route path="/acessibilidade" element={<Accessibility />} />
+                    <Route path="/acessibilidade" element={withPageLoading(<Accessibility />, "Acessibilidade")} />
                 </Route>
 
                 {/* Páginas Privadas */}
@@ -207,8 +224,8 @@ export default function AppRoutes() {
                     <Route path="/dashboard" element={<Suspense fallback={<DashboardRouteLoading />}><Dashboard /></Suspense>} />
                     <Route path="/perfil" element={<ProfileErrorBoundary>{withProfileLoading(<Profile />)}</ProfileErrorBoundary>} />
                     <Route path="/historico" element={<Navigate to="/historico/retiradas" replace />} />
-                    <Route path="/historico/retiradas" element={<Historico mode="withdrawal" />} />
-                    <Route path="/historico/solicitacoes" element={<Historico mode="purchase" />} />
+                    <Route path="/historico/retiradas" element={withPageLoading(<Historico mode="withdrawal" />, "Histórico de retiradas")} />
+                    <Route path="/historico/solicitacoes" element={withPageLoading(<Historico mode="purchase" />, "Histórico de solicitações")} />
                     <Route element={<RequisitionAccessRoute />}>
                         <Route path="/requisicoes" element={withRequisitionLoading(<Requisitions mode="list" />)} />
                         <Route path="/requisicoes/nova" element={withRequisitionLoading(<Requisitions mode="create" />)} />
@@ -221,8 +238,8 @@ export default function AppRoutes() {
                     <Route path="/cozinha" element={withKitchenLoading(<Kitchen />)} />
                     <Route path="/fornecedores" element={withSupplierLoading(<Suppliers />)} />
                     <Route element={<SupervisorOnlyRoute />}>
-                        <Route path="/equipe-acessos" element={<TeamAccess />} />
-                        <Route path="/produtos" element={<Products />}>
+                        <Route path="/equipe-acessos" element={withPageLoading(<TeamAccess />, "Equipe e acessos")} />
+                        <Route path="/produtos" element={withPageLoading(<Products />, "Produtos")}>
                             <Route index element={withProductLoading(<ProductCatalog />)} />
                             <Route path="novo" element={withProductLoading(<ProductEditor mode="create" />)} />
                             <Route path="categorias-unidades" element={withProductLoading(<ProductReferenceManagement />)} />
@@ -232,6 +249,9 @@ export default function AppRoutes() {
                     </Route>
                 </Route>
             </Routes>
+            <footer className="sr-only" aria-label="Rodapé do Inventra">
+                Fim da página. Aplicação Inventra.
+            </footer>
         </BrowserRouter>
     )
 }

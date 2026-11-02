@@ -1,23 +1,23 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 
 import type { UserAccount } from "../../../types/auth";
-import { getCurrentUser } from "../../../services/authService";
-import { updateSessionUser } from "../../../services/authSession";
+import { useProfileServiceActions } from "../../../hooks/useServiceActions";
 import Button from "../../ui/Button";
 import Feedback from "../../ui/Feedback";
-import ProfileAccessibilityCard from "./ProfileAccessibilityCard";
-import ProfileAccountCard from "./ProfileAccountCard";
+import ProfileAccessibilityCard from "./ProfileAccessibilityCard/index";
+import ProfileAccountCard from "./ProfileAccountCard/index";
 import ProfileLoadingSkeleton from "./ProfileLoadingSkeleton";
-import ProfilePasswordCard from "./ProfilePasswordCard";
-import ProfilePasswordTip from "./ProfilePasswordTip";
-import ProfilePersonalCard from "./ProfilePersonalCard";
+import ProfilePasswordCard from "./ProfilePasswordCard/index";
+import ProfilePasswordTip from "./ProfilePasswordTip/index";
+import ProfilePersonalCard from "./ProfilePersonalCard/index";
 import { getProfileErrorMessage } from "./profileHelpers";
 
 interface ProfileProps {
     onUserUpdated: (user: UserAccount) => void;
 }
 
-function Profile({ onUserUpdated }: ProfileProps) {
+function ProfileContent({ onUserUpdated }: ProfileProps) {
+    const { getCurrentUser, updateSessionUser } = useProfileServiceActions();
     const [user, setUser] = useState<UserAccount | null>(null);
     const [loading, setLoading] = useState(true);
     const [loadError, setLoadError] = useState<string | null>(null);
@@ -54,7 +54,7 @@ function Profile({ onUserUpdated }: ProfileProps) {
             window.clearTimeout(timeoutId);
             controller.abort();
         };
-    }, [onUserUpdated, reloadKey]);
+    }, [getCurrentUser, onUserUpdated, reloadKey, updateSessionUser]);
 
     if (loading) return <ProfileLoadingSkeleton />;
 
@@ -90,4 +90,5 @@ function Profile({ onUserUpdated }: ProfileProps) {
     );
 }
 
-export default Profile;
+// The page retains this callback while updating its header; memo prevents the profile tree from re-rendering for that header-only update.
+export default memo(ProfileContent);

@@ -16,8 +16,8 @@ import kitchenIcon from "../assets/icons/cozinha.svg";
 import teamIcon from "../assets/icons/equipe-linha.svg";
 import settingsIcon from "../assets/icons/config.svg";
 import accessibilityIcon from "../assets/icons/acessibilidade.svg";
-import { getSession } from "../services/authSession";
 import { readSidebarFixedPreference, saveSidebarFixedPreference } from "../utils/sidebarPreferences";
+import { useAuth } from "../context/auth";
 
 interface PrivateRouteProps { allowPublic?: boolean }
 
@@ -46,13 +46,14 @@ const menuSections: MenuSection[] = [
 function PrivateRoute({ allowPublic = false }: PrivateRouteProps) {
     const [fixed, setFixedState] = useState(readSidebarFixedPreference);
     const location = useLocation();
+    const { session } = useAuth();
 
     function setFixed(value: boolean) {
         setFixedState(value);
         saveSidebarFixedPreference(value);
     }
 
-    if (!getSession()) {
+    if (!session) {
         if (!allowPublic) return <Navigate to="/login" replace state={{ from: location }} />;
         return <><AccessibilityTools /><Outlet /></>;
     }

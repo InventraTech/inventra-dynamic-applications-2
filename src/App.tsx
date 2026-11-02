@@ -1,12 +1,15 @@
 import AppRoutes from "./routes/AppRoutes";
 
 import { AccessibilityProvider } from "./context/AccessibilityContext";
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   return (
-    <AccessibilityProvider>
-      <AppRoutes />
-    </AccessibilityProvider>
+    <AuthProvider>
+      <AccessibilityProvider>
+        <AppRoutes />
+      </AccessibilityProvider>
+    </AuthProvider>
   )
 }
 

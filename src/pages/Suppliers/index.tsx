@@ -1,10 +1,11 @@
-import SupplierManagement from "../../components/features/Suppliers/SupplierManagement";
+import SupplierManagement from "../../components/features/Suppliers/SupplierManagement/index";
 import Topbar from "../../components/layout/Topbar";
-import { getSession } from "../../services/authSession";
+import { useAuth } from "../../context/auth";
 import { displayProfileRole, getProfileDisplayName, getProfileInitials } from "../../components/features/Profile/profileHelpers";
 
 function Suppliers() {
-    const user = getSession()?.user;
+    const { session } = useAuth();
+    const user = session?.user;
     const profile = user?.profile;
     const accessType = typeof profile === "string" ? profile : profile?.accessType;
     const userName = getProfileDisplayName(user?.name ?? "Usuário");

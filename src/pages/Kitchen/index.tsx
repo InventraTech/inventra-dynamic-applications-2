@@ -1,16 +1,16 @@
 import Button from "../../components/ui/Button";
 import Feedback from "../../components/ui/Feedback";
 import Topbar from "../../components/layout/Topbar";
-import KitchenAboutCard from "../../components/features/Kitchen/KitchenAboutCard";
-import KitchenDetailsForm from "../../components/features/Kitchen/KitchenDetailsForm";
-import KitchenEntryCard from "../../components/features/Kitchen/KitchenEntryCard";
-import KitchenHero from "../../components/features/Kitchen/KitchenHero";
-import KitchenSafetyCard from "../../components/features/Kitchen/KitchenSafetyCard";
-import KitchenSettingsSkeleton from "../../components/features/Kitchen/KitchenSettingsSkeleton";
-import KitchenTeamCard from "../../components/features/Kitchen/KitchenTeamCard";
+import KitchenAboutCard from "../../components/features/Kitchen/KitchenAboutCard/index";
+import KitchenDetailsForm from "../../components/features/Kitchen/KitchenDetailsForm/index";
+import KitchenEntryCard from "../../components/features/Kitchen/KitchenEntryCard/index";
+import KitchenHero from "../../components/features/Kitchen/KitchenHero/index";
+import KitchenSafetyCard from "../../components/features/Kitchen/KitchenSafetyCard/index";
+import KitchenSettingsSkeleton from "../../components/features/Kitchen/KitchenSettingsSkeleton/index";
+import KitchenTeamCard from "../../components/features/Kitchen/KitchenTeamCard/index";
 import Mascot from "../../components/ui/Mascot";
-import { getSession } from "../../services/authSession";
 import useKitchenSettings from "../../hooks/useKitchenSettings";
+import { useAuth } from "../../context/auth";
 
 function getUserLabel(name: string | undefined): { name: string; initials: string } {
     const parts = (name ?? "Usuário").trim().split(/\s+/).filter(Boolean);
@@ -28,7 +28,7 @@ function getRoleLabel(profile: string | { name?: string; accessType?: string } |
 }
 
 function Kitchen() {
-    const session = getSession();
+    const { session } = useAuth();
     const profile = session?.user.profile;
     const accessType = typeof profile === "string" ? profile : profile?.accessType;
     const canManage = accessType?.toLocaleUpperCase("pt-BR") === "SUPERVISOR";

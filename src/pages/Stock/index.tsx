@@ -1,7 +1,7 @@
 import Topbar from "../../components/layout/Topbar";
 import StockFlow from "../../components/features/Stock";
-import StockAccessDenied from "../../components/features/Stock/StockAccessDenied";
-import { getSession } from "../../services/authSession";
+import StockAccessDenied from "../../components/features/Stock/StockAccessDenied/index";
+import { useAuth } from "../../context/auth";
 
 function getDisplayName(name: string | undefined): { name: string; initials: string } {
     const parts = (name ?? "Usuário").trim().split(/\s+/).filter(Boolean);
@@ -11,7 +11,7 @@ function getDisplayName(name: string | undefined): { name: string; initials: str
 }
 
 export default function Stock() {
-    const session = getSession();
+    const { session } = useAuth();
     const user = getDisplayName(session?.user.name);
     const role = typeof session?.user.profile === "string"
         ? session.user.profile
