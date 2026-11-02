@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ApiError } from "../services/api";
+import { ApiError } from "../utils/apiError";
 import { listSuppliers } from "../services/suppliers";
 import type { Supplier } from "../types/suppliers";
 

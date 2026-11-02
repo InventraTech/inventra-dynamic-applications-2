@@ -1,10 +1,11 @@
 import { Navigate } from "react-router-dom";
 
 import RegisterFeature from "../../components/features/Register";
-import { getSession } from "../../services/authSession";
+import { useAuth } from "../../context/auth";
 
 function Register() {
-    if (getSession()) return <Navigate to="/home" replace />;
+    const { isAuthenticated } = useAuth();
+    if (isAuthenticated) return <Navigate to="/home" replace />;
 
     return <RegisterFeature />;
 }

@@ -2,14 +2,15 @@ import { useCallback, useState } from "react";
 
 import ProfileContent from "../../components/features/Profile";
 import Topbar from "../../components/layout/Topbar";
-import { getSession } from "../../services/authSession";
+import { useAuth } from "../../context/auth";
 import type { UserAccount } from "../../types/auth";
 import { displayProfileRole, getProfileDisplayName, getProfileInitials } from "../../components/features/Profile/profileHelpers";
 
 function Profile() {
     const [user, setUser] = useState<UserAccount | null>(null);
+    const { session } = useAuth();
     const handleUserUpdated = useCallback((updatedUser: UserAccount) => setUser(updatedUser), []);
-    const sessionUser = getSession()?.user;
+    const sessionUser = session?.user;
     const profile = user?.profile ?? sessionUser?.profile;
     const userRole = displayProfileRole(typeof profile === "string" ? profile : profile?.accessType);
     const userName = getProfileDisplayName(user?.name ?? sessionUser?.name ?? "Usuário");

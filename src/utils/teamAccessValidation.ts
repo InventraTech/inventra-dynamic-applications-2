@@ -1,5 +1,16 @@
 import type { TeamUserFormErrors, TeamUserFormValues } from "../types/teamAccess";
 
+export interface OptionalAccessReasonValidation {
+    value: string | undefined;
+    error: string | null;
+}
+
+export function validateOptionalAccessReason(reason: string): OptionalAccessReasonValidation {
+    const value = reason.trim();
+    if (value.length > 255) return { value: undefined, error: "O motivo deve ter até 255 caracteres." };
+    return { value: value || undefined, error: null };
+}
+
 export function validateTeamUser(values: TeamUserFormValues, isEditing: boolean): TeamUserFormErrors {
     const errors: TeamUserFormErrors = {};
     const name = values.name.trim();

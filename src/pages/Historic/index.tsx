@@ -1,12 +1,10 @@
-import { useState } from "react";
-
 import HistoryContent from "../../components/features/History";
 import Topbar from "../../components/layout/Topbar";
 import type { HistoryProps } from "../../types/history";
-import { getSession } from "../../services/authSession";
+import { useAuth } from "../../context/auth";
 
 function Historico({ mode }: HistoryProps) {
-    const [session] = useState(() => getSession());
+    const { session } = useAuth();
     const nameParts = (session?.user.name ?? "Usuário").trim().split(/\s+/).filter(Boolean);
     const userName = nameParts.length > 1
         ? `${nameParts[0]} ${nameParts[nameParts.length - 1]}`

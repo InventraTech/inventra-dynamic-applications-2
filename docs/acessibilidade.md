@@ -51,12 +51,14 @@ Os componentes usam Tailwind. CSS global é reservado aos temas, preferências d
 npm run build
 npm run lint
 npm run test:accessibility
+npm run test:dashboard
+npm run test:requirements
 ```
 
-O último comando verifica tipos dos testes e executa cinco casos de migração, descarte de valores inválidos e preservação de preferências. Precisa de Node.js com suporte a `--experimental-strip-types`.
+`test:accessibility` verifica cinco casos de migração e validação das preferências. `test:dashboard` cobre agregações e estados parciais do painel. `test:requirements` verifica migração e descarte seguro de sessões, validação de login e parâmetros da cozinha. Os comandos de teste precisam de Node.js com suporte a `--experimental-strip-types`.
 
 Com o Vite aberto, `/tests/accessibility/index.html` permite conferir Topbar, Sidebar, ferramentas, avisos e cartões reais de histórico com dados fictícios de validação. Essa página fica fora do código de entrada da aplicação, não cria sessão e não consulta o back-end; não entra no build de produção.
 
-Na implementação foram conferidos login, cadastro, configurações e componentes compartilhados entre 320 e 1440 pixels, incluindo escala de texto de 200%, fonte alternativa e espaçamento máximo. Foram conferidos erros associados a campos e foco no primeiro campo inválido, Escape e retorno do foco do menu, e controles de leitura em voz. O uso com NVDA/VoiceOver, diferenças entre navegadores e a qualidade da tradução do serviço externo continuam sendo validações específicas de apresentação; não se declara certificação WCAG completa.
+O registro anterior cobre login, cadastro, configurações e componentes compartilhados entre 320 e 1440 pixels, com escala de texto de 200%, fonte alternativa e espaçamento máximo; também registra erros associados a campos, foco no primeiro campo inválido, Escape e retorno do foco do menu. Esses registros não substituem a repetição da bateria em cada tela alterada. O uso com NVDA/VoiceOver, diferenças entre navegadores e a qualidade da tradução do serviço externo continuam sendo validações específicas de apresentação; não se declara certificação WCAG completa. Nesta revisão, build, lint e os três conjuntos de testes automatizados foram executados; a inspeção visual completa em todos os breakpoints e leitor de tela real permanece pendente.
 
 Referências: [reflow](https://www.w3.org/WAI/WCAG21/Understanding/reflow.html), [espaçamento de texto](https://www.w3.org/WAI/WCAG21/Understanding/text-spacing.html), [contraste mínimo](https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html) e [temas com Tailwind](https://tailwindcss.com/docs/dark-mode).

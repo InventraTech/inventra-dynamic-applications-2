@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { getSession } from "../services/authSession";
+import { useAuth } from "../context/auth";
 import { getKitchenStock } from "../services/stock";
 import { getKitchenRequisitions, getRequisitionItems } from "../services/requisitions";
 import { getProductKitchenParameters } from "../services/products";
@@ -23,7 +23,7 @@ function useResource<T>(key: string | null, revision: number, loader: (signal: A
 }
 
 export default function useDashboard(tab: DashboardTab, productFilterActive: boolean) {
-    const session = getSession();
+    const { session } = useAuth();
     const kitchenId = session?.user.kitchen?.id ?? null;
     const profile = session?.user.profile;
     const accessType = typeof profile === "string" ? profile : profile?.accessType;
@@ -34,6 +34,7 @@ export default function useDashboard(tab: DashboardTab, productFilterActive: boo
     const [visited, setVisited] = useState<Set<DashboardTab>>(() => new Set([tab]));
     const [itemsRequested, setItemsRequested] = useState(false);
 
+    // Stable loaders are effect dependencies in useResource; they prevent refetches caused only by parent renders.
     const stockLoader = useCallback((signal: AbortSignal) => getKitchenStock(kitchenId!, {}, signal), [kitchenId]);
     const batchLoader = useCallback((signal: AbortSignal) => getDashboardBatches(kitchenId!, signal), [kitchenId]);
     const requisitionLoader = useCallback((signal: AbortSignal) => getKitchenRequisitions(kitchenId!, signal), [kitchenId]);
@@ -44,12 +45,14 @@ export default function useDashboard(tab: DashboardTab, productFilterActive: boo
     const alerts = useResource(scope, revision, alertLoader);
     const itemLoader = useCallback((signal: AbortSignal) => getRelatedRecords((requisitions.data ?? []).filter(row => row.kitchen.id === kitchenId).map(row => row.id), getRequisitionItems, signal), [requisitions.data, kitchenId]);
     const items = useResource(scope && requisitions.data && (visited.has("purchases") || itemsRequested || productFilterActive) ? scope : null, revision, itemLoader);
+    // Deduplication touches data from several endpoints and stays cached until one source changes.
     const referencedIds = useMemo(() => [...new Set([
         ...(alerts.data ?? []).flatMap(row => row.product ? [row.product.id] : []),
         ...Object.values(items.data?.records ?? {}).flat().map(row => row.product.id),
     ])], [alerts.data, items.data]);
     const productLoader = useCallback((signal: AbortSignal) => getDashboardProducts(stock.data ?? [], batches.data ?? [], signal, referencedIds), [stock.data, batches.data, referencedIds]);
     const products = useResource(scope && stock.data && batches.data ? scope : null, revision, productLoader);
+    // This list feeds multiple endpoint loaders and is reused while product records are unchanged.
     const productIds = useMemo(() => products.data ? Object.keys(products.data.records).map(Number) : [], [products.data]);
     const parameterLoader = useCallback((signal: AbortSignal) => getRelatedRecords(productIds, getProductKitchenParameters, signal), [productIds]);
     const parameters = useResource(scope && products.data && visited.has("stock") ? scope : null, revision, parameterLoader);

@@ -9,6 +9,7 @@ interface DialogProps extends Omit<ComponentPropsWithoutRef<"dialog">, "open" | 
 
 export default function Dialog({ open, onOpenChange, children, className = "", placement = "center", ...props }: DialogProps) {
     const dialogRef = useRef<HTMLDialogElement>(null);
+    const returnFocusRef = useRef<HTMLElement | null>(null);
     const placementClasses = placement === "right"
         ? "my-0 ml-auto mr-0 h-dvh max-h-dvh w-full max-w-2xl overflow-hidden rounded-l-3xl rounded-r-none border-r-0"
         : placement === "top"
@@ -18,10 +19,23 @@ export default function Dialog({ open, onOpenChange, children, className = "", p
     useEffect(() => {
         const dialog = dialogRef.current;
         if (!dialog) return;
-        if (open && !dialog.open) dialog.showModal();
-        if (!open && dialog.open) dialog.close();
-        return () => { if (dialog.open) dialog.close(); };
+        if (open && !dialog.open) {
+            const activeElement = document.activeElement;
+            returnFocusRef.current = activeElement instanceof HTMLElement ? activeElement : null;
+            dialog.showModal();
+        }
+        if (!open && dialog.open) {
+            dialog.close();
+            requestAnimationFrame(() => {
+                if (returnFocusRef.current?.isConnected) returnFocusRef.current.focus();
+                returnFocusRef.current = null;
+            });
+        }
     }, [open]);
+
+    useEffect(() => () => {
+        if (dialogRef.current?.open) dialogRef.current.close();
+    }, []);
 
     return (
         <dialog

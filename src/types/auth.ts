@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 export interface ApiKitchen {
     id: number;
     name: string;
@@ -48,7 +50,26 @@ export interface RegisterRequest {
 }
 
 export interface AuthSession {
+    _versao: 1;
     token: string;
     expiresAt: number;
     user: AuthUser;
+}
+
+export interface AuthState {
+    session: AuthSession | null;
+}
+
+export type AuthAction =
+    | { type: "session/synced"; session: AuthSession | null }
+    | { type: "session/signed-out" };
+
+export interface AuthContextType extends AuthState {
+    isAuthenticated: boolean;
+    refreshSession: () => void;
+    signOut: () => void;
+}
+
+export interface AuthProviderProps {
+    children: ReactNode;
 }

@@ -1,9 +1,9 @@
 import Topbar from "../../components/layout/Topbar";
 import TeamAccessContent from "../../components/features/TeamAccess";
-import { getSession } from "../../services/authSession";
+import { useAuth } from "../../context/auth";
 
 function TeamAccess() {
-    const session = getSession();
+    const { session } = useAuth();
     const nameParts = (session?.user.name ?? "Usuário").trim().split(/\s+/).filter(Boolean);
     const userName = nameParts.length > 1 ? `${nameParts[0]} ${nameParts[nameParts.length - 1]}` : nameParts[0] ?? "Usuário";
     const initials = nameParts.length > 1 ? [nameParts[0], nameParts[nameParts.length - 1]] : nameParts;

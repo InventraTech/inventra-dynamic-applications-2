@@ -1,6 +1,6 @@
-import RegisterBrandPanel from "./RegisterBrandPanel";
-import RegisterForm from "./RegisterForm";
-import KitchenSetupForm from "./KitchenSetupForm";
+import RegisterBrandPanel from "./RegisterBrandPanel/index";
+import RegisterForm from "./RegisterForm/index";
+import KitchenSetupForm from "./KitchenSetupForm/index";
 import AccessibilityLink from "../../ui/AccessibilityLink";
 
 interface RegisterFeatureProps {

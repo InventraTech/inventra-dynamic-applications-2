@@ -1,4 +1,4 @@
-import { ApiError } from "../../../services/api";
+import { ApiError } from "../../../utils/apiError";
 
 export function getProfileErrorMessage(error: unknown, fallback: string): string {
     if (error instanceof ApiError) return error.message;

@@ -3,19 +3,19 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import Button from "../../ui/Button";
 import Feedback from "../../ui/Feedback";
 import Loading from "../../ui/Loading";
-import RequisitionList from "./RequisitionList";
-import RequisitionMetrics from "./RequisitionMetrics";
-import { getKitchenRequisitions } from "../../../services/requisitions";
+import RequisitionList from "./RequisitionList/index";
+import RequisitionMetrics from "./RequisitionMetrics/index";
+import { useRequisitionServiceActions } from "../../../hooks/useServiceActions";
 import type { Requisition, RequisitionListFilters } from "../../../types/requisitions";
 import type { RequisitionPageMode } from "../../../pages/Requisitions";
-import RequisitionFilters from "./RequisitionFilters";
-import RequisitionCreateForm from "./RequisitionCreateForm";
+import RequisitionFilters from "./RequisitionFilters/index";
+import RequisitionCreateForm from "./RequisitionCreateForm/index";
 import useRequisitionDetail from "../../../hooks/useRequisitionDetail";
-import RequisitionDetailSkeleton from "./RequisitionDetailSkeleton";
-import RequisitionDetailView from "./RequisitionDetailView";
-import RequisitionComposer from "./RequisitionComposer";
-import RequisitionTypeGuidance from "./RequisitionTypeGuidance";
-import RequisitionListHeader from "./RequisitionListHeader";
+import RequisitionDetailSkeleton from "./RequisitionDetailSkeleton/index";
+import RequisitionDetailView from "./RequisitionDetailView/index";
+import RequisitionComposer from "./RequisitionComposer/index";
+import RequisitionTypeGuidance from "./RequisitionTypeGuidance/index";
+import RequisitionListHeader from "./RequisitionListHeader/index";
 
 interface RequisitionFlowProps {
     mode: RequisitionPageMode;
@@ -34,6 +34,7 @@ interface ListState {
 }
 
 export default function RequisitionFlow({ mode, kitchenId, kitchenName, userId, userName, userPhotoUrl, canReview }: RequisitionFlowProps) {
+    const { getKitchenRequisitions } = useRequisitionServiceActions();
     const [listState, setListState] = useState<ListState>({ loading: true, error: null, requisitions: [] });
     const [filters, setFilters] = useState<RequisitionListFilters>({ status: "ALL", type: "ALL", search: "" });
     const [page, setPage] = useState(1);
@@ -62,7 +63,7 @@ export default function RequisitionFlow({ mode, kitchenId, kitchenName, userId, 
             });
 
         return () => controller.abort();
-    }, [kitchenId, mode]);
+    }, [getKitchenRequisitions, kitchenId, mode]);
 
     const normalizedSearch = filters.search.trim().toLocaleLowerCase("pt-BR");
     const visibleRequisitions = listState.requisitions.filter((requisition) => {

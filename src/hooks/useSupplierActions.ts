@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ApiError } from "../services/api";
+import { ApiError } from "../utils/apiError";
 import {
     createSupplier,
     removeSupplierPhoto,

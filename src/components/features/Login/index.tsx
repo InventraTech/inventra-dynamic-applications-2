@@ -1,5 +1,5 @@
-import LoginBrandPanel from "./LoginBrandPanel";
-import LoginForm from "./LoginForm";
+import LoginBrandPanel from "./LoginBrandPanel/index";
+import LoginForm from "./LoginForm/index";
 import AccessibilityLink from "../../ui/AccessibilityLink";
 
 function LoginFeature() {

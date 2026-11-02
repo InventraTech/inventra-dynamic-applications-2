@@ -1,8 +1,8 @@
 import Topbar from "../../components/layout/Topbar";
-import InventoryDetail from "../../components/features/Inventory/InventoryDetail";
-import InventoryList from "../../components/features/Inventory/InventoryList";
+import InventoryDetail from "../../components/features/Inventory/InventoryDetail/index";
+import InventoryList from "../../components/features/Inventory/InventoryList/index";
 import { Link, Navigate, useParams } from "react-router-dom";
-import { getSession } from "../../services/authSession";
+import { useAuth } from "../../context/auth";
 
 function getUserDisplay(name: string | undefined) {
     const parts = (name ?? "Usuário").trim().split(/\s+/).filter(Boolean);
@@ -15,9 +15,9 @@ function getUserDisplay(name: string | undefined) {
 export default function InventoryPage() {
     const { inventoryId: inventoryIdParam } = useParams<{ inventoryId: string }>();
     const inventoryId = inventoryIdParam === undefined ? null : Number(inventoryIdParam);
+    const { session } = useAuth();
     if (inventoryIdParam !== undefined && (!Number.isInteger(inventoryId) || (inventoryId ?? 0) <= 0)) return <Navigate to="/inventarios" replace />;
 
-    const session = getSession();
     const user = session?.user;
     const profile = user?.profile;
     const role = typeof profile === "string" ? profile : profile?.accessType ?? "Membro";

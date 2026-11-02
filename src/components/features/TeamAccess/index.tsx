@@ -2,29 +2,17 @@ import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react"
 import { Link } from "react-router-dom";
 import type { AuthUser } from "../../../types/auth";
 import type { AccessRequestStatus, CreateTeamUserRequest, KitchenAccessRequest, TeamProfile, TeamUser, TeamUserFormValues } from "../../../types/teamAccess";
-import { ApiError } from "../../../services/api";
-import { updateSessionKitchen } from "../../../services/authSession";
-import { getCurrentUser } from "../../../services/authService";
-import {
-    activateTeamUser,
-    approveKitchenAccess,
-    createTeamUser,
-    deactivateTeamUser,
-    getKitchenAccessRequests,
-    getTeamProfiles,
-    getTeamUsers,
-    rejectKitchenAccess,
-    updateTeamUser,
-} from "../../../services/teamAccess";
+import { ApiError } from "../../../utils/apiError";
+import { useAuthServiceActions, useTeamAccessServiceActions } from "../../../hooks/useServiceActions";
 import Button from "../../ui/Button";
 import Feedback from "../../ui/Feedback";
 import SearchField from "../../ui/SearchField";
-import TeamSummary from "./TeamSummary";
-import TeamProfileSummary from "./TeamProfileSummary";
-import TeamUserTable from "./TeamUserTable";
-import AccessRequestList from "./AccessRequestList";
-import TeamLoadingSkeleton from "./TeamLoadingSkeleton";
-import { RejectRequestDialog, UserAccountDialog, UserStatusDialog } from "./TeamDialogs";
+import TeamSummary from "./TeamSummary/index";
+import TeamProfileSummary from "./TeamProfileSummary/index";
+import TeamUserTable from "./TeamUserTable/index";
+import AccessRequestList from "./AccessRequestList/index";
+import TeamLoadingSkeleton from "./TeamLoadingSkeleton/index";
+import { RejectRequestDialog, UserAccountDialog, UserStatusDialog } from "./TeamDialogs/index";
 import usersIcon from "../../../assets/icons/usuarios.svg";
 import accessRequestIcon from "../../../assets/icons/pedido-acesso.svg";
 import addIcon from "../../../assets/icons/adicionar.svg";
@@ -71,6 +59,8 @@ function FilterButton({ selected, children, onClick }: FilterButtonProps) {
 }
 
 function TeamAccessContent() {
+    const { updateSessionKitchen, getCurrentUser } = useAuthServiceActions();
+    const { activateTeamUser, approveKitchenAccess, createTeamUser, deactivateTeamUser, getKitchenAccessRequests, getTeamProfiles, getTeamUsers, rejectKitchenAccess, updateTeamUser } = useTeamAccessServiceActions();
     const [data, setData] = useState<TeamPageData | null>(null);
     const [loading, setLoading] = useState(true);
     const [loadError, setLoadError] = useState<string | null>(null);
@@ -144,7 +134,7 @@ function TeamAccessContent() {
 
         void loadData();
         return () => controller.abort();
-    }, [reloadKey]);
+    }, [getCurrentUser, getKitchenAccessRequests, getTeamProfiles, getTeamUsers, reloadKey, updateSessionKitchen]);
 
     const members = data?.users ?? emptyUsers;
     const profiles = data?.profiles ?? emptyProfiles;
@@ -295,12 +285,12 @@ function TeamAccessContent() {
         requestAnimationFrame(() => returnFocusTarget.current?.focus());
     }
 
-    async function confirmReject(reason: string) {
+    async function confirmReject(reason: string | undefined) {
         if (!rejectTarget) return;
         setBusyRequestId(rejectTarget.id);
         setRequestDialogError(null);
         try {
-            const updatedRequest = await rejectKitchenAccess(rejectTarget.id, reason || undefined);
+            const updatedRequest = await rejectKitchenAccess(rejectTarget.id, reason);
             setData((current) => current ? { ...current, requests: current.requests.map((item) => item.id === updatedRequest.id ? updatedRequest : item) } : current);
             setSuccessMessage(`O pedido de ${rejectTarget.user.name} foi rejeitado.`);
             closeRejectDialog();
