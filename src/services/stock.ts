@@ -30,6 +30,11 @@ export function getKitchenStockBatches(kitchenId: number, productId: number, sig
     return apiRequest<StockBatch[]>(`/stock-batches?${params.toString()}`, { signal });
 }
 
+export function getStockBatchesByKitchen(kitchenId: number, signal?: AbortSignal): Promise<StockBatch[]> {
+    const params = new URLSearchParams({ kitchenId: String(kitchenId) });
+    return apiRequest<StockBatch[]>(`/stock-batches?${params.toString()}`, { signal });
+}
+
 export function getExpiringStockBatches(kitchenId: number, days: number, signal?: AbortSignal): Promise<StockBatch[]> {
     const params = new URLSearchParams({ kitchenId: String(kitchenId), days: String(days) });
     return apiRequest<StockBatch[]>(`/stock-batches/expiring-soon?${params.toString()}`, { signal });
