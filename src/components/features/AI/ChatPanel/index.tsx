@@ -7,6 +7,8 @@ import Feedback from "../../../ui/Feedback";
 import StatusBadge from "../../../ui/StatusBadge";
 import { useAccessibility } from "../../../../context/accessibility";
 import { getAIAudioFileName, maxAIQuestionLength, supportedAIAudioRecorderTypes, validateAIDocumentSelection, validateAIQuestion } from "../../../../utils/aiValidation";
+import MarkdownMessage from "../MarkdownMessage/index";
+import ThinkingIndicator from "../ThinkingIndicator/index";
 
 interface ChatPanelProps {
     messages: AIMessageView[];
@@ -214,7 +216,7 @@ const Message = memo(function Message({ message, onReviewAction }: MessageProps)
                         })}
                     </ol>
                 </section> : null}
-                {message.content ? <div className={`rounded-3xl px-4 py-3 shadow-history-card sm:px-5 ${isHuman ? "bg-brand text-on-brand" : "border border-history-border bg-surface text-ink"}`}><p className="whitespace-pre-wrap wrap-anywhere font-k2d text-sm leading-relaxed sm:text-base">{message.content}</p></div> : null}
+                {message.content ? <div className={`rounded-3xl px-4 py-3 shadow-history-card sm:px-5 ${isHuman ? "bg-brand text-on-brand" : "border border-history-border bg-surface text-ink"}`}>{isHuman ? <p className="whitespace-pre-wrap wrap-anywhere font-k2d text-sm leading-relaxed sm:text-base">{message.content}</p> : <MarkdownMessage content={message.content} />}</div> : null}
                 {message.artifacts && withUniqueKeys(message.artifacts, (artifact) => JSON.stringify(artifact)).map(({ item: artifact, key }) => <ArtifactView key={`${message.id}-${key}`} artifact={artifact} />)}
             {message.pendingActions?.map((action) => {
                 const status = pendingActionStatus(action.status);
@@ -378,13 +380,13 @@ export default function ChatPanel({ messages, conversationTitle, disabled, owned
                 {!messages.length ? (
                     <div className="flex min-h-80 flex-col items-center justify-center px-2 py-4 text-center 2xl:min-h-full 2xl:py-2">
                         <img className="mb-3 size-16 max-w-full object-contain sm:size-20" src={mascotHead} alt="" aria-hidden="true" />
-                        <h2 className="font-k2d text-xl font-bold text-sidebar-purple sm:text-2xl">Oi, eu sou o Caixito.</h2>
+                        <h2 className="font-k2d text-xl font-bold text-sidebar-purple sm:text-2xl">Oi, eu sou o IAI.</h2>
                         <p className="mt-2 max-w-3xl font-k2d text-sm leading-relaxed text-history-muted sm:text-base">Eu consulto o estoque, os lotes, a validade, as requisições e os documentos da sua cozinha. Ações que alteram dados sempre pedem sua confirmação.</p>
                         <div className="mt-4 flex max-w-4xl flex-wrap justify-center gap-2">{quickPrompts.map((prompt) => <button key={prompt} type="button" onClick={() => void onSendMessage(prompt)} disabled={disabled || loading || readOnly} className="rounded-full border border-sidebar-divider bg-sidebar-active px-3 py-1.5 font-k2d text-xs font-semibold text-sidebar-purple transition-colors hover:bg-history-card-header focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:cursor-not-allowed disabled:opacity-60 sm:text-sm">{prompt}</button>)}</div>
                     </div>
                 ) : null}
                 {messages.map((message) => <Message key={message.id} message={message} onReviewAction={onReviewAction} />)}
-                {loading && messages.at(-1)?.content === "" ? <div className="mr-auto flex items-center gap-3 rounded-2xl bg-history-card-header px-4 py-3 font-k2d text-sm text-history-muted" role="status" aria-live="polite"><span className="size-3 motion-safe:animate-pulse rounded-full bg-brand" aria-hidden="true" />Caixito está consultando os dados da cozinha…</div> : null}
+                {loading ? <ThinkingIndicator responding={Boolean(messages.at(-1)?.content.trim())} /> : null}
                 {error ? <Feedback severity="error">{error}</Feedback> : null}
                 {uploadResults.length ? <section aria-label="Resultado dos documentos enviados" className="space-y-2">{uploadResults.map((result) => <Feedback key={result.arquivo_id || `${result.nome}-${result.codigo}-${result.status}-${result.tipo}`} severity={result.status === "indexado" ? "success" : "error"}><strong>{result.nome}:</strong> {result.mensagem || (result.status === "indexado" ? "Documento indexado para consulta." : "O arquivo não foi indexado.")}</Feedback>)}</section> : null}
             </div>
