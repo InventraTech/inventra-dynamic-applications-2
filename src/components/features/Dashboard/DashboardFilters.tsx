@@ -21,14 +21,18 @@ export default function DashboardFilters({ filters, tab, products, dates, alertT
     const activeCount = Object.values(filters).filter(Boolean).length;
     return <section className="min-w-0 overflow-hidden rounded-3xl border border-history-border bg-surface shadow-history-card" aria-labelledby="dashboard-filter-title">
         <details className="group">
-            <summary className="flex min-h-16 cursor-pointer list-none flex-wrap items-center justify-between gap-3 rounded-3xl px-4 py-4 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:px-6">
+            <summary className="flex min-h-16 cursor-pointer list-none marker:hidden flex-wrap items-center justify-between gap-3 rounded-3xl px-4 py-4 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:px-6">
                 <span className="min-w-0">
                     <span id="dashboard-filter-title" className="block text-base font-bold text-heading">Filtros</span>
                     <span className="mt-1 block text-xs leading-relaxed text-history-muted">Categoria, produto, período e situação; filtros ativos permanecem ao trocar de área.</span>
                 </span>
-                <span className="flex shrink-0 items-center gap-2">
+                <span className="flex shrink-0 items-center gap-3">
                     <span className={`rounded-full px-3 py-1 text-xs font-semibold ${activeCount ? "bg-sidebar-active text-brand-strong" : "bg-history-card-header text-history-muted"}`}>{activeCount ? `${activeCount} ${activeCount === 1 ? "filtro ativo" : "filtros ativos"}` : "Opcional"}</span>
-                    <span className="text-lg leading-none text-brand transition-transform group-open:rotate-180" aria-hidden="true">⌄</span>
+                    <span className="grid size-9 place-items-center rounded-full border border-history-border bg-history-card-header text-brand transition-transform group-open:rotate-180" aria-hidden="true">
+                        <svg className="size-4" viewBox="0 0 16 16" fill="none">
+                            <path d="m3.5 6 4.5 4 4.5-4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                    </span>
                 </span>
             </summary>
             <div className="grid gap-4 border-t border-history-border px-4 pb-5 pt-4 sm:px-6">

@@ -174,12 +174,12 @@ function layoutTreemap(items: ChartDatum[], bounds: Pick<TreemapRect, "x" | "y" 
 }
 
 const treemapPalette = [
-    "var(--color-brand-strong)",
-    "var(--color-feedback-success)",
-    "var(--color-feedback-error)",
-    "var(--color-history-status-observation-text)",
-    "var(--color-feedback-info)",
-    "var(--color-ink)",
+    { background: "var(--color-brand-strong)", foreground: "var(--color-on-brand)" },
+    { background: "var(--color-brand)", foreground: "var(--color-on-brand)" },
+    { background: "var(--color-feedback-info)", foreground: "var(--color-on-brand)" },
+    { background: "var(--color-history-muted)", foreground: "var(--color-on-brand)" },
+    { background: "var(--color-sidebar-active)", foreground: "var(--color-heading)" },
+    { background: "var(--color-history-card-header)", foreground: "var(--color-heading)" },
 ];
 
 function fittedTreemapLabel(label: string, width: number): string {
@@ -193,11 +193,15 @@ export function TreemapChart({ data, format = dashboardMoney, onSelect, selected
     if (!groups.length) return <EmptyChart message="Não há lotes com saldo positivo e preço conhecido para esta seleção." />;
 
     const width = 1200;
-    const height = 360;
+    const height = 400;
     const total = groups.reduce((sum, group) => sum + group.value, 0);
-    const categoryTiles = layoutTreemap(groups, { x: 0, y: 0, width, height }).map((rect, index) => {
+    const leadingGroup = groups[0];
+    const leadingShare = leadingGroup.value / total;
+    const showExpandedRemainder = groups.length > 2 && leadingShare >= 0.62 && selected !== leadingGroup.key;
+    const mapGroups = showExpandedRemainder ? groups.slice(1) : groups;
+    const categoryTiles = layoutTreemap(mapGroups, { x: 0, y: 0, width, height }).map(rect => {
         const group = groups.find(item => item.key === rect.key)!;
-        const color = treemapPalette[index % treemapPalette.length];
+        const palette = treemapPalette[groups.findIndex(item => item.key === rect.key) % treemapPalette.length];
         const inset = 6;
         const headingHeight = rect.width >= 130 && rect.height >= 66 ? 32 : 0;
         const content = {
@@ -209,42 +213,59 @@ export function TreemapChart({ data, format = dashboardMoney, onSelect, selected
         const items = content.width > 0 && content.height > 0
             ? layoutTreemap(group.items, content)
             : [];
-        return { ...group, ...rect, color, headingHeight, items };
+        return { ...group, ...rect, color: palette.background, textColor: palette.foreground, headingHeight, items };
     });
+    const leadingPalette = treemapPalette[0];
 
     return <div className="grid min-w-0 gap-4">
-        <p className="text-xs leading-relaxed text-history-muted">Cada categoria ocupa uma área proporcional ao valor. Os blocos dentro dela representam os produtos; use a legenda para filtrar por categoria.</p>
-        <svg className="h-72 w-full rounded-2xl sm:h-80" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" role="img" aria-labelledby={`${chartId}-title`}>
-            <title id={`${chartId}-title`}>Treemap do valor em estoque por categoria e produto</title>
+        {showExpandedRemainder && <section className="grid min-w-0 gap-3 rounded-2xl border border-history-border bg-history-card-header p-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:p-4" aria-label="Categoria com maior participação">
+            <div className="min-w-0">
+                <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                    <p className="text-xs font-semibold text-history-muted">Maior categoria</p>
+                    <strong className="text-sm text-heading">{dashboardNumber(leadingShare * 100)}% do valor</strong>
+                </div>
+                <p className="mt-1 truncate text-base font-bold text-heading">{leadingGroup.label} <span className="font-semibold text-history-muted">· {format(leadingGroup.value)}</span></p>
+                <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface" role="img" aria-label={`${leadingGroup.label} representa ${dashboardNumber(leadingShare * 100)} por cento do valor conhecido`}>
+                    <span className="block h-full rounded-full" style={{ width: `${leadingShare * 100}%`, backgroundColor: leadingPalette.background }} />
+                </div>
+            </div>
+            <p className="text-xs leading-relaxed text-history-muted sm:max-w-48">O mapa abaixo amplia as demais categorias para permitir comparar seus valores.</p>
+        </section>}
+        <p className="text-xs leading-relaxed text-history-muted">{showExpandedRemainder ? "Áreas ampliadas e proporcionais entre as demais categorias; os valores e percentuais da legenda continuam relativos ao total." : "Cada categoria ocupa uma área proporcional ao valor. Os blocos dentro dela representam os produtos; use a legenda para filtrar por categoria."}</p>
+        <svg className="block h-auto w-full rounded-2xl" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby={`${chartId}-title`}>
+            <title id={`${chartId}-title`}>{showExpandedRemainder ? "Treemap ampliado das categorias com menor participação no valor em estoque" : "Treemap do valor em estoque por categoria e produto"}</title>
             {categoryTiles.map(group => {
                 const isMuted = selected && selected !== group.key;
                 return <g key={group.key} opacity={isMuted ? 0.28 : 1}>
                     <rect x={group.x} y={group.y} width={group.width} height={group.height} rx="8" fill={group.color} stroke="var(--color-surface)" strokeWidth="5" />
-                    {group.headingHeight > 0 && <text x={group.x + 14} y={group.y + 23} className="fill-on-brand text-sm font-bold">{fittedTreemapLabel(group.label, group.width)}</text>}
+                    {group.headingHeight > 0 && <text x={group.x + 14} y={group.y + 23} style={{ fill: group.textColor }} className="text-sm font-bold">{fittedTreemapLabel(group.label, group.width)}</text>}
                     {group.items.map(item => <g key={item.key}>
                         <title>{`${group.label} · ${item.label}: ${format(item.value)} · ${dashboardNumber(item.value / total * 100)}% do total`}</title>
                         <rect x={item.x} y={item.y} width={item.width} height={item.height} fill={group.color} stroke="var(--color-surface)" strokeWidth="4" />
                         {item.width >= 112 && item.height >= 46 && <>
-                            <text x={item.x + 12} y={item.y + 21} className="fill-on-brand text-sm font-semibold">{fittedTreemapLabel(item.label, item.width)}</text>
-                            {item.height >= 66 && <text x={item.x + 12} y={item.y + 42} className="fill-on-brand text-xs">{format(item.value)}</text>}
+                            <text x={item.x + 12} y={item.y + 21} style={{ fill: group.textColor }} className="text-sm font-semibold">{fittedTreemapLabel(item.label, item.width)}</text>
+                            {item.height >= 66 && <text x={item.x + 12} y={item.y + 42} style={{ fill: group.textColor }} className="text-xs">{format(item.value)}</text>}
                         </>}
                     </g>)}
                 </g>;
             })}
         </svg>
         <ul className="grid min-w-0 gap-2 sm:grid-cols-2" aria-label="Categorias e participação no valor em estoque">
-            {categoryTiles.map(group => <li key={group.key} className="min-w-0">
+            {groups.map((group, index) => {
+                const palette = treemapPalette[index % treemapPalette.length];
+                return <li key={group.key} className="min-w-0">
                 {onSelect ? <Button variant="ghost" className={`min-h-12 w-full justify-start gap-3 rounded-xl border border-history-border px-3 py-2 text-left ${selected === group.key ? "bg-sidebar-active text-heading" : "hover:bg-history-card-header"}`} aria-pressed={selected === group.key} onClick={() => onSelect(group.key)}>
-                    <span className="size-3 shrink-0 rounded-sm" style={{ backgroundColor: group.color }} aria-hidden="true" />
+                    <span className="size-3 shrink-0 rounded-sm" style={{ backgroundColor: palette.background }} aria-hidden="true" />
                     <span className="min-w-0 flex-1">
                         <span className="block truncate text-sm font-semibold text-heading">{group.label}</span>
                         <span className="block text-xs font-normal text-history-muted">{format(group.value)} · {dashboardNumber(group.value / total * 100)}% do valor</span>
                     </span>
                 </Button> : <div className="flex min-h-12 min-w-0 items-center gap-3 rounded-xl border border-history-border px-3 py-2">
-                    <span className="size-3 shrink-0 rounded-sm" style={{ backgroundColor: group.color }} aria-hidden="true" />
+                    <span className="size-3 shrink-0 rounded-sm" style={{ backgroundColor: palette.background }} aria-hidden="true" />
                     <span className="min-w-0 flex-1"><span className="block truncate text-sm font-semibold text-heading">{group.label}</span><span className="block text-xs text-history-muted">{format(group.value)} · {dashboardNumber(group.value / total * 100)}% do valor</span></span>
                 </div>}
-            </li>)}
+            </li>;
+            })}
         </ul>
         <details className="text-sm text-ink"><summary className="min-h-11 cursor-pointer py-3 font-semibold text-heading">Consultar produtos e valores da categoria</summary><div className="grid gap-4 sm:grid-cols-2">{groups.map(group => <section key={group.key} aria-label={group.label}><h4 className="font-semibold text-heading">{group.label} · {format(group.value)}</h4><ul className="mt-2 grid gap-1">{group.items.map(item => <li key={item.key} className="flex flex-wrap justify-between gap-x-3 gap-y-1 border-b border-history-border py-2"><span>{item.label}</span><strong>{format(item.value)}</strong></li>)}</ul></section>)}</div></details>
     </div>;
