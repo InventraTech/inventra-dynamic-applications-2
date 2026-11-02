@@ -4,7 +4,7 @@ import LoginFeature from "../../components/features/Login";
 import { getSession } from "../../services/authSession";
 
 function Login() {
-    if (getSession()) return <Navigate to="/home" replace />;
+    if (getSession()) return <Navigate to="/dashboard" replace />;
 
     return <LoginFeature />;
 }

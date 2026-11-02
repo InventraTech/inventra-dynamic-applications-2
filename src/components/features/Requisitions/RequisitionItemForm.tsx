@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { addRequisitionItem } from "../../../services/requisitions";
-import { getProductSuppliers } from "../../../services/products";
+import { getProductSuppliers } from "../../../services/productSuppliers";
 import type { ProductRecord, ProductSupplier } from "../../../types/products";
 import type { Requisition } from "../../../types/requisitions";
 import { validateRequisitionItem } from "../../../utils/requisitionValidation";

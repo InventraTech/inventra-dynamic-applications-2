@@ -8,11 +8,14 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint .",
     "test:accessibility": "tsc -p tests/tsconfig.json && node --experimental-strip-types --test tests/accessibility-settings.test.ts",
+    "test:dashboard": "tsc -p tests/tsconfig.json && node --experimental-strip-types --test tests/dashboard.test.ts",
+    "dev:dashboard-validation": "vite --config tests/dashboard/vite.config.ts --open /tests/dashboard/index.html",
     "preview": "vite preview"
   },
   "dependencies": {
     "@fontsource/k2d": "^5.3.0",
     "@tailwindcss/vite": "^4.3.3",
+    "@vercel/config": "^0.14.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.3",

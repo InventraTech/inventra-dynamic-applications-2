@@ -37,31 +37,41 @@ export async function apiRequest<T>(path: string, options: ApiRequestOptions = {
     }
 
     const normalizedPath = path.startsWith("/") ? path : `/${path}`;
-    const response = await fetch(`${API_BASE_URL}${normalizedPath}`, {
-        ...requestOptions,
-        headers,
-    });
+    try {
+        const response = await fetch(`${API_BASE_URL}${normalizedPath}`, {
+            ...requestOptions,
+            headers,
+        });
 
-    const responseText = response.status === 204 ? "" : await response.text();
-    let responseBody: unknown = undefined;
-    if (responseText) {
-        try {
-            responseBody = JSON.parse(responseText) as unknown;
-        } catch {
-            responseBody = responseText;
+        const responseText = response.status === 204 ? "" : await response.text();
+        let responseBody: unknown = undefined;
+        if (responseText) {
+            try {
+                responseBody = JSON.parse(responseText) as unknown;
+            } catch {
+                responseBody = responseText;
+            }
         }
-    }
 
-    if (!response.ok) {
-        if (authenticated && response.status === 401) {
-            clearSession();
-            window.dispatchEvent(new Event(SESSION_EXPIRED_EVENT));
+        if (!response.ok) {
+            if (authenticated && response.status === 401) {
+                clearSession();
+                window.dispatchEvent(new Event(SESSION_EXPIRED_EVENT));
+            }
+            throw new ApiError(
+                getErrorMessage(responseBody, `A solicitação falhou (${response.status}).`),
+                response.status,
+            );
         }
+
+        return responseBody as T;
+    } catch (error) {
+        if (error instanceof ApiError) throw error;
+        if (error instanceof DOMException && error.name === "AbortError") throw error;
+
         throw new ApiError(
-            getErrorMessage(responseBody, `A solicitação falhou (${response.status}).`),
-            response.status,
+            "Não foi possível conectar à API. Verifique sua conexão e tente novamente.",
+            0,
         );
     }
-
-    return responseBody as T;
 }

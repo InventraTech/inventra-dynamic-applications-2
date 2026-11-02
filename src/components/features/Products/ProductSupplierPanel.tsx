@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import type { ProductRecord, ProductSupplier, ProductSupplierOption } from "../../../types/products";
 import { ApiError } from "../../../services/api";
-import { getActiveSuppliers, getProductSuppliers, linkProductSupplier } from "../../../services/products";
+import { getActiveSuppliers } from "../../../services/suppliers";
+import { getProductSuppliers, linkProductSupplier } from "../../../services/productSuppliers";
 import Button from "../../ui/Button";
 import Feedback from "../../ui/Feedback";
 import Input from "../../ui/Input";

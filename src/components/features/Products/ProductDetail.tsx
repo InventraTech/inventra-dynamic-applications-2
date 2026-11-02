@@ -5,7 +5,8 @@ import type { ProductKitchenParameters, ProductRecord, ProductSupplier } from ".
 import { ApiError } from "../../../services/api";
 import { getCurrentUser } from "../../../services/authService";
 import { getSession, updateSessionKitchen } from "../../../services/authSession";
-import { deleteProductPhoto, getProduct, getProductKitchenParameters, getProductSuppliers, setProductActive } from "../../../services/products";
+import { getProductSuppliers } from "../../../services/productSuppliers";
+import { deleteProductPhoto, getProduct, getProductKitchenParameters, setProductActive } from "../../../services/products";
 import Button from "../../ui/Button";
 import Feedback from "../../ui/Feedback";
 import ProductDetailSkeleton from "./ProductDetailSkeleton";
