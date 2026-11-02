@@ -3,7 +3,6 @@ import { BrowserRouter, Navigate, Outlet, Routes, Route } from "react-router-dom
 
 import PrivateRoute from "./PrivateRoute";
 
-import Home from "../pages/Home";
 import Historico from "../pages/Historic";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
@@ -31,6 +30,11 @@ const Requisitions = lazy(() => import("../pages/Requisitions"));
 const Stock = lazy(() => import("../pages/Stock"));
 const Kitchen = lazy(() => import("../pages/Kitchen"));
 const Suppliers = lazy(() => import("../pages/Suppliers"));
+const Dashboard = lazy(() => import("../pages/Dashboard"));
+
+function DashboardRouteLoading() {
+    return <main id="conteudo-principal" tabIndex={-1} className="min-w-0 p-4 outline-none sm:p-6" aria-busy="true"><h1 className="text-2xl font-bold text-heading">Painel</h1><p role="status" className="mt-4 text-history-muted">Carregando painel gerencial…</p><div className="mt-5 min-h-40 rounded-3xl bg-surface shadow-history-card motion-safe:animate-pulse" aria-hidden="true" /></main>;
+}
 
 function ProductRouteLoading() {
     return <section className="flex min-w-0 flex-col gap-4 px-6 pb-8 pt-6 max-md:px-4 max-sm:px-3" aria-busy="true"><p className="sr-only" role="status" aria-live="polite">Carregando tela de produtos…</p><div className="h-12 w-full rounded-2xl bg-surface motion-safe:animate-pulse" aria-hidden="true" /><div className="min-h-72 rounded-3xl bg-surface shadow-history-card motion-safe:animate-pulse" aria-hidden="true" /></section>;
@@ -189,7 +193,8 @@ export default function AppRoutes() {
 
                 {/* Páginas Privadas */}
                 <Route element={<PrivateRoute />}>
-                    <Route path="/home" element={<Home />} />
+                    <Route path="/home" element={<Navigate to="/dashboard" replace />} />
+                    <Route path="/dashboard" element={<Suspense fallback={<DashboardRouteLoading />}><Dashboard /></Suspense>} />
                     <Route path="/perfil" element={<ProfileErrorBoundary>{withProfileLoading(<Profile />)}</ProfileErrorBoundary>} />
                     <Route path="/historico" element={<Navigate to="/historico/retiradas" replace />} />
                     <Route path="/historico/retiradas" element={<Historico mode="withdrawal" />} />

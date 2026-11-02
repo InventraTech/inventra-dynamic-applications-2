@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import type { SidebarProps } from "../../../types/sidebar";
 import Button from "../../ui/Button";
 import fixIcon from "../../../assets/icons/fixar.svg";
@@ -100,7 +100,13 @@ function Sidebar({ logo, logoMark, menuSections = [], fixo, setFixo }: SidebarPr
                             {section.menuOptions.map((option) => (
                                 <li className="min-w-0 w-full" key={option.id}>
                                     {option.availability === "available" && option.pagePath ? (
-                                        <NavLink title={option.page} aria-label={option.page} className={({ isActive }) => `relative flex w-full items-center rounded-2xl px-3.5 py-2.75 font-k2d text-sidebar-nav leading-normal transition-colors duration-200 ${spacing} ${isActive ? "bg-sidebar-active font-bold text-sidebar-purple" : "font-medium text-sidebar-text hover:bg-sidebar-active"}`} to={option.pagePath}>
+                                        option.id === "painel" && pathname === "/dashboard" ? (
+                                            <Link title={option.page} aria-label={option.page} aria-current="page" className={`relative flex w-full items-center rounded-2xl bg-sidebar-active px-3.5 py-2.75 font-k2d text-sidebar-nav font-bold leading-normal text-sidebar-purple transition-colors duration-200 ${spacing}`} to={option.pagePath}>
+                                                <span className="absolute left-0 top-4 h-7 w-1 rounded-r-sidebar-indicator bg-sidebar-indicator" aria-hidden="true" />
+                                                <img className="sidebar-navigation-icon size-8 shrink-0 object-contain" src={option.pageIcon} alt="" />
+                                                <span className={`min-w-0 overflow-hidden sidebar-label-transition dyslexia-font:max-w-none dyslexia-font:overflow-visible dyslexia-font:whitespace-normal dyslexia-font:wrap-anywhere ${label}`}>{option.page}</span>
+                                            </Link>
+                                        ) : <NavLink title={option.page} aria-label={option.page} className={({ isActive }) => `relative flex w-full items-center rounded-2xl px-3.5 py-2.75 font-k2d text-sidebar-nav leading-normal transition-colors duration-200 ${spacing} ${isActive ? "bg-sidebar-active font-bold text-sidebar-purple" : "font-medium text-sidebar-text hover:bg-sidebar-active"}`} to={option.pagePath}>
                                             {({ isActive }) => <>
                                                 {isActive && <span className="absolute left-0 top-4 h-7 w-1 rounded-r-sidebar-indicator bg-sidebar-indicator" aria-hidden="true" />}
                                                 <img className="sidebar-navigation-icon size-8 shrink-0 object-contain" src={option.pageIcon} alt="" />
