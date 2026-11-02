@@ -1,5 +1,5 @@
 import { useId, useMemo, useState, type ReactNode } from "react";
-import type { ChartDatum, DashboardInventoryDivergence, DashboardResource, DashboardStackedDatum, DashboardStockCoverage, DashboardTreemapGroup } from "../../../types/dashboard";
+import type { ChartDatum, DashboardInventoryDivergence, DashboardResource, DashboardStackedDatum, DashboardStockCoverage } from "../../../types/dashboard";
 import { dashboardMoney, dashboardNumber } from "../../../utils/dashboardAggregations";
 import Button from "../../ui/Button";
 import Feedback from "../../ui/Feedback";
@@ -114,44 +114,6 @@ export function StockCoverageChart({ data }: { data: DashboardStockCoverage[] })
         </ul>
         {data.length > visible.length && <p className="text-xs text-history-muted">Exibindo os {visible.length} produtos com menor cobertura; a tabela de estoque contém a lista completa.</p>}
         <div className="flex flex-wrap items-center justify-between gap-2 border-t border-history-border pt-3 text-xs text-history-muted"><span>0% do mínimo</span><span className="font-semibold text-heading">│ 100% · mínimo</span><span>{dashboardNumber(scaleMax)}% ou mais</span></div>
-    </div>;
-}
-
-export function TreemapChart({ data, format = dashboardMoney, onSelect, selected }: { data: DashboardTreemapGroup[]; format?: (value: number) => string; onSelect?: (key: string) => void; selected?: string }) {
-    if (!data.length) return <EmptyChart message="Não há lotes com saldo positivo e preço conhecido para esta seleção." />;
-    const width = 1200;
-    const height = 320;
-    const total = data.reduce((sum, group) => sum + group.value, 0);
-    const fills = ["var(--color-sidebar-active)", "var(--color-history-card-header)", "var(--color-feedback-info-bg)", "var(--color-feedback-success-bg)", "var(--color-feedback-error-bg)", "var(--color-history-status-observation-bg)"];
-    let offsetX = 0;
-    const groups = data.map((group, index) => {
-        const groupWidth = width * group.value / total;
-        let offsetY = 0;
-        const items = group.items.map(item => {
-            const itemHeight = height * item.value / group.value;
-            const tile = { ...item, x: offsetX, y: offsetY, width: groupWidth, height: itemHeight, fill: fills[index % fills.length] };
-            offsetY += itemHeight;
-            return tile;
-        });
-        const layout = { ...group, x: offsetX, width: groupWidth, fill: fills[index % fills.length], items };
-        offsetX += groupWidth;
-        return layout;
-    });
-
-    return <div className="grid min-w-0 gap-4">
-        <p className="text-xs leading-relaxed text-history-muted">A área de cada bloco é proporcional ao saldo positivo com preço conhecido. As colunas agrupam produtos por categoria.</p>
-        <svg className="h-64 w-full rounded-2xl sm:h-72" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" role="img" aria-label="Treemap do valor em estoque por categoria e produto">
-            {groups.flatMap(group => group.items.map(item => {
-                return <g key={`${group.key}:${item.key}`}>
-                    <title>{`${item.label} · ${group.label}: ${format(item.value)}`}</title>
-                    <rect x={item.x} y={item.y} width={item.width} height={item.height} fill={item.fill} stroke="var(--color-surface)" strokeWidth="5" />
-                </g>;
-            }))}
-        </svg>
-        <ul className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-history-muted" aria-label="Categorias do treemap">
-            {groups.map(group => <li key={group.key} className="inline-flex min-w-0 items-center gap-2"><span className="size-3 shrink-0 rounded-sm border border-history-border" style={{ backgroundColor: group.fill }} aria-hidden="true" />{onSelect ? <Button variant="link" className={`min-h-11 min-w-0 rounded-lg px-2 text-left text-heading ${selected === group.key ? "bg-sidebar-active text-brand" : "hover:bg-sidebar-active"}`} aria-pressed={selected === group.key} onClick={() => onSelect(group.key)}>{group.label}</Button> : <span className="min-w-0">{group.label}</span>}<strong className="text-ink">{format(group.value)}</strong></li>)}
-        </ul>
-        <details className="text-sm text-ink"><summary className="min-h-11 cursor-pointer py-3 font-semibold text-heading">Ver produtos e valores por categoria</summary><div className="grid gap-4">{groups.map(group => <section key={group.key} aria-label={group.label}><h4 className="font-semibold text-heading">{group.label} · {format(group.value)}</h4><ul className="mt-2 grid gap-1">{group.items.map(item => <li key={item.key} className="flex flex-wrap justify-between gap-x-3 gap-y-1 border-b border-history-border py-2"><span>{item.label}</span><strong>{format(item.value)}</strong></li>)}</ul></section>)}</div></details>
     </div>;
 }
 

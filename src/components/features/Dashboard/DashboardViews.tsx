@@ -2,7 +2,7 @@ import type { DashboardAnalysis } from "../../../utils/dashboardAnalysis";
 import type { DashboardFilters } from "../../../types/dashboard";
 import { dashboardDate, dashboardMoney, dashboardNumber, domainLabel } from "../../../utils/dashboardAggregations";
 import { getBatchStatusPresentation, getDaysUntilDate } from "../../../utils/stockPresentation";
-import { BarChart, ChartCard, DashboardTable, DivergingBarChart, DonutChart, LineChart, Metric, ScatterChart, StackedBarChart, StockCoverageChart, TreemapChart, panelClass } from "./DashboardPrimitives";
+import { BarChart, ChartCard, DashboardTable, DivergingBarChart, DonutChart, LineChart, Metric, ScatterChart, StackedBarChart, StockCoverageChart, panelClass } from "./DashboardPrimitives";
 import Feedback from "../../ui/Feedback";
 import { Link } from "react-router-dom";
 import stockIcon from "../../../assets/icons/estoque.svg";
@@ -29,7 +29,7 @@ export function Overview({ analysis: a, onRetry, filters, onFilter }: ViewProps)
             <Metric title="Requisições em análise" value={a.states.requisitions.ready ? dashboardNumber(a.pending) : null} note="Aguardando decisão do supervisor." tone={a.states.requisitions.ready ? a.pending ? "warning" : "success" : undefined} pending={a.states.requisitions.loading} icon={requisitionIcon} />
         </dl>
         <div className={chartsClass}>
-            <ChartCard title="Mapa do valor em estoque" description={a.value.missing ? "Área proporcional ao saldo positivo com preço conhecido, agrupado por produto e categoria. O valor total é parcial." : "Área proporcional ao saldo positivo com preço conhecido, agrupado por produto e categoria."} {...a.states.categories} onRetry={onRetry}><TreemapChart data={a.stockTreemap} format={dashboardMoney} selected={filters.category} onSelect={key => onFilter("category", filters.category === key ? "" : key)} /></ChartCard>
+            <ChartCard title="Valor em estoque por categoria" description={a.value.missing ? "Comparação do saldo positivo com preço conhecido. Como há lotes sem preço, o valor é parcial." : "Comparação do saldo positivo com preço conhecido por categoria."} {...a.states.categories} onRetry={onRetry}><BarChart data={a.categoryValue} format={dashboardMoney} selected={filters.category} onSelect={key => onFilter("category", filters.category === key ? "" : key)} /></ChartCard>
             <ChartCard title="Alertas por severidade" description="Alertas retornados para sua conta nesta cozinha." {...a.states.alerts} onRetry={onRetry}><DonutChart data={a.alertSeverities} /></ChartCard>
         </div>
         <OverviewAttention analysis={a} />
