@@ -46,8 +46,7 @@ function LoginForm() {
             }
 
             saveSession(response, rememberMe);
-            const destination = (location.state as LoginNavigationState | null)?.from?.pathname ?? "/historico";
-            navigate(destination, { replace: true });
+            navigate("/dashboard", { replace: true });
         } catch (loginError) {
             if (loginError instanceof ApiError && loginError.status === 401) {
                 setError(loginError.message);

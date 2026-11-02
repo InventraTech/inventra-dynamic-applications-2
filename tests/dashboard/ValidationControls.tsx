@@ -1,0 +1,7 @@
+import { useAccessibility } from "../../src/context/accessibility";
+import type { ColorVisionMode, ContrastMode } from "../../src/types/accessibility";
+
+export default function ValidationControls() {
+    const { settings, updateSettings, resetSettings } = useAccessibility();
+    return <details className="min-w-0 bg-surface p-3 text-ink"><summary>Controles de validação de acessibilidade</summary><div className="flex min-w-0 flex-wrap gap-3 p-3"><button onClick={() => updateSettings({ fontScale: 200, letterSpacing: 0.15, lineSpacing: 2, dyslexiaFont: true, reduceMotion: true, keyboardFocus: "reinforced", visualAlerts: "icon-color" })}>Texto 200% e espaçamento máximo</button><button onClick={resetSettings}>Restaurar preferências</button><label className="min-w-0 max-w-full">Contraste de validação<select className="min-w-0 max-w-full" value={settings.contrastMode} onChange={event => updateSettings({ contrastMode: event.target.value as ContrastMode })}>{["normal", "dark", "reinforced", "yellow-black"].map(mode => <option key={mode} value={mode}>{mode}</option>)}</select></label><label className="min-w-0 max-w-full">Paleta de validação<select className="min-w-0 max-w-full" value={settings.colorVisionMode} onChange={event => updateSettings({ colorVisionMode: event.target.value as ColorVisionMode })}>{["none", "protanopia", "deuteranopia", "tritanopia"].map(mode => <option key={mode} value={mode}>{mode}</option>)}</select></label></div></details>;
+}
