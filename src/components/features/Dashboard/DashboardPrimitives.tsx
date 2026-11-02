@@ -284,8 +284,8 @@ export function DashboardTable<T>({ title, data, columns, rowKey }: { title: str
         <div className="relative max-w-full overflow-x-auto rounded-xl border border-history-border" role="region" aria-label={`${title}: tabela com rolagem horizontal`} tabIndex={0}>
             <table className="w-full min-w-160 border-collapse text-left text-sm text-ink">
                 <caption className="sr-only">{title}</caption>
-                <thead className="bg-history-card-header text-heading"><tr>{columns.map(column => <th key={column.key} scope="col" className="px-3 py-2 font-semibold" aria-sort={sort?.key === column.key ? sort.descending ? "descending" : "ascending" : column.sort ? "none" : undefined}>
-                    {column.sort ? <Button variant="ghost" className="min-h-11 text-left" onClick={() => { setSort({ key: column.key, descending: sort?.key === column.key ? !sort.descending : false }); setPage(0); }}>{column.title}<span aria-hidden="true">{sort?.key === column.key ? sort.descending ? " ↓" : " ↑" : " ↕"}</span><span className="sr-only">, ordenar</span></Button> : column.title}
+                <thead className="bg-history-card-header text-heading"><tr>{columns.map(column => <th key={column.key} scope="col" className="whitespace-nowrap px-3 py-2 font-semibold" aria-sort={sort?.key === column.key ? sort.descending ? "descending" : "ascending" : column.sort ? "none" : undefined}>
+                    {column.sort ? <Button variant="ghost" className="min-h-11 whitespace-nowrap text-left" onClick={() => { setSort({ key: column.key, descending: sort?.key === column.key ? !sort.descending : false }); setPage(0); }}>{column.title}<span aria-hidden="true">{sort?.key === column.key ? sort.descending ? " ↓" : " ↑" : " ↕"}</span><span className="sr-only">, ordenar</span></Button> : column.title}
                 </th>)}</tr></thead>
                 <tbody>{sorted.slice(currentPage * 10, currentPage * 10 + 10).map(row => <tr key={rowKey(row)} className="border-t border-history-border">{columns.map(column => <td key={column.key} className="px-3 py-3 align-top">{column.render(row)}</td>)}</tr>)}</tbody>
             </table>
