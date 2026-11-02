@@ -141,20 +141,22 @@ function layoutTreemap(items: ChartDatum[], bounds: Pick<TreemapRect, "x" | "y" 
     const placeRow = () => {
         if (!row.length) return;
         const rowValue = row.reduce((total, item) => total + item.value, 0);
+        const unplacedValue = rowValue + remaining.reduce((total, item) => total + item.value, 0);
+        const rowArea = (rowValue / unplacedValue) * free.width * free.height;
         if (free.width >= free.height) {
-            const rowHeight = rowValue / free.width;
+            const rowHeight = rowArea / free.width;
             let x = free.x;
             row.forEach((item, index) => {
-                const width = index === row.length - 1 ? free.x + free.width - x : item.value / rowHeight;
+                const width = index === row.length - 1 ? free.x + free.width - x : (item.value / rowValue) * free.width;
                 layout.push({ ...item, x, y: free.y, width: Math.max(0, width), height: rowHeight });
                 x += width;
             });
             free = { ...free, y: free.y + rowHeight, height: Math.max(0, free.height - rowHeight) };
         } else {
-            const rowWidth = rowValue / free.height;
+            const rowWidth = rowArea / free.height;
             let y = free.y;
             row.forEach((item, index) => {
-                const height = index === row.length - 1 ? free.y + free.height - y : item.value / rowWidth;
+                const height = index === row.length - 1 ? free.y + free.height - y : (item.value / rowValue) * free.height;
                 layout.push({ ...item, x: free.x, y, width: rowWidth, height: Math.max(0, height) });
                 y += height;
             });
@@ -166,7 +168,11 @@ function layoutTreemap(items: ChartDatum[], bounds: Pick<TreemapRect, "x" | "y" 
     while (remaining.length && free.width > 0 && free.height > 0) {
         const next = remaining[0];
         const side = Math.min(free.width, free.height);
-        if (!row.length || worstTreemapRatio([...row, next], side) <= worstTreemapRatio(row, side)) row.push(remaining.shift()!);
+        const unplacedValue = row.reduce((total, item) => total + item.value, 0) + remaining.reduce((total, item) => total + item.value, 0);
+        const areaScale = (free.width * free.height) / unplacedValue;
+        const scaledRow = row.map(item => ({ ...item, value: item.value * areaScale }));
+        const scaledNext = { ...next, value: next.value * areaScale };
+        if (!row.length || worstTreemapRatio([...scaledRow, scaledNext], side) <= worstTreemapRatio(scaledRow, side)) row.push(remaining.shift()!);
         else placeRow();
     }
     placeRow();
