@@ -46,13 +46,19 @@ html[data-accessibility-motion="reduce"] * {
   transition-duration: 100ms !important;
 }
 
-html[data-accessibility-focus="reinforced"] :focus-visible:not(.search-field-input) {
+html[data-accessibility-focus="reinforced"] :focus-visible:not(.search-field-input, .ai-composer-input) {
   outline: 3px solid var(--color-login-gold) !important;
   outline-offset: 3px !important;
   box-shadow: 0 0 0 3px var(--color-sidebar-purple) !important;
 }
 
 html[data-accessibility-focus="reinforced"] .search-field:focus-within {
+  outline: 3px solid var(--color-login-gold);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 3px var(--color-sidebar-purple);
+}
+
+html[data-accessibility-focus="reinforced"] .ai-composer:focus-within {
   outline: 3px solid var(--color-login-gold);
   outline-offset: 3px;
   box-shadow: 0 0 0 3px var(--color-sidebar-purple);
@@ -106,7 +112,7 @@ html[data-accessibility-line-spacing="custom"] p + p {
   margin-block-start: 1em;
 }
 
-:focus-visible:not(.search-field-input) {
+:focus-visible:not(.search-field-input, .ai-composer-input) {
   outline: 2px solid var(--color-focus);
   outline-offset: 3px;
 }
@@ -288,9 +294,11 @@ html[data-accessibility-cursor="true"] :is(textarea, input:not([type="checkbox"]
 }
 
 @media (forced-colors: active) {
-  :focus-visible:not(.search-field-input) { outline: 3px solid Highlight !important; box-shadow: none !important; }
-  button, input:not(.search-field-input), select, textarea { border: 1px solid ButtonText; }
+  :focus-visible:not(.search-field-input, .ai-composer-input) { outline: 3px solid Highlight !important; box-shadow: none !important; }
+  button, input:not(.search-field-input), select, textarea:not(.ai-composer-input) { border: 1px solid ButtonText; }
   .search-field:focus-within { outline: 3px solid Highlight !important; outline-offset: 3px; box-shadow: none !important; }
+  .ai-composer:focus-within { outline: 3px solid Highlight !important; outline-offset: 3px; box-shadow: none !important; }
+  .ai-composer-input { border: 0 !important; outline: none !important; box-shadow: none !important; }
   [role="switch"][aria-checked="true"] { outline: 2px solid Highlight; }
 }
 

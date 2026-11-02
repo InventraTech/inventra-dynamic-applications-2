@@ -4,6 +4,7 @@ import { BrowserRouter, Navigate, Outlet, Routes, Route } from "react-router-dom
 import PrivateRoute from "./PrivateRoute";
 
 import RouteAccessibility from "../components/layout/RouteAccessibility";
+import AssistantLauncher from "../components/layout/AssistantLauncher";
 import ProfileLoadingSkeleton from "../components/features/Profile/ProfileLoadingSkeleton";
 import ProfileErrorBoundary from "../components/features/Profile/ProfileErrorBoundary";
 import KitchenSettingsSkeleton from "../components/features/Kitchen/KitchenSettingsSkeleton/index";
@@ -33,6 +34,7 @@ const Kitchen = lazy(() => import("../pages/Kitchen"));
 const Suppliers = lazy(() => import("../pages/Suppliers"));
 const Inventory = lazy(() => import("../pages/Inventory"));
 const Dashboard = lazy(() => import("../pages/Dashboard"));
+const Assistant = lazy(() => import("../pages/Assistant"));
 
 function DashboardRouteLoading() {
     return <main id="conteudo-principal" tabIndex={-1} className="min-w-0 p-4 outline-none sm:p-6" aria-busy="true"><h1 className="text-2xl font-bold text-heading">Painel</h1><p role="status" className="mt-4 text-history-muted">Carregando painel gerencial…</p><div className="mt-5 min-h-40 rounded-3xl bg-surface shadow-history-card motion-safe:animate-pulse" aria-hidden="true" /></main>;
@@ -222,6 +224,7 @@ export default function AppRoutes() {
                 <Route element={<PrivateRoute />}>
                     <Route path="/home" element={<Navigate to="/dashboard" replace />} />
                     <Route path="/dashboard" element={<Suspense fallback={<DashboardRouteLoading />}><Dashboard /></Suspense>} />
+                    <Route path="/assistente-ia" element={withPageLoading(<Assistant />, "Assistente IA")} />
                     <Route path="/perfil" element={<ProfileErrorBoundary>{withProfileLoading(<Profile />)}</ProfileErrorBoundary>} />
                     <Route path="/historico" element={<Navigate to="/historico/retiradas" replace />} />
                     <Route path="/historico/retiradas" element={withPageLoading(<Historico mode="withdrawal" />, "Histórico de retiradas")} />
@@ -249,6 +252,7 @@ export default function AppRoutes() {
                     </Route>
                 </Route>
             </Routes>
+            <AssistantLauncher />
             <footer className="sr-only" aria-label="Rodapé do Inventra">
                 Fim da página. Aplicação Inventra.
             </footer>
