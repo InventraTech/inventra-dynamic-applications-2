@@ -1,5 +1,5 @@
 import type { DashboardData } from "../hooks/useDashboard";
-import type { ChartDatum, DashboardFilters, DashboardResource, DashboardTab, DashboardTreemapGroup } from "../types/dashboard";
+import type { DashboardFilters, DashboardResource, DashboardTab } from "../types/dashboard";
 import { getDaysUntilDate } from "./stockPresentation.ts";
 import { average, domainLabel, groupMonths, groupValues, hasProductFilter, matchesPeriod, matchesProduct, quantityByUnit, stockValue } from "./dashboardAggregations.ts";
 
@@ -69,27 +69,6 @@ export function analyzeDashboard(data: DashboardData, filters: DashboardFilters,
         unit: row.unit.symbol,
         percent: row.totalQuantity / row.minStock! * 100,
     })).sort((left, right) => left.percent - right.percent);
-    const stockTreemapGroups = new Map<string, { key: string; label: string; value: number; items: Map<string, ChartDatum> }>();
-    for (const batch of valuedStockBatches) {
-        const amount = batch.currentQuantity * batch.unitPrice!;
-        if (!Number.isFinite(amount) || amount <= 0) continue;
-        const product = productMap.get(batch.product.id);
-        const categoryId = String(product?.category?.id ?? "uncategorized");
-        const categoryName = product?.category?.name ?? "Sem categoria";
-        const group = stockTreemapGroups.get(categoryId) ?? { key: categoryId, label: categoryName, value: 0, items: new Map<string, ChartDatum>() };
-        const productKey = String(batch.product.id);
-        const item = group.items.get(productKey) ?? { key: productKey, label: product?.name ?? batch.product.name, value: 0 };
-        item.value += amount;
-        group.value += amount;
-        group.items.set(productKey, item);
-        stockTreemapGroups.set(categoryId, group);
-    }
-    const stockTreemap: DashboardTreemapGroup[] = [...stockTreemapGroups.values()].map(group => ({
-        key: group.key,
-        label: group.label,
-        value: group.value,
-        items: [...group.items.values()].sort((left, right) => right.value - left.value || left.label.localeCompare(right.label, "pt-BR")),
-    })).sort((left, right) => right.value - left.value || left.label.localeCompare(right.label, "pt-BR"));
     const inventoryDivergenceGroups = new Map<string, { key: string; label: string; unit: string; shortage: number; surplus: number }>();
     for (const row of divergences) {
         const unit = unitFor(allBatches.get(row.batch.id)?.product.id ?? -1);
@@ -124,7 +103,7 @@ export function analyzeDashboard(data: DashboardData, filters: DashboardFilters,
         categoryValue: groupValues(valuedStockBatches, row => String(productMap.get(row.product.id)?.category?.id ?? "uncategorized"), row => productMap.get(row.product.id)?.category?.name ?? "Sem categoria", row => row.currentQuantity * row.unitPrice!),
         topProducts: groupValues(valuedStockBatches, row => String(row.product.id), row => row.product.name, row => row.currentQuantity * row.unitPrice!).slice(0, 10),
         alertSeverities: sumBy("severity", alerts), requestStatuses: sumBy("status", requisitions), batchStatuses: sumBy("status", batches),
-        requisitionsByType, stockCoverage, inventoryDivergences, stockTreemap,
+        requisitionsByType, stockCoverage, inventoryDivergences,
         requestTypes: sumBy("type", requisitions), inventoryStatuses: sumBy("status", inventories), alertTypes: sumBy("type", alerts),
         entryMonths: groupMonths(batches, row => row.entryDate), alertMonths: groupMonths(alerts, row => row.createdAt),
         // Count occurrences in distinct requests, avoiding a sum of kg, litres and units in a ranking.

@@ -105,7 +105,3 @@ export interface DashboardInventoryDivergence {
     surplus: number;
 }
 
-export interface DashboardTreemapGroup extends ChartDatum {
-    items: ChartDatum[];
-}
-

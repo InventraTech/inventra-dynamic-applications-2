@@ -1,5 +1,5 @@
 import { useId, useMemo, useState, type ReactNode } from "react";
-import type { ChartDatum, DashboardInventoryDivergence, DashboardResource, DashboardStackedDatum, DashboardStockCoverage, DashboardTreemapGroup } from "../../../types/dashboard";
+import type { ChartDatum, DashboardInventoryDivergence, DashboardResource, DashboardStackedDatum, DashboardStockCoverage } from "../../../types/dashboard";
 import { dashboardMoney, dashboardNumber } from "../../../utils/dashboardAggregations";
 import Button from "../../ui/Button";
 import Feedback from "../../ui/Feedback";
@@ -117,163 +117,63 @@ export function StockCoverageChart({ data }: { data: DashboardStockCoverage[] })
     </div>;
 }
 
-interface TreemapRect extends ChartDatum {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-}
+export function CategoryConcentrationChart({ data, format = dashboardMoney, onSelect, selected }: { data: ChartDatum[]; format?: (value: number) => string; onSelect?: (key: string) => void; selected?: string }) {
+    const categories = data.filter(category => Number.isFinite(category.value) && category.value > 0);
+    if (!categories.length) return <EmptyChart message="Não há lotes com saldo positivo e preço conhecido para esta seleção." />;
 
-function worstTreemapRatio(items: ChartDatum[], side: number): number {
-    if (!items.length || side <= 0) return Number.POSITIVE_INFINITY;
-    const sum = items.reduce((total, item) => total + item.value, 0);
-    const largest = Math.max(...items.map(item => item.value));
-    const smallest = Math.min(...items.map(item => item.value));
-    return Math.max((side ** 2 * largest) / (sum ** 2), (sum ** 2) / (side ** 2 * smallest));
-}
-
-function layoutTreemap(items: ChartDatum[], bounds: Pick<TreemapRect, "x" | "y" | "width" | "height">): TreemapRect[] {
-    const remaining = items.filter(item => Number.isFinite(item.value) && item.value > 0).sort((left, right) => right.value - left.value);
-    const layout: TreemapRect[] = [];
-    let free = { ...bounds };
-    let row: ChartDatum[] = [];
-
-    const placeRow = () => {
-        if (!row.length) return;
-        const rowValue = row.reduce((total, item) => total + item.value, 0);
-        const unplacedValue = rowValue + remaining.reduce((total, item) => total + item.value, 0);
-        const rowArea = (rowValue / unplacedValue) * free.width * free.height;
-        if (free.width >= free.height) {
-            const rowHeight = rowArea / free.width;
-            let x = free.x;
-            row.forEach((item, index) => {
-                const width = index === row.length - 1 ? free.x + free.width - x : (item.value / rowValue) * free.width;
-                layout.push({ ...item, x, y: free.y, width: Math.max(0, width), height: rowHeight });
-                x += width;
-            });
-            free = { ...free, y: free.y + rowHeight, height: Math.max(0, free.height - rowHeight) };
-        } else {
-            const rowWidth = rowArea / free.height;
-            let y = free.y;
-            row.forEach((item, index) => {
-                const height = index === row.length - 1 ? free.y + free.height - y : (item.value / rowValue) * free.height;
-                layout.push({ ...item, x: free.x, y, width: rowWidth, height: Math.max(0, height) });
-                y += height;
-            });
-            free = { ...free, x: free.x + rowWidth, width: Math.max(0, free.width - rowWidth) };
-        }
-        row = [];
-    };
-
-    while (remaining.length && free.width > 0 && free.height > 0) {
-        const next = remaining[0];
-        const side = Math.min(free.width, free.height);
-        const unplacedValue = row.reduce((total, item) => total + item.value, 0) + remaining.reduce((total, item) => total + item.value, 0);
-        const areaScale = (free.width * free.height) / unplacedValue;
-        const scaledRow = row.map(item => ({ ...item, value: item.value * areaScale }));
-        const scaledNext = { ...next, value: next.value * areaScale };
-        if (!row.length || worstTreemapRatio([...scaledRow, scaledNext], side) <= worstTreemapRatio(scaledRow, side)) row.push(remaining.shift()!);
-        else placeRow();
-    }
-    placeRow();
-    return layout;
-}
-
-const treemapPalette = [
-    { background: "var(--color-brand-strong)", foreground: "var(--color-on-brand)" },
-    { background: "var(--color-brand)", foreground: "var(--color-on-brand)" },
-    { background: "var(--color-feedback-info)", foreground: "var(--color-on-brand)" },
-    { background: "var(--color-history-muted)", foreground: "var(--color-on-brand)" },
-    { background: "var(--color-sidebar-active)", foreground: "var(--color-heading)" },
-    { background: "var(--color-history-card-header)", foreground: "var(--color-heading)" },
-];
-
-function fittedTreemapLabel(label: string, width: number): string {
-    const maxCharacters = Math.max(5, Math.floor((width - 20) / 8));
-    return label.length > maxCharacters ? `${label.slice(0, maxCharacters - 1).trimEnd()}…` : label;
-}
-
-export function TreemapChart({ data, format = dashboardMoney, onSelect, selected }: { data: DashboardTreemapGroup[]; format?: (value: number) => string; onSelect?: (key: string) => void; selected?: string }) {
-    const chartId = useId().replaceAll(":", "");
-    const groups = data.filter(group => Number.isFinite(group.value) && group.value > 0);
-    if (!groups.length) return <EmptyChart message="Não há lotes com saldo positivo e preço conhecido para esta seleção." />;
-
-    const width = 1200;
-    const height = 400;
-    const total = groups.reduce((sum, group) => sum + group.value, 0);
-    const leadingGroup = groups[0];
-    const leadingShare = leadingGroup.value / total;
-    const showExpandedRemainder = groups.length > 2 && leadingShare >= 0.62 && selected !== leadingGroup.key;
-    const mapGroups = showExpandedRemainder ? groups.slice(1) : groups;
-    const categoryTiles = layoutTreemap(mapGroups, { x: 0, y: 0, width, height }).map(rect => {
-        const group = groups.find(item => item.key === rect.key)!;
-        const palette = treemapPalette[groups.findIndex(item => item.key === rect.key) % treemapPalette.length];
-        const inset = 6;
-        const headingHeight = rect.width >= 130 && rect.height >= 66 ? 32 : 0;
-        const content = {
-            x: rect.x + inset,
-            y: rect.y + headingHeight + inset,
-            width: Math.max(0, rect.width - inset * 2),
-            height: Math.max(0, rect.height - headingHeight - inset * 2),
-        };
-        const items = content.width > 0 && content.height > 0
-            ? layoutTreemap(group.items, content)
-            : [];
-        return { ...group, ...rect, color: palette.background, textColor: palette.foreground, headingHeight, items };
-    });
-    const leadingPalette = treemapPalette[0];
+    const total = categories.reduce((sum, category) => sum + category.value, 0);
+    const maximum = categories[0].value;
+    const leaderShare = categories[0].value / total * 100;
 
     return <div className="grid min-w-0 gap-4">
-        {showExpandedRemainder && <section className="grid min-w-0 gap-3 rounded-2xl border border-history-border bg-history-card-header p-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:p-4" aria-label="Categoria com maior participação">
+        <div className="flex min-w-0 flex-wrap items-center justify-between gap-x-6 gap-y-3 rounded-2xl bg-history-card-header p-4 sm:px-5">
             <div className="min-w-0">
-                <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-                    <p className="text-xs font-semibold text-history-muted">Maior categoria</p>
-                    <strong className="text-sm text-heading">{dashboardNumber(leadingShare * 100)}% do valor</strong>
-                </div>
-                <p className="mt-1 truncate text-base font-bold text-heading">{leadingGroup.label} <span className="font-semibold text-history-muted">· {format(leadingGroup.value)}</span></p>
-                <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface" role="img" aria-label={`${leadingGroup.label} representa ${dashboardNumber(leadingShare * 100)} por cento do valor conhecido`}>
-                    <span className="block h-full rounded-full" style={{ width: `${leadingShare * 100}%`, backgroundColor: leadingPalette.background }} />
-                </div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-brand">Maior concentração</p>
+                <p className="mt-1 truncate text-base font-bold text-heading sm:text-lg">{categories[0].label}</p>
             </div>
-            <p className="text-xs leading-relaxed text-history-muted sm:max-w-48">O mapa abaixo amplia as demais categorias para permitir comparar seus valores.</p>
-        </section>}
-        <p className="text-xs leading-relaxed text-history-muted">{showExpandedRemainder ? "Áreas ampliadas e proporcionais entre as demais categorias; os valores e percentuais da legenda continuam relativos ao total." : "Cada categoria ocupa uma área proporcional ao valor. Os blocos dentro dela representam os produtos; use a legenda para filtrar por categoria."}</p>
-        <svg className="block h-auto w-full rounded-2xl" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby={`${chartId}-title`}>
-            <title id={`${chartId}-title`}>{showExpandedRemainder ? "Treemap ampliado das categorias com menor participação no valor em estoque" : "Treemap do valor em estoque por categoria e produto"}</title>
-            {categoryTiles.map(group => {
-                const isMuted = selected && selected !== group.key;
-                return <g key={group.key} opacity={isMuted ? 0.28 : 1}>
-                    <rect x={group.x} y={group.y} width={group.width} height={group.height} rx="8" fill={group.color} stroke="var(--color-surface)" strokeWidth="5" />
-                    {group.headingHeight > 0 && <text x={group.x + 14} y={group.y + 23} style={{ fill: group.textColor }} className="text-sm font-bold">{fittedTreemapLabel(group.label, group.width)}</text>}
-                    {group.items.map(item => <g key={item.key}>
-                        <title>{`${group.label} · ${item.label}: ${format(item.value)} · ${dashboardNumber(item.value / total * 100)}% do total`}</title>
-                        <rect x={item.x} y={item.y} width={item.width} height={item.height} fill={group.color} stroke="var(--color-surface)" strokeWidth="4" />
-                        {item.width >= 112 && item.height >= 46 && <>
-                            <text x={item.x + 12} y={item.y + 21} style={{ fill: group.textColor }} className="text-sm font-semibold">{fittedTreemapLabel(item.label, item.width)}</text>
-                            {item.height >= 66 && <text x={item.x + 12} y={item.y + 42} style={{ fill: group.textColor }} className="text-xs">{format(item.value)}</text>}
-                        </>}
-                    </g>)}
-                </g>;
-            })}
-        </svg>
-        <ul className="grid min-w-0 gap-2 sm:grid-cols-2" aria-label="Categorias e participação no valor em estoque">
-            {groups.map((group, index) => {
-                const palette = treemapPalette[index % treemapPalette.length];
-                return <li key={group.key} className="min-w-0">
-                {onSelect ? <Button variant="ghost" className={`min-h-12 w-full justify-start gap-3 rounded-xl border border-history-border px-3 py-2 text-left ${selected === group.key ? "bg-sidebar-active text-heading" : "hover:bg-history-card-header"}`} aria-pressed={selected === group.key} onClick={() => onSelect(group.key)}>
-                    <span className="size-3 shrink-0 rounded-sm" style={{ backgroundColor: palette.background }} aria-hidden="true" />
-                    <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-semibold text-heading">{group.label}</span>
-                        <span className="block text-xs font-normal text-history-muted">{format(group.value)} · {dashboardNumber(group.value / total * 100)}% do valor</span>
+            <div className="flex shrink-0 flex-wrap items-baseline gap-x-5 gap-y-1">
+                <strong className="text-lg font-bold text-heading sm:text-xl">{format(categories[0].value)}</strong>
+                <span className="text-sm font-semibold text-brand">{dashboardNumber(leaderShare)}% do total conhecido</span>
+            </div>
+        </div>
+
+        <p className="text-xs leading-relaxed text-history-muted">A barra compara cada categoria com a de maior valor. O percentual mostra quanto ela representa do valor conhecido em estoque; categorias sem preço informado ficam fora deste cálculo.</p>
+
+        <div className="hidden grid-cols-[minmax(0,1fr)_minmax(12rem,2fr)_minmax(7rem,auto)] gap-4 px-3 text-xs font-semibold text-history-muted lg:grid">
+            <span>Categoria e valor</span>
+            <span>Comparação com a maior categoria</span>
+            <span className="text-right">Participação no total</span>
+        </div>
+        <ul className="grid min-w-0 gap-2" aria-label="Comparação do valor em estoque por categoria">
+            {categories.map((category, index) => {
+                const share = category.value / total * 100;
+                const relativeValue = category.value / maximum * 100;
+                const rowContent = <span className="grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2 lg:grid-cols-[minmax(0,1fr)_minmax(12rem,2fr)_minmax(7rem,auto)] lg:gap-4">
+                    <span className="col-start-1 row-start-1 flex min-w-0 items-center gap-3">
+                        <span className={`grid size-8 shrink-0 place-items-center rounded-full text-xs font-bold ${index === 0 ? "bg-brand text-on-brand" : "bg-sidebar-active text-brand"}`} aria-hidden="true">{index + 1}</span>
+                        <span className="min-w-0 flex-1">
+                            <span className="block truncate text-sm font-semibold text-heading">{category.label}</span>
+                            <span className="block text-xs font-normal text-history-muted">{format(category.value)}</span>
+                        </span>
                     </span>
-                </Button> : <div className="flex min-h-12 min-w-0 items-center gap-3 rounded-xl border border-history-border px-3 py-2">
-                    <span className="size-3 shrink-0 rounded-sm" style={{ backgroundColor: palette.background }} aria-hidden="true" />
-                    <span className="min-w-0 flex-1"><span className="block truncate text-sm font-semibold text-heading">{group.label}</span><span className="block text-xs text-history-muted">{format(group.value)} · {dashboardNumber(group.value / total * 100)}% do valor</span></span>
-                </div>}
-            </li>;
+                    <span className="col-span-2 row-start-2 grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 lg:col-span-1 lg:col-start-2 lg:row-start-auto">
+                        <span className="h-3 min-w-0 overflow-hidden rounded-full bg-history-card-header" aria-hidden="true">
+                            <span className={`block h-full rounded-full ${index === 0 ? "bg-brand-strong" : "bg-brand"}`} style={{ width: `${relativeValue}%` }} />
+                        </span>
+                        <span className="text-xs tabular-nums text-history-muted">{dashboardNumber(relativeValue)}%</span>
+                    </span>
+                    <span className="col-start-2 row-start-1 justify-self-end text-sm font-bold tabular-nums text-heading lg:col-start-3 lg:row-start-auto">{dashboardNumber(share)}%</span>
+                </span>;
+
+                return <li key={category.key} className="min-w-0">
+                    {onSelect ? <Button variant="ghost" className={`min-h-18 w-full min-w-0 justify-start rounded-2xl border px-3 py-3 text-left transition-colors sm:px-4 ${selected === category.key ? "border-brand bg-sidebar-active" : "border-history-border bg-surface hover:bg-history-card-header"}`} aria-pressed={selected === category.key} onClick={() => onSelect(category.key)}>
+                        {rowContent}
+                    </Button> : <div className="flex min-h-18 min-w-0 items-center rounded-2xl border border-history-border bg-surface px-3 py-3 sm:px-4">
+                        {rowContent}
+                    </div>}
+                </li>;
             })}
         </ul>
-        <details className="text-sm text-ink"><summary className="min-h-11 cursor-pointer py-3 font-semibold text-heading">Consultar produtos e valores da categoria</summary><div className="grid gap-4 sm:grid-cols-2">{groups.map(group => <section key={group.key} aria-label={group.label}><h4 className="font-semibold text-heading">{group.label} · {format(group.value)}</h4><ul className="mt-2 grid gap-1">{group.items.map(item => <li key={item.key} className="flex flex-wrap justify-between gap-x-3 gap-y-1 border-b border-history-border py-2"><span>{item.label}</span><strong>{format(item.value)}</strong></li>)}</ul></section>)}</div></details>
     </div>;
 }
 
@@ -301,8 +201,8 @@ export function DivergingBarChart({ data }: { data: DashboardInventoryDivergence
 export function DonutChart({ data }: { data: ChartDatum[] }) {
     if (!data.length) return <EmptyChart />;
     const total = data.reduce((sum, row) => sum + row.value, 0);
-    return <div className="flex min-w-0 flex-wrap items-center justify-center gap-5">
-        <svg className="size-40 max-w-full shrink-0" viewBox="0 0 42 42" aria-hidden="true">
+    return <div className="grid min-w-0 items-center gap-5 sm:grid-cols-[10rem_minmax(0,1fr)] sm:gap-8">
+        <svg className="size-36 justify-self-center sm:size-40" viewBox="0 0 42 42" aria-hidden="true">
             <circle cx="21" cy="21" r="15.9155" fill="none" strokeWidth="6" className="stroke-history-card-header" />
             {data.map((row, index) => {
                 const share = total ? row.value / total * 100 : 0;
@@ -310,7 +210,7 @@ export function DonutChart({ data }: { data: ChartDatum[] }) {
                 return <circle key={row.key} cx="21" cy="21" r="15.9155" fill="none" strokeWidth="6" stroke={chartColor(row.key, index)} strokeDasharray={`${share} ${100 - share}`} strokeDashoffset={25 - start} />;
             })}
         </svg>
-        <ul className="grid min-w-0 flex-1 gap-3 text-sm" aria-label="Valores do gráfico de distribuição">{data.map((row, index) => <li key={row.key} className="flex min-w-0 flex-wrap items-center gap-2"><svg className="size-3 shrink-0" viewBox="0 0 10 10" aria-hidden="true"><rect width="10" height="10" fill={chartColor(row.key, index)} /></svg><span className="min-w-0 flex-1 text-ink">{row.label}</span><strong className="text-ink">{dashboardNumber(row.value)}</strong><span className="text-history-muted">({dashboardNumber(total ? row.value / total * 100 : 0)}%)</span></li>)}</ul>
+        <ul className="grid min-w-0 gap-x-6 gap-y-3 text-sm sm:grid-cols-2 lg:grid-cols-3" aria-label="Valores do gráfico de distribuição">{data.map((row, index) => <li key={row.key} className="flex min-w-0 flex-wrap items-center gap-2"><svg className="size-3 shrink-0" viewBox="0 0 10 10" aria-hidden="true"><rect width="10" height="10" fill={chartColor(row.key, index)} /></svg><span className="min-w-0 flex-1 text-ink">{row.label}</span><strong className="text-ink">{dashboardNumber(row.value)}</strong><span className="text-history-muted">({dashboardNumber(total ? row.value / total * 100 : 0)}%)</span></li>)}</ul>
     </div>;
 }
 
