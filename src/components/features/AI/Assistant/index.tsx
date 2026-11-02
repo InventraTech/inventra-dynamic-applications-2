@@ -4,10 +4,10 @@ import { useAIAssistant } from "../../../../hooks/useAIAssistant";
 import Feedback from "../../../ui/Feedback";
 import StatusBadge from "../../../ui/StatusBadge";
 import Button from "../../../ui/Button";
-import ApprovalsPanel from "../ApprovalsPanel";
-import ChatPanel from "../ChatPanel";
-import ConversationSidebar from "../ConversationSidebar";
-import DocumentsPanel from "../DocumentsPanel";
+import ApprovalsPanel from "../ApprovalsPanel/index";
+import ChatPanel from "../ChatPanel/index";
+import ConversationSidebar from "../ConversationSidebar/index";
+import DocumentsPanel from "../DocumentsPanel/index";
 import kitchenIcon from "../../../../assets/icons/cozinha.svg";
 
 function serviceStatusLabel(status: string | undefined): string {

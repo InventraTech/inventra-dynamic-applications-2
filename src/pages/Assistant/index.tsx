@@ -1,5 +1,5 @@
 import Topbar from "../../components/layout/Topbar";
-import AssistantFlow from "../../components/features/AI/Assistant";
+import AssistantFlow from "../../components/features/AI/Assistant/index";
 import { displayProfileRole, getProfileDisplayName, getProfileInitials } from "../../components/features/Profile/profileHelpers";
 import { useAuth } from "../../context/auth";
 

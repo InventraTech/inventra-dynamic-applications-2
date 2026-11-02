@@ -34,7 +34,7 @@ const Kitchen = lazy(() => import("../pages/Kitchen"));
 const Suppliers = lazy(() => import("../pages/Suppliers"));
 const Inventory = lazy(() => import("../pages/Inventory"));
 const Dashboard = lazy(() => import("../pages/Dashboard"));
-const Assistant = lazy(() => import("../pages/Assistant"));
+const Assistant = lazy(() => import("../pages/Assistant/index"));
 
 function DashboardRouteLoading() {
     return <main id="conteudo-principal" tabIndex={-1} className="min-w-0 p-4 outline-none sm:p-6" aria-busy="true"><h1 className="text-2xl font-bold text-heading">Painel</h1><p role="status" className="mt-4 text-history-muted">Carregando painel gerencial…</p><div className="mt-5 min-h-40 rounded-3xl bg-surface shadow-history-card motion-safe:animate-pulse" aria-hidden="true" /></main>;
