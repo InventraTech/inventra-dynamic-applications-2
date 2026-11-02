@@ -2,7 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { getSession } from "../services/authSession";
 import { getKitchenStock } from "../services/stock";
 import { getKitchenRequisitions, getRequisitionItems } from "../services/requisitions";
-import { getProductKitchenParameters, getProductSuppliers } from "../services/products";
+import { getProductKitchenParameters } from "../services/products";
+import { getProductSuppliers } from "../services/productSuppliers";
 import { getDashboardAlerts, getDashboardBatches, getDashboardCounts, getDashboardInventories, getDashboardProducts, getDashboardSuppliers, getRelatedRecords } from "../services/dashboard";
 import type { DashboardResource, DashboardTab } from "../types/dashboard";
 
