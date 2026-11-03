@@ -1,3 +1,4 @@
+import Icon from "../../../ui/Icon";
 import { Link } from "react-router-dom";
 import Button from "../../../ui/Button/index";
 import mascotHead from "../../../../assets/images/mascote-cabeca.svg";
@@ -16,7 +17,7 @@ export default function StockHero({ kitchenName, onConsume }: StockHeroProps) {
             <img src={hexagonPattern} alt="" aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 size-full object-cover opacity-70" />
             <div className="relative z-10 grid min-w-0 max-w-4xl gap-2">
                 <span className="flex w-fit max-w-full items-center gap-2 rounded-full border border-white/20 bg-white/12 px-3 py-1 text-xs font-semibold text-on-brand wrap-anywhere">
-                    <span aria-hidden="true">⌖</span>{kitchenName}
+                    <Icon name="pin" className="size-4 shrink-0" />{kitchenName}
                 </span>
                 <h2 className="m-0 font-k2d text-2xl font-bold leading-tight text-on-brand sm:text-3xl">Estoque da cozinha</h2>
                 <p className="m-0 max-w-prose text-sm leading-relaxed text-on-brand sm:text-base">O saldo soma só os lotes ativos e dentro da validade. Alertas e movimentações valem apenas para esta cozinha.</p>

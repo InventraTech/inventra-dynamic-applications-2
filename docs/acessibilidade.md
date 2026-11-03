@@ -12,7 +12,7 @@ Toda tela nova deve ser responsiva, continuar utilizável com texto e espaçamen
 - O cursor ampliado atua em dispositivos com mouse. A régua acompanha ponteiro, toque e foco do teclado; também pode ser movida com os botões das ferramentas de leitura.
 - A leitura em voz usa a voz do navegador, com controle manual, por foco ou por ponteiro. Os botões globais permitem ouvir, pausar, continuar e parar. Senhas e valores digitados não são lidos. Navegadores sem síntese de voz mantêm o recurso indisponível.
 - O VLibras é carregado quando ativado, com estados de carregamento e erro e opção de tentar novamente. Sua posição e suas dimensões seguem o padrão do widget oficial; foco e movimento reduzido também são respeitados dentro do Shadow DOM.
-- Controle por voz próprio e rastreamento ocular estão indisponíveis. Seus cartões informam isso e não oferecem ativação, calibração ou pedido de câmera/microfone.
+- Pesquisa por voz: após salvar a preferência, o microfone da topbar reconhece nomes de páginas em português e preenche a busca, sem disparar ações de escrita. Solicita permissão apenas ao clicar. Usa a Web Speech API; o serviço do fabricante pode processar o áudio externamente e nem todos os navegadores o suportam. Recusa de permissão, ausência de fala e erro de rede têm feedback visível.
 - A opção de fonte de leitura usa OpenDyslexic, servida localmente com os arquivos WOFF2 e a licença SIL Open Font License 1.1. Os modos de visão de cores adaptam as paletas dos estados, mantendo os nomes e símbolos; não simulam uma deficiência visual.
 
 ## Onde manter cada responsabilidade

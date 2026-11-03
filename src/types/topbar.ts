@@ -5,9 +5,4 @@ export interface TopbarProps {
     userPhotoUrl?: string | null;
     userName?: string;
     userRole?: string;
-    searchPlaceholder?: string;
-    searchValue?: string;
-    hasNotifications?: boolean;
-    onSearch?: (value: string) => void;
-    onNotifications?: () => void;
 }

@@ -1,3 +1,4 @@
+import Icon from "../../../ui/Icon";
 import { useId, useMemo, useState, type ReactNode } from "react";
 import type { ChartDatum, DashboardInventoryDivergence, DashboardResource, DashboardStackedDatum, DashboardStockCoverage } from "../../../../types/dashboard";
 import { dashboardMoney, dashboardNumber } from "../../../../utils/dashboardAggregations";
@@ -8,19 +9,13 @@ export const panelClass = "min-w-0 rounded-3xl border border-history-border bg-s
 
 export function Metric({ title, value, note, featured = false, pending = false, tone, icon }: { title: string; value: ReactNode; note: string; featured?: boolean; pending?: boolean; tone?: "brand" | "warning" | "success" | "danger"; icon?: string }) {
     const accent = tone ?? (featured ? "brand" : null);
-    const accentClasses = {
-        brand: "border-l-4 border-l-brand",
-        warning: "border-l-4 border-l-history-status-observation-text",
-        success: "border-l-4 border-l-feedback-success",
-        danger: "border-l-4 border-l-feedback-error",
-    };
     const iconBackground = {
         brand: "bg-sidebar-active",
         warning: "bg-history-status-observation-bg",
         success: "bg-feedback-success-bg",
         danger: "bg-feedback-error-bg",
     };
-    return <div className={`${panelClass} flex min-h-36 flex-col text-ink ${accent ? accentClasses[accent] : ""}`}>
+    return <div className={`${panelClass} flex min-h-36 flex-col text-ink`}>
         <div className="flex min-w-0 items-start justify-between gap-3">
             <dt className="min-w-0 pt-1 text-sm font-semibold leading-snug text-history-muted">{title}</dt>
             {icon && <span className={`grid size-10 shrink-0 place-items-center rounded-2xl ${accent ? iconBackground[accent] : "bg-sidebar-active"}`} aria-hidden="true"><img className="size-5" src={icon} alt="" /></span>}
@@ -285,7 +280,7 @@ export function DashboardTable<T>({ title, data, columns, rowKey }: { title: str
             <table className="w-full min-w-160 border-collapse text-left text-sm text-ink">
                 <caption className="sr-only">{title}</caption>
                 <thead className="bg-history-card-header text-heading"><tr>{columns.map(column => <th key={column.key} scope="col" className="whitespace-nowrap px-3 py-2 font-semibold" aria-sort={sort?.key === column.key ? sort.descending ? "descending" : "ascending" : column.sort ? "none" : undefined}>
-                    {column.sort ? <Button variant="ghost" className="min-h-11 whitespace-nowrap text-left" onClick={() => { setSort({ key: column.key, descending: sort?.key === column.key ? !sort.descending : false }); setPage(0); }}>{column.title}<span aria-hidden="true">{sort?.key === column.key ? sort.descending ? " ↓" : " ↑" : " ↕"}</span><span className="sr-only">, ordenar</span></Button> : column.title}
+                    {column.sort ? <Button variant="ghost" className="min-h-11 whitespace-nowrap text-left" onClick={() => { setSort({ key: column.key, descending: sort?.key === column.key ? !sort.descending : false }); setPage(0); }}>{column.title}<Icon name="sort" className="size-4" /><span className="sr-only">, ordenar</span></Button> : column.title}
                 </th>)}</tr></thead>
                 <tbody>{sorted.slice(currentPage * 10, currentPage * 10 + 10).map(row => <tr key={rowKey(row)} className="border-t border-history-border">{columns.map(column => <td key={column.key} className="px-3 py-3 align-top">{column.render(row)}</td>)}</tr>)}</tbody>
             </table>

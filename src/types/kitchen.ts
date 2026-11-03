@@ -35,3 +35,5 @@ export interface KitchenFormValues {
 }
 
 export type KitchenFormErrors = Partial<Record<keyof KitchenFormValues, string>>;
+
+export interface LeaveKitchenControls { saving: boolean; error: string | null; leave: () => Promise<void> }

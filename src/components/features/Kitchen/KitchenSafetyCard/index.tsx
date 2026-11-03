@@ -1,3 +1,4 @@
+import { useLeaveKitchen } from "../../../../hooks/useLeaveKitchen";
 import { useState } from "react";
 
 import warningIcon from "../../../../assets/icons/alerta.svg";
@@ -18,6 +19,8 @@ interface KitchenSafetyCardProps {
 }
 
 function KitchenSafetyCard({ kitchen, canEdit, saving, error, success, onStatusChange }: KitchenSafetyCardProps) {
+    const leaveAction = useLeaveKitchen();
+    const [confirmLeave, setConfirmLeave] = useState(false);
     const [confirmDeactivate, setConfirmDeactivate] = useState(false);
 
     async function confirmAction() {
@@ -59,14 +62,14 @@ function KitchenSafetyCard({ kitchen, canEdit, saving, error, success, onStatusC
                     <div className="grid min-w-0 gap-1.5">
                         <h3 className="m-0 flex min-w-0 flex-wrap items-center gap-2 font-k2d text-base font-bold text-ink sm:text-lg">
                             Sair da cozinha
-                            <span className="rounded-full bg-history-card-header px-2.5 py-0.5 font-k2d text-xs font-bold text-history-muted">Indisponível</span>
+
                         </h3>
-                        <p className="m-0 text-sm leading-snug text-history-muted">A API atual não permite remover a associação da sua conta à cozinha. Nenhuma ação será simulada.</p>
+                        <p className="m-0 text-sm leading-snug text-history-muted">Sua conta e seu histórico são mantidos. Seus rascunhos nesta cozinha são cancelados. O último supervisor precisa promover outro membro ou desativar a cozinha antes de sair.</p>
                     </div>
                 </div>
-                <Button variant="outline" className="w-full shrink-0 sm:w-auto" type="button" disabled aria-describedby="kitchen-leave-unavailable">Sair da cozinha</Button>
+                <Button variant="outline" className="w-full shrink-0 sm:w-auto" type="button" onClick={() => setConfirmLeave(true)}>Sair da cozinha</Button>
             </div>
-            <p id="kitchen-leave-unavailable" className="sr-only">Função indisponível: o backend ainda não oferece uma operação para sair da cozinha.</p>
+            <Dialog open={confirmLeave} onOpenChange={setConfirmLeave} aria-labelledby="leave-kitchen-title"><div className="space-y-4 p-6"><h2 id="leave-kitchen-title" className="text-xl font-bold">Sair da cozinha?</h2><p>Você perderá acesso aos dados desta cozinha e seus rascunhos serão cancelados. Sua conta será mantida.</p>{leaveAction.error && <Feedback severity="error">{leaveAction.error}</Feedback>}<div className="flex flex-wrap justify-end gap-3"><Button variant="outline" disabled={leaveAction.saving} onClick={() => setConfirmLeave(false)}>Cancelar</Button><Button variant="danger" disabled={leaveAction.saving} onClick={() => void leaveAction.leave()}>{leaveAction.saving ? "Saindo…" : "Confirmar saída"}</Button></div></div></Dialog>
             {error && !confirmDeactivate && <Feedback severity="error">{error}</Feedback>}
             {success && <Feedback severity="success">{success}</Feedback>}
             {saving && <p role="status" aria-live="polite" className="sr-only">Atualizando situação da cozinha…</p>}

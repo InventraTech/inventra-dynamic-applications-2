@@ -1,3 +1,4 @@
+import Icon from "../../../ui/Icon";
 import { useNavigate } from "react-router-dom";
 import Button from "../../../ui/Button/index";
 import mascotHead from "../../../../assets/images/mascote-cabeca.svg";
@@ -13,7 +14,7 @@ export default function RequisitionListHeader() {
                 <h2 id="requisitions-heading" className="m-0 font-k2d text-2xl font-bold leading-tight text-on-brand sm:text-3xl">Requisições da cozinha</h2>
                 <p className="m-0 max-w-prose text-sm leading-relaxed text-on-brand sm:text-base">Compras, consumo e transferências — acompanhe cada pedido até a decisão.</p>
                 <Button variant="accent" type="button" onClick={() => navigate("/requisicoes/nova")} className="mt-1 w-fit">
-                    <span aria-hidden="true">⊕</span>
+                    <Icon name="plus" className="size-4 shrink-0" />
                     Nova requisição
                 </Button>
             </div>

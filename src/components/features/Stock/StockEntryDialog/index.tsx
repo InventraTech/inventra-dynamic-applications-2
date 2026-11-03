@@ -1,3 +1,4 @@
+import Icon from "../../../ui/Icon";
 import { useEffect, useState, type FormEvent } from "react";
 import type { KitchenStockItem, StockEntryRequest, StockSupplier } from "../../../../types/stock";
 import { validateStockEntry, type StockEntryErrors, type StockEntryFormValues } from "../../../../utils/stockValidation";
@@ -89,7 +90,7 @@ export default function StockEntryDialog({ open, kitchenId, products, suppliers,
                         <h2 id="stock-entry-heading" className="m-0 font-k2d text-xl font-bold text-ink sm:text-2xl">Registrar entrada</h2>
                         <p className="m-0 text-sm leading-relaxed text-history-muted">Informe o lote recebido para atualizar o saldo da cozinha.</p>
                     </div>
-                    <Button variant="icon" type="button" autoFocus={products.length === 0} aria-label="Fechar diálogo" className="min-w-11 shrink-0 rounded-full px-2 text-xl leading-none text-history-muted hover:bg-history-card-header" onClick={() => onOpenChange(false)}>×</Button>
+                    <Button variant="icon" type="button" autoFocus={products.length === 0} aria-label="Fechar diálogo" className="min-w-11 shrink-0 rounded-full px-2 text-xl leading-none text-history-muted hover:bg-history-card-header" onClick={() => onOpenChange(false)}><Icon name="close" className="size-4" /></Button>
                 </header>
 
                 {products.length === 0 ? (

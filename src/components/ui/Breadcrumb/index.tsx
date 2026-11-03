@@ -1,3 +1,4 @@
+import Icon from "../Icon";
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
 
@@ -15,7 +16,7 @@ interface BreadcrumbProps {
 export default function Breadcrumb({ items, backHref, backLabel = "Voltar" }: BreadcrumbProps) {
     return (
         <nav aria-label="Navegação estrutural" className="flex min-w-0 items-center gap-3">
-            {backHref && <Link className="grid size-11 shrink-0 place-items-center rounded-full border border-history-border bg-surface text-xl text-brand transition-colors hover:border-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to={backHref} aria-label={backLabel}><span aria-hidden="true">←</span></Link>}
+            {backHref && <Link className="grid size-11 shrink-0 place-items-center rounded-full border border-history-border bg-surface text-xl text-brand transition-colors hover:border-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to={backHref} aria-label={backLabel}><Icon name="arrow" className="size-4 shrink-0" /></Link>}
             <ol className="flex min-w-0 list-none flex-wrap items-center gap-2 p-0 text-sm text-history-muted">
                 {items.map((item, index) => {
                     const current = index === items.length - 1;

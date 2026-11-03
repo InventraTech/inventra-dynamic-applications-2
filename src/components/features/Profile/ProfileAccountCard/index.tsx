@@ -1,3 +1,4 @@
+import Icon from "../../../ui/Icon";
 import type { UserAccount } from "../../../../types/auth";
 import emailIcon from "../../../../assets/icons/email.svg";
 import kitchenIcon from "../../../../assets/icons/cozinha.svg";
@@ -44,7 +45,7 @@ function ProfileAccountCard({ user }: ProfileAccountCardProps) {
             <div className="mt-4 rounded-2xl bg-history-card-header p-3">
                 <p className="font-k2d text-xs leading-relaxed text-history-muted">O e-mail é fixo. Cozinha e perfil de acesso são gerenciados pela equipe da cozinha.</p>
                 {isSupervisor
-                    ? <Link className="mt-2 inline-flex min-h-11 items-center font-k2d text-sm font-bold text-sidebar-purple underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to="/equipe-acessos">Ir para Equipe e acessos <span aria-hidden="true" className="ml-1">→</span></Link>
+                    ? <Link className="mt-2 inline-flex min-h-11 items-center font-k2d text-sm font-bold text-sidebar-purple underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to="/equipe-acessos">Ir para Equipe e acessos <Icon name="arrow" className="size-4 shrink-0 rotate-180" /></Link>
                     : <p className="mt-2 font-k2d text-xs leading-relaxed text-history-muted">Para alterar esses dados, peça ajuda ao supervisor da cozinha.</p>}
             </div>
         </section>

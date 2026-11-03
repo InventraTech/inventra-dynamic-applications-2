@@ -1,3 +1,4 @@
+import Icon from "../../../ui/Icon";
 import { useId } from "react";
 import type { Supplier } from "../../../../types/suppliers";
 import { formatSupplierCnpj } from "../../../../utils/validateSupplier";
@@ -45,7 +46,7 @@ function SupplierDetailDialog({ open, supplier, canManage, photoFile, photoBusy,
                         <h2 id={`${id}-title`} className="font-k2d text-xl font-bold text-sidebar-text">Detalhes do fornecedor</h2>
                         <p className="mt-1 text-sm text-history-muted">Cadastro compartilhado entre cozinhas.</p>
                     </div>
-                    <Button variant="icon" type="button" onClick={() => onOpenChange(false)} aria-label="Fechar detalhes" className="size-10 rounded-full bg-history-card-header text-history-muted">×</Button>
+                    <Button variant="icon" type="button" onClick={() => onOpenChange(false)} aria-label="Fechar detalhes" className="size-10 rounded-full bg-history-card-header text-history-muted"><Icon name="close" className="size-4" /></Button>
                 </header>
 
                 <div className="grid min-h-0 min-w-0 flex-1 gap-4 overflow-y-auto overscroll-contain px-5 py-5 sm:px-7">

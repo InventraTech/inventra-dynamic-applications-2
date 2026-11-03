@@ -1,3 +1,4 @@
+import Icon from "../../../ui/Icon";
 import type { Supplier } from "../../../../types/suppliers";
 import { formatSupplierCnpj } from "../../../../utils/validateSupplier";
 import Button from "../../../ui/Button/index";
@@ -110,9 +111,9 @@ function SupplierTable({ suppliers, totalCount, page, pageSize, totalPages, onPa
                 </div>
                 <div className="flex min-w-0 flex-wrap items-center gap-2">
                     <nav className="flex items-center gap-2" aria-label="Paginação de fornecedores">
-                        <Button variant="ghost" type="button" className="size-9 px-0 text-sidebar-purple hover:bg-sidebar-active disabled:opacity-50" disabled={page <= 1} onClick={() => onPageChange(page - 1)} aria-label="Página anterior">←</Button>
+                        <Button variant="ghost" type="button" className="size-9 px-0 text-sidebar-purple hover:bg-sidebar-active disabled:opacity-50" disabled={page <= 1} onClick={() => onPageChange(page - 1)} aria-label="Página anterior"><Icon name="arrow" className="size-4" /></Button>
                         <span className="whitespace-nowrap" aria-live="polite">Página {page} de {totalPages}</span>
-                        <Button variant="ghost" type="button" className="size-9 px-0 text-sidebar-purple hover:bg-sidebar-active disabled:opacity-50" disabled={page >= totalPages} onClick={() => onPageChange(page + 1)} aria-label="Próxima página">→</Button>
+                        <Button variant="ghost" type="button" className="size-9 px-0 text-sidebar-purple hover:bg-sidebar-active disabled:opacity-50" disabled={page >= totalPages} onClick={() => onPageChange(page + 1)} aria-label="Próxima página"><Icon name="arrow" className="size-4 rotate-180" /></Button>
                     </nav>
                     <label className="flex items-center gap-2" htmlFor="supplier-page-size">
                         <span>por página</span>

@@ -1,3 +1,4 @@
+import Icon from "../../../ui/Icon";
 import { useEffect, useId, useState, type FormEvent } from "react";
 import Button from "../../../ui/Button/index";
 import Dialog from "../../../ui/Dialog/index";
@@ -40,7 +41,7 @@ export default function InventoryOpenDialog({ open, saving, error, onOpenChange,
                         <h2 id={`${id}-title`} className="m-0 font-k2d text-xl font-bold text-ink sm:text-2xl">Novo inventário</h2>
                         <p className="m-0 text-sm leading-relaxed text-history-muted">Abra uma contagem física para os lotes da cozinha atual. Só pode existir um inventário aberto por vez.</p>
                     </div>
-                    <Button variant="icon" type="button" className="shrink-0 rounded-full text-xl text-history-muted hover:bg-history-card-header" aria-label="Fechar diálogo" disabled={saving} onClick={() => onOpenChange(false)}>×</Button>
+                    <Button variant="icon" type="button" className="shrink-0 rounded-full text-xl text-history-muted hover:bg-history-card-header" aria-label="Fechar diálogo" disabled={saving} onClick={() => onOpenChange(false)}><Icon name="close" className="size-4" /></Button>
                 </header>
 
                 <div className="grid min-w-0 content-start gap-1">

@@ -74,7 +74,7 @@ function KitchenAboutCard({ kitchen, roleLabel, canManage }: KitchenAboutCardPro
                     </p>
                     {canManage && (
                         <Link className="w-fit max-w-full font-k2d text-sm font-bold text-link underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to="/equipe-acessos">
-                            Ir para Equipe e acessos →
+                            Ir para Equipe e acessos
                         </Link>
                     )}
                 </div>

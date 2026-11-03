@@ -1,3 +1,4 @@
+import Icon from "../../ui/Icon";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import Button from "../../ui/Button";
@@ -121,7 +122,7 @@ export default function RequisitionFlow({ mode, kitchenId, kitchenName, userId, 
                     <div className="grid min-h-60 place-content-center justify-items-center gap-3 rounded-3xl bg-surface p-6 text-center shadow-history-card">
                         <h3 className="font-k2d text-xl font-bold text-heading">Nenhuma requisição por enquanto</h3>
                         <p className="max-w-prose text-history-muted">Crie um rascunho para solicitar uma compra, registrar um consumo ou transferir itens.</p>
-                        <Link className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-brand px-4 py-2.5 font-k2d text-sm font-bold text-on-brand transition-colors hover:bg-brand-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to="/requisicoes/nova">Nova requisição <span aria-hidden="true">→</span></Link>
+                        <Link className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-brand px-4 py-2.5 font-k2d text-sm font-bold text-on-brand transition-colors hover:bg-brand-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to="/requisicoes/nova">Nova requisição <Icon name="arrow" className="size-4 shrink-0 rotate-180" /></Link>
                     </div>
                 )}
                 {!listState.loading && !listState.error && visibleRequisitions.length === 0 && listState.requisitions.length > 0 && <div className="grid justify-items-center gap-3 rounded-2xl bg-surface p-6 text-center"><p className="text-history-muted">Nenhuma requisição corresponde aos filtros selecionados.</p><Button variant="outline" type="button" onClick={() => { setFilters({ status: "ALL", type: "ALL", search: "" }); setPage(1); }}>Limpar filtros</Button></div>}

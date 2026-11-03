@@ -215,14 +215,22 @@ html:not([data-accessibility-contrast="normal"]) .topbar-accent {
 }
 
 /* Rótulos e ícones continuam indicando os estados quando a paleta é adaptada. */
-html[data-accessibility-color-vision="protanopia"],
-html[data-accessibility-color-vision="deuteranopia"] {
+html[data-accessibility-color-vision="protanopia"] {
   --color-history-status-complete-bg: #ddecff;
   --color-history-status-complete-text: #12477c;
   --color-history-status-pending-bg: #ffe6d5;
   --color-history-status-pending-text: #81370d;
   --color-history-status-observation-bg: #eee6ff;
   --color-history-status-observation-text: #573c80;
+}
+
+html[data-accessibility-color-vision="deuteranopia"] {
+  --color-history-status-complete-bg: #dbeaff;
+  --color-history-status-complete-text: #174172;
+  --color-history-status-pending-bg: #fff0d2;
+  --color-history-status-pending-text: #714800;
+  --color-history-status-observation-bg: #ede3ff;
+  --color-history-status-observation-text: #56377a;
 }
 
 html[data-accessibility-color-vision="tritanopia"] {
@@ -313,3 +321,7 @@ html[data-accessibility-cursor="true"] :is(textarea, input:not([type="checkbox"]
     --spacing-login-input-height: 3rem;
   }
 }
+
+/* Superfície sólida mantém o ícone legível sobre o painel roxo no mobile. */
+html body a[data-accessibility-launcher] { background: var(--color-surface); box-shadow: none; }
+html body a[data-accessibility-launcher]:hover { background: var(--color-sidebar-active); }

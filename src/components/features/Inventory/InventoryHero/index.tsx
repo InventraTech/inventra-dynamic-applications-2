@@ -1,3 +1,4 @@
+import Icon from "../../../ui/Icon";
 import type { ReactNode } from "react";
 import hexagonPattern from "../../../../assets/images/requisition-hex-pattern.svg";
 import Mascot from "../../../ui/Mascot/index";
@@ -15,7 +16,7 @@ export default function InventoryHero({ kitchenName, title, description, actions
             <img src={hexagonPattern} alt="" aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 size-full object-cover opacity-60" />
             <div className="relative z-10 grid min-w-0 max-w-4xl gap-2">
                 <span className="flex w-fit max-w-full items-center gap-2 rounded-full border border-white/25 bg-white/12 px-3 py-1 text-xs font-semibold text-on-brand wrap-anywhere">
-                    <span aria-hidden="true">⌖</span>{kitchenName}
+                    <Icon name="pin" className="size-4 shrink-0" />{kitchenName}
                 </span>
                 <h2 className="m-0 font-k2d text-2xl font-bold leading-tight text-on-brand sm:text-3xl">{title}</h2>
                 <p className="m-0 max-w-prose text-sm leading-relaxed text-on-brand sm:text-base">{description}</p>

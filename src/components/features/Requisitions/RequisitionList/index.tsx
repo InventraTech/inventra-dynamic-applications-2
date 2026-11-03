@@ -1,3 +1,4 @@
+import Icon from "../../../ui/Icon";
 import { Link } from "react-router-dom";
 import type { Requisition } from "../../../../types/requisitions";
 import StatusBadge from "../../../ui/StatusBadge/index";
@@ -31,14 +32,14 @@ function RequisitionPagination({ page, pageSize, totalCount, onPageChange, onPag
             <p className="m-0">Mostrando {firstVisible}–{lastVisible} de {totalCount} {totalCount === 1 ? "requisição" : "requisições"}</p>
             <div className="flex min-w-0 flex-wrap items-center gap-2">
                 <nav className="flex flex-wrap items-center gap-1" aria-label="Paginação das requisições">
-                    {totalPages > 1 && <Button variant="ghost" type="button" className="text-brand" disabled={page <= 1} onClick={() => onPageChange(page - 1)} aria-label="Página anterior">←</Button>}
+                    {totalPages > 1 && <Button variant="ghost" type="button" className="text-brand" disabled={page <= 1} onClick={() => onPageChange(page - 1)} aria-label="Página anterior"><Icon name="arrow" className="size-4" /></Button>}
                     {visiblePages.map((pageNumber, index) => (
                         <span key={pageNumber} className="flex items-center gap-1">
                             {index > 0 && pageNumber - visiblePages[index - 1] > 1 && <span aria-hidden="true" className="px-1">…</span>}
                             <Button variant="ghost" type="button" className={"size-9 px-0 " + (pageNumber === page ? "bg-brand text-on-brand hover:bg-brand-strong" : "text-sidebar-purple hover:bg-sidebar-active")} aria-current={pageNumber === page ? "page" : undefined} aria-label={"Página " + pageNumber} onClick={() => onPageChange(pageNumber)}>{pageNumber}</Button>
                         </span>
                     ))}
-                    {totalPages > 1 && <Button variant="ghost" type="button" className="size-9 bg-sidebar-active px-0 text-brand hover:bg-history-card-header" disabled={page >= totalPages} onClick={() => onPageChange(page + 1)} aria-label="Próxima página">→</Button>}
+                    {totalPages > 1 && <Button variant="ghost" type="button" className="size-9 bg-sidebar-active px-0 text-brand hover:bg-history-card-header" disabled={page >= totalPages} onClick={() => onPageChange(page + 1)} aria-label="Próxima página"><Icon name="arrow" className="size-4 rotate-180" /></Button>}
                 </nav>
                 <label className="flex items-center gap-2" htmlFor="requisition-page-size">
                     <span>por página</span>
@@ -83,7 +84,7 @@ function RequisitionCards({ requisitions }: Pick<RequisitionListProps, "requisit
                         </div>
                         <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
                             <span className="font-k2d text-lg font-bold text-brand">{formatRequisitionCurrency(requisition.estimatedTotal)}</span>
-                            <Link className="inline-flex min-h-10 items-center justify-center rounded-xl bg-sidebar-active px-4 py-2 font-k2d text-sm font-bold text-brand transition-colors hover:bg-history-card-header focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to={"/requisicoes/" + requisition.id} aria-label={"Ver detalhes da requisição " + requisition.id}>Ver requisição <span className="ml-2" aria-hidden="true">→</span></Link>
+                            <Link className="inline-flex min-h-10 items-center justify-center rounded-xl bg-sidebar-active px-4 py-2 font-k2d text-sm font-bold text-brand transition-colors hover:bg-history-card-header focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to={"/requisicoes/" + requisition.id} aria-label={"Ver detalhes da requisição " + requisition.id}>Ver requisição <Icon name="arrow" className="size-4 shrink-0 rotate-180" /></Link>
                         </div>
                     </li>
                 );
@@ -129,7 +130,7 @@ function RequisitionTable({ requisitions }: Pick<RequisitionListProps, "requisit
                                     <td className="min-w-64 max-w-80 px-4 py-4"><span className="block max-w-80 line-clamp-2 wrap-anywhere">{itemSummary}</span><span className="mt-1 block text-xs text-history-muted">{requisition.itemCount} {requisition.itemCount === 1 ? "item" : "itens"}</span></td>
                                     <td className="whitespace-nowrap px-4 py-4 text-right font-semibold text-brand">{formatRequisitionCurrency(requisition.estimatedTotal)}</td>
                                     <td className="px-4 py-4"><StatusBadge label={status.label} tone={status.tone} /></td>
-                                    <td className="px-4 py-4"><Link className="grid size-10 place-items-center rounded-full bg-sidebar-active font-semibold text-brand transition-colors hover:bg-history-card-header focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to={"/requisicoes/" + requisition.id} aria-label={"Ver detalhes da requisição " + requisition.id}><span aria-hidden="true">→</span></Link></td>
+                                    <td className="px-4 py-4"><Link className="grid size-10 place-items-center rounded-full bg-sidebar-active font-semibold text-brand transition-colors hover:bg-history-card-header focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to={"/requisicoes/" + requisition.id} aria-label={"Ver detalhes da requisição " + requisition.id}><Icon name="arrow" className="size-4 shrink-0 rotate-180" /></Link></td>
                                 </tr>
                             );
                         })}

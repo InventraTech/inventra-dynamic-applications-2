@@ -1,3 +1,4 @@
+import Icon from "../../../ui/Icon";
 import { Fragment, useState } from "react";
 import { Link } from "react-router-dom";
 import { useRequisitionServiceActions } from "../../../../hooks/useServiceActions";
@@ -88,7 +89,7 @@ export default function RequisitionItemsPanel({ requisition, items, canEdit, onC
                     <h3 id="requisition-items-heading" className="m-0 font-k2d text-lg font-bold text-ink">{heading}</h3>
                     <div className="flex min-w-0 flex-wrap items-center gap-3">
                         <span className="rounded-full bg-sidebar-active px-3 py-1 text-sm font-semibold text-heading">{items.length} {items.length === 1 ? "item" : "itens"}</span>
-                        {addItemTo && <Link className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-history-border bg-surface px-4 py-2 font-k2d text-sm font-bold text-sidebar-purple transition-colors hover:bg-history-card-header focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to={addItemTo}><span aria-hidden="true">⊕</span>Adicionar item</Link>}
+                        {addItemTo && <Link className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-history-border bg-surface px-4 py-2 font-k2d text-sm font-bold text-sidebar-purple transition-colors hover:bg-history-card-header focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus" to={addItemTo}><Icon name="plus" className="size-4 shrink-0" />Adicionar item</Link>}
                     </div>
                 </header>
             )}

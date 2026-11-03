@@ -1,6 +1,6 @@
 import type { RequisitionStatus } from "../../../../types/api";
 import type { HistoryStatusBadgeProps } from "../../../../types/history";
-import approvedIcon from "../../../../assets/icons/aprovado.svg";
+import Icon from "../../../ui/Icon";
 
 const statusLabels: Record<RequisitionStatus, string> = {
     APPROVED: "Aprovada",
@@ -16,17 +16,10 @@ const statusStyles: Record<RequisitionStatus, string> = {
     CANCELLED: "bg-history-status-pending-bg text-history-status-pending-text",
 };
 
-const statusIcons: Record<RequisitionStatus, string> = {
-    APPROVED: "✓",
-    UNDER_REVIEW: "…",
-    REJECTED: "×",
-    CANCELLED: "−",
-};
-
 function HistoryStatusBadge({ status }: HistoryStatusBadgeProps) {
     return (
         <span className={`inline-flex max-w-full items-center gap-2 rounded-full border border-current px-3 py-1.5 font-k2d text-sm font-bold ${statusStyles[status]}`}>
-            {status === "APPROVED" ? <span className="size-4 shrink-0 mask-contain mask-no-repeat bg-current" style={{ maskImage: `url(${approvedIcon})` }} aria-hidden="true" /> : <span aria-hidden="true">{statusIcons[status]}</span>}
+            <Icon name={status === "APPROVED" ? "check" : status === "UNDER_REVIEW" ? "clock" : status === "CANCELLED" ? "minus" : "close"} className="size-4 shrink-0" />
             {statusLabels[status]}
         </span>
     );

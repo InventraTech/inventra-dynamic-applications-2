@@ -1,3 +1,4 @@
+import Icon from "../../components/ui/Icon";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -26,7 +27,6 @@ import speechIcon from "../../assets/icons/leitura-voz.svg";
 import motionIcon from "../../assets/icons/reducao-movimento.svg";
 import cursorIcon from "../../assets/icons/cursor-ampliado.svg";
 import voiceIcon from "../../assets/icons/controle-voz.svg";
-import eyeIcon from "../../assets/icons/rastreamento-ocular.svg";
 import focusIcon from "../../assets/icons/foco-teclado.svg";
 import alertsIcon from "../../assets/icons/alertas-visuais.svg";
 
@@ -108,9 +108,9 @@ const alertOptions: ChoiceOption<AccessibilitySettings["visualAlerts"]>[] = [
 ];
 
 const cursorSizeClasses: Record<AccessibilitySettings["cursorSize"], string> = {
-    medium: "text-2xl",
-    large: "text-4xl",
-    "extra-large": "text-6xl",
+    medium: "size-6",
+    large: "size-10",
+    "extra-large": "size-14",
 };
 
 const cursorColorClasses: Record<AccessibilitySettings["cursorColor"], string> = {
@@ -166,6 +166,7 @@ function Accessibility() {
         if (selected.contrastMode !== "normal") features.push("Contraste ajustado");
         if (selected.colorVisionMode !== "none") features.push("Paleta de estados adaptada");
         if (selected.libras) features.push("Libras");
+        if (selected.voiceSearch) features.push("Pesquisa por voz");
         if (selected.readAloud && speechSupported) features.push("Leitura em voz");
         if (selected.reduceMotion) features.push("Movimento reduzido");
         if (selected.largeCursor) features.push("Cursor ampliado");
@@ -320,7 +321,7 @@ function Accessibility() {
                                                             />
                                                             <span className={`grid aspect-square w-full place-items-center rounded-full ring-offset-2 ring-offset-surface peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 peer-focus-visible:outline-brand ${option.colorClass} ${selected ? "ring-4 ring-brand" : "ring-1 ring-history-border"}`}>
                                                                 <span className="sr-only">{option.label}</span>
-                                                                {selected && <span className={`font-bold ${option.checkClass}`} aria-hidden="true">✓</span>}
+                                                                {selected && <Icon name="check" className={`size-6 ${option.checkClass}`} />}
                                                             </span>
                                                         </label>
                                                     );
@@ -328,18 +329,14 @@ function Accessibility() {
                                             </div>
                                         </fieldset>
                                         <div className="flex min-h-16 items-center gap-3 rounded-xl border border-history-border bg-history-card-header px-4" role="img" aria-label={`Amostra do cursor ${cursorColors[draft.cursorColor].label.toLocaleLowerCase("pt-BR")}, tamanho ${draft.cursorSize === "extra-large" ? "extra grande" : draft.cursorSize === "large" ? "grande" : "médio"}`}>
-                                            <span className={`font-bold leading-none ${cursorSizeClasses[draft.cursorSize]} ${cursorColorClasses[draft.cursorColor]}`} aria-hidden="true">↖</span>
+                                            <Icon name="cursor" className={`${cursorSizeClasses[draft.cursorSize]} ${cursorColorClasses[draft.cursorColor]}`} />
                                             <span className="font-k2d text-xs text-history-muted">Amostra do cursor: {cursorColors[draft.cursorColor].label}</span>
                                         </div>
                                     </>}
                                 </AccessibilityCard>
 
-                                <AccessibilityCard icon={voiceIcon} title="Controle por voz" description="Atalhos de comando por voz para navegar sem mouse.">
-                                    <p className="rounded-xl border border-history-border bg-history-card-header p-3 text-sm text-history-muted">Ainda indisponível. Você pode navegar usando o controle por voz do seu dispositivo. O Inventra não solicita acesso ao microfone.</p>
-                                </AccessibilityCard>
-
-                                <AccessibilityCard icon={eyeIcon} title="Rastreamento ocular" description="Ajustes de permanência para uma futura integração com rastreador ocular.">
-                                    <p className="rounded-xl border border-history-border bg-history-card-header p-3 text-sm text-history-muted">Ainda indisponível. A calibração depende de uma integração com rastreador ocular. O Inventra não solicita acesso à câmera.</p>
+                                <AccessibilityCard icon={voiceIcon} title="Pesquisa por voz" description="Diga o nome de uma página para encontrá-la na topbar.">
+                                    <SettingRow title="Pesquisa de páginas por voz" description="Após salvar, use o microfone da topbar e diga o nome da página. O navegador solicita permissão ao iniciar e pode processar o áudio no serviço de reconhecimento do fabricante."><Toggle enabled={draft.voiceSearch} onToggle={() => updateDraft("voiceSearch", !draft.voiceSearch)} ariaLabel="Ativar pesquisa por voz" /></SettingRow>
                                 </AccessibilityCard>
 
                                 <AccessibilityCard icon={focusIcon} title="Foco do teclado" description="Destaque o elemento selecionado ao navegar sem mouse.">

@@ -1,3 +1,4 @@
+import Icon from "../../../ui/Icon";
 import { useRef, useState } from "react";
 
 import type { AIApproval } from "../../../../types/ai";
@@ -175,7 +176,7 @@ export default function ApprovalsPanel({ inbox, approvals, total, page, status, 
             {selectedLoading ? <div className="rounded-3xl bg-surface p-6 shadow-history-card"><Loading loadingText="Carregando detalhes da ação" /></div> : null}
             {selectedError ? <Feedback severity="error">{selectedError}</Feedback> : null}
             {selected ? <section ref={selectedActionRef} aria-labelledby="ai-approval-detail-title" className="scroll-mt-24 rounded-3xl bg-surface p-4 shadow-history-card sm:p-6">
-                <div className="flex flex-wrap items-start justify-between gap-3"><div><h2 id="ai-approval-detail-title" className="font-k2d text-xl font-bold text-ink">Revisão da ação</h2><p className="mt-1 font-k2d text-sm text-history-muted">Criada em {formatDate(selected.created_at)}</p></div><div className="flex items-center gap-2"><StatusBadge tone={statusTone(selected.status)} label={statusLabel(selected.status)} /><Button variant="icon" type="button" onClick={closeDetails} className="size-10 rounded-full text-history-muted hover:bg-history-card-header" aria-label="Fechar revisão">×</Button></div></div>
+                <div className="flex flex-wrap items-start justify-between gap-3"><div><h2 id="ai-approval-detail-title" className="font-k2d text-xl font-bold text-ink">Revisão da ação</h2><p className="mt-1 font-k2d text-sm text-history-muted">Criada em {formatDate(selected.created_at)}</p></div><div className="flex items-center gap-2"><StatusBadge tone={statusTone(selected.status)} label={statusLabel(selected.status)} /><Button variant="icon" type="button" onClick={closeDetails} className="size-10 rounded-full text-history-muted hover:bg-history-card-header" aria-label="Fechar revisão"><Icon name="close" className="size-4" /></Button></div></div>
                 <p className="mt-4 rounded-2xl bg-history-card-header p-4 font-k2d text-sm leading-relaxed text-ink">{selected.justification}</p>
                 <h3 className="mt-5 font-k2d text-sm font-bold text-ink">Dados que serão afetados</h3>
                 <dl className="mt-2 divide-y divide-history-border rounded-2xl border border-history-border">{Object.entries(selected.action.parameters).map(([key, value]) => <div key={key} className="grid gap-1 px-4 py-3 sm:grid-cols-[minmax(8rem,0.7fr)_minmax(0,1.3fr)]"><dt className="font-k2d text-xs font-semibold uppercase text-history-muted">{key.replaceAll("_", " ")}</dt><dd className="min-w-0 wrap-anywhere font-k2d text-sm text-ink">{formatValue(value)}</dd></div>)}</dl>

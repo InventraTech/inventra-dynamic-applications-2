@@ -1,3 +1,4 @@
+import Icon from "../../../ui/Icon";
 import { memo, useEffect, useRef, useState } from "react";
 
 import type { AIArtifact, AIMessageView, AIPendingAction, AIUploadResult } from "../../../../types/ai";
@@ -209,7 +210,7 @@ const Message = memo(function Message({ message, onReviewAction }: MessageProps)
                         {message.steps.map((step) => {
                             const complete = step.status === "fim";
                             return <li key={step.id} className="flex min-w-0 items-center gap-3 font-k2d text-sm">
-                                <span className={`grid size-5 shrink-0 place-items-center rounded-full border ${complete ? "border-feedback-success text-feedback-success" : "border-brand text-brand"}`} aria-hidden="true">{complete ? "✓" : <span className="size-2 motion-safe:animate-pulse rounded-full bg-brand" />}</span>
+                                <span className={`grid size-5 shrink-0 place-items-center rounded-full border ${complete ? "border-feedback-success text-feedback-success" : "border-brand text-brand"}`} aria-hidden="true">{complete ? <Icon name="check" className="size-4" /> : <span className="size-2 motion-safe:animate-pulse rounded-full bg-brand" />}</span>
                                 <span className="min-w-0 flex-1 text-ink">{step.texto}</span>
                                 <span className={`shrink-0 text-xs font-semibold ${complete ? "text-feedback-success" : "text-sidebar-purple"}`}>{complete ? "Concluída" : "Em andamento"}</span>
                             </li>;
@@ -345,7 +346,7 @@ function Composer({ disabled, ownedDocumentCount, readOnly, loading, recording, 
         <div className="shrink-0 border-t border-history-border bg-surface p-2 sm:p-3">
             {readOnly ? <p className="mb-3 rounded-xl bg-history-card-header px-3 py-2 font-k2d text-sm text-history-muted">Esta conversa é do histórico e está somente para leitura.</p> : null}
             {feedbackError ? <Feedback severity="error" className="mb-3">{feedbackError}</Feedback> : null}
-            {files.length ? <ul className="mb-3 flex flex-wrap gap-2" aria-label="Arquivos anexados">{files.map((file) => <li key={`${file.name}-${file.size}-${file.lastModified}`} className="flex max-w-full items-center gap-2 rounded-full bg-history-card-header px-3 py-1.5 font-k2d text-xs"><span className="max-w-48 truncate">{file.name}</span><button type="button" className="rounded-full px-1 font-bold text-feedback-error focus-visible:outline-2 focus-visible:outline-focus" onClick={() => setComposer((current) => ({ ...current, files: current.files.filter((candidate) => candidate !== file) }))} aria-label={`Remover ${file.name}`}>×</button></li>)}</ul> : null}
+            {files.length ? <ul className="mb-3 flex flex-wrap gap-2" aria-label="Arquivos anexados">{files.map((file) => <li key={`${file.name}-${file.size}-${file.lastModified}`} className="flex max-w-full items-center gap-2 rounded-full bg-history-card-header px-3 py-1.5 font-k2d text-xs"><span className="max-w-48 truncate">{file.name}</span><button type="button" className="rounded-full px-1 font-bold text-feedback-error focus-visible:outline-2 focus-visible:outline-focus" onClick={() => setComposer((current) => ({ ...current, files: current.files.filter((candidate) => candidate !== file) }))} aria-label={`Remover ${file.name}`}><Icon name="close" className="size-4" /></button></li>)}</ul> : null}
             <div className="ai-composer flex min-w-0 items-center gap-2 rounded-2xl border-2 border-brand bg-history-card-header p-1.5 transition-colors focus-within:ring-2 focus-within:ring-focus/25 sm:gap-3 sm:p-2">
                 <input ref={inputRef} type="file" multiple accept=".pdf,.docx,.xlsx,.pptx,.csv,.txt,.md,.png,.jpg,.jpeg,.webp" className="sr-only" onChange={(event) => { addFiles(event.target.files); event.target.value = ""; }} aria-label="Selecionar arquivos para enviar à conversa" />
                 <Button variant="icon" type="button" onClick={() => inputRef.current?.click()} disabled={isComposerDisabled} className="size-9 shrink-0 rounded-full bg-surface text-sidebar-purple hover:bg-sidebar-active" aria-label="Anexar documentos"><svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.2-9.19a4 4 0 0 1 5.65 5.65l-9.2 9.2a2 2 0 0 1-2.82-2.83l8.48-8.48" /></svg></Button>

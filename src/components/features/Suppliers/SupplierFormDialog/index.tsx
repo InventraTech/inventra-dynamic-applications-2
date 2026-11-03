@@ -1,3 +1,4 @@
+import Icon from "../../../ui/Icon";
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import type { Supplier, SupplierDialogMode } from "../../../../types/suppliers";
 import { formatSupplierCnpj, validateSupplier, type SupplierFormErrors, type SupplierFormValues } from "../../../../utils/validateSupplier";
@@ -87,7 +88,7 @@ function SupplierFormDialog({ open, mode, supplier = null, saving, error, onOpen
                         <h2 id={`${id}-title`} className="font-k2d text-xl font-bold text-sidebar-text">{editing ? "Editar fornecedor" : "Novo fornecedor"}</h2>
                         <p className="mt-1 text-sm leading-relaxed text-history-muted">{editing ? "Atualize os dados deste cadastro compartilhado." : "Cadastre uma empresa fornecedora para todas as cozinhas."}</p>
                     </div>
-                    <Button variant="icon" type="button" onClick={() => onOpenChange(false)} disabled={saving} aria-label="Fechar cadastro" className="size-10 rounded-full bg-history-card-header text-history-muted">×</Button>
+                    <Button variant="icon" type="button" onClick={() => onOpenChange(false)} disabled={saving} aria-label="Fechar cadastro" className="size-10 rounded-full bg-history-card-header text-history-muted"><Icon name="close" className="size-4" /></Button>
                 </header>
 
                 <div ref={fieldsRef} className="grid min-h-0 min-w-0 flex-1 gap-4 overflow-y-auto overscroll-contain px-5 py-5 sm:grid-cols-2 sm:px-7">

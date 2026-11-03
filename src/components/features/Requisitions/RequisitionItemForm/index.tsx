@@ -1,3 +1,4 @@
+import Icon from "../../../ui/Icon";
 import { useEffect, useState, type FormEvent } from "react";
 import { useProductServiceActions, useRequisitionServiceActions } from "../../../../hooks/useServiceActions";
 import type { ProductRecord, ProductSupplier } from "../../../../types/products";
@@ -129,7 +130,7 @@ export default function RequisitionItemForm({ requisition, kitchenId, onAdded }:
                         </div>
                         <div className="flex min-w-0 flex-wrap items-end justify-between gap-4 border-t border-history-border pt-4">
                             <p className="grid min-w-0 gap-1 text-sm text-history-muted"><span>Estimativa deste item</span><strong className="font-k2d text-xl text-brand">{estimatedTotal === null || !Number.isFinite(estimatedTotal) ? "Não informada" : new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(estimatedTotal)}</strong></p>
-                            <Button variant="standard" type="submit" disabled={submitting || supplierLoading} aria-busy={submitting} className="w-full sm:w-auto"><span aria-hidden="true">⊕</span><span>{submitting ? "Adicionando…" : "Adicionar item"}</span></Button>
+                            <Button variant="standard" type="submit" disabled={submitting || supplierLoading} aria-busy={submitting} className="w-full sm:w-auto"><Icon name="plus" className="size-4 shrink-0" /><span>{submitting ? "Adicionando…" : "Adicionar item"}</span></Button>
                         </div>
                     </div>
                     {feedback && <Feedback severity={feedback.severity}>{feedback.message}</Feedback>}

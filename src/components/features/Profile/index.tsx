@@ -1,3 +1,4 @@
+import ProfileSignOutCard from "./ProfileSignOutCard";
 import { memo, useEffect, useState } from "react";
 
 import type { UserAccount } from "../../../types/auth";
@@ -56,14 +57,14 @@ function ProfileContent({ onUserUpdated }: ProfileProps) {
         };
     }, [getCurrentUser, onUserUpdated, reloadKey, updateSessionUser]);
 
-    if (loading) return <ProfileLoadingSkeleton />;
+    if (loading) return <><ProfileLoadingSkeleton /><div className="px-4 pb-4"><ProfileSignOutCard /></div></>;
 
     if (loadError || !user) {
         return (
             <section className="mx-auto flex w-full max-w-3xl flex-col gap-4 p-4 sm:p-6" aria-labelledby="perfil-erro-titulo">
                 <h2 id="perfil-erro-titulo" className="font-k2d text-xl font-bold text-sidebar-text">Não foi possível abrir seu perfil</h2>
                 <Feedback severity="error">{loadError ?? "Os dados do perfil não foram retornados."}</Feedback>
-                <div><Button variant="standard" type="button" onClick={() => setReloadKey((value) => value + 1)}>Tentar novamente</Button></div>
+                <div><Button variant="standard" type="button" onClick={() => setReloadKey((value) => value + 1)}>Tentar novamente</Button></div><ProfileSignOutCard />
             </section>
         );
     }
@@ -84,6 +85,7 @@ function ProfileContent({ onUserUpdated }: ProfileProps) {
                     <ProfileAccountCard user={user} />
                     <ProfileAccessibilityCard />
                     <ProfilePasswordTip />
+                    <ProfileSignOutCard />
                 </aside>
             </div>
         </div>

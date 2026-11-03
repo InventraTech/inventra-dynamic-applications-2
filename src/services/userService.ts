@@ -31,3 +31,8 @@ export async function removeCurrentUserPhoto(): Promise<UserAccount> {
     const user = await apiRequest<UserAccount>("/users/me/photo", { method: "DELETE" });
     return normalizeUserAccount(user);
 }
+
+export async function leaveCurrentKitchen(): Promise<UserAccount> {
+ try { return normalizeUserAccount(await apiRequest<UserAccount>("/users/me/leave-kitchen", { method: "POST" })); }
+ catch (error) { throw error instanceof Error ? error : new Error("Não foi possível sair da cozinha."); }
+}

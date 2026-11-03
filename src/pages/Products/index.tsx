@@ -1,9 +1,8 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import Topbar from "../../components/layout/Topbar";
 import { useAuth } from "../../context/auth";
 
 function Products() {
-    const navigate = useNavigate();
     const { session } = useAuth();
     const nameParts = (session?.user.name ?? "Usuário").trim().split(/\s+/).filter(Boolean);
     const userName = nameParts.length > 1 ? `${nameParts[0]} ${nameParts[nameParts.length - 1]}` : nameParts[0] ?? "Usuário";
@@ -21,8 +20,6 @@ function Products() {
                 userPhotoUrl={session?.user.photoUrl}
                 userName={userName}
                 userRole={userRole}
-                searchPlaceholder="Buscar produtos..."
-                onSearch={(value) => navigate(value.trim() ? `/produtos?name=${encodeURIComponent(value)}` : "/produtos")}
             />
             <main id="conteudo-principal" tabIndex={-1} className="min-w-0 flex-1 outline-none">
                 <Outlet />

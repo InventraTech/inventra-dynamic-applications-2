@@ -26,6 +26,7 @@ export interface AccessibilitySettings {
     colorVisionMode: ColorVisionMode;
     libras: boolean;
     readAloud: boolean;
+    voiceSearch: boolean;
     speechRate: 0.75 | 1 | 1.25;
     speechTrigger: SpeechTrigger;
     reduceMotion: boolean;
