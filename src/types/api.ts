@@ -1,0 +1,45 @@
+export type RequisitionType = "PURCHASE" | "TRANSFER" | "CONSUMPTION";
+export type RequisitionStatus = "UNDER_REVIEW" | "APPROVED" | "REJECTED" | "CANCELLED";
+
+export interface RequisitionDto {
+    id: number;
+    type: RequisitionType;
+    status: RequisitionStatus;
+    reason?: string | null;
+    requester: {
+        id: string;
+        name: string;
+        photoUrl?: string | null;
+    };
+    approver?: {
+        id: string;
+        name: string;
+        photoUrl?: string | null;
+    } | null;
+    createdAt: string;
+    approvedAt?: string | null;
+    estimatedTotal?: number | null;
+}
+
+export interface RequisitionItemDto {
+    id: number;
+    product: {
+        id: number;
+        name: string;
+    };
+    quantity: number;
+    estimatedPrice?: number | null;
+    suggestedSupplier?: {
+        id: number;
+        legalName: string;
+    } | null;
+    note?: string | null;
+}
+
+export interface ProductDto {
+    id: number;
+    brand?: string | null;
+    unit?: {
+        symbol: string;
+    } | null;
+}
