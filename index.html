@@ -3,11 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Carregado direto no head para evitar flash antes do VLibras inicializar -->
+    <link rel="stylesheet" href="/vlibras-override.css">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <title>Inventra</title>
   </head>
   <body>
     <div id="root"></div>
+    <div id="vlibras-wrapper" vw class="enabled">
+      <div vw-access-button class="active"></div>
+      <div vw-plugin-wrapper>
+        <div class="vw-plugin-top-wrapper"></div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -1,7 +1,7 @@
+import { Navigate } from "react-router-dom";
+
 function Home() {
-    return (
-        <h1>ola</h1>
-    )
+    return <Navigate to="/dashboard" replace />;
 }
 
 export default Home;
