@@ -30,9 +30,25 @@ if (
 const iaBasePath = iaOriginUrl.pathname.replace(/\/+$/, "");
 
 export const config: VercelConfig = {
-    rewrites: [
-        routes.rewrite("/api/:path*", `${apiOriginUrl.origin}/api/:path*`),
-        routes.rewrite("/ia/:path*", `${iaOriginUrl.origin}${iaBasePath}/:path*`),
-        routes.rewrite("/(.*)", "/index.html"),
-    ],
+    routes: routes
+        .route({
+            src: "^/api/(.*)$",
+            dest: `${apiOriginUrl.origin}/api/$1`,
+            transforms: [
+                {
+                    type: "request.headers",
+                    op: "delete",
+                    target: { key: "origin" },
+                },
+            ],
+        })
+        .route({
+            src: "^/ia/(.*)$",
+            dest: `${iaOriginUrl.origin}${iaBasePath}/$1`,
+        })
+        .route({
+            src: "^/(.*)$",
+            dest: "/index.html",
+        })
+        .getConfig().routes,
 };
